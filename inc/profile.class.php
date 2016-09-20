@@ -79,7 +79,11 @@ class PluginUseditemsexportProfile extends CommonDBTM {
           array('itemtype'  => 'PluginUseditemsexportExport',
                 'label'     => PluginUseditemsexportExport::getTypeName(),
                 'field'     => 'plugin_useditemsexport_export',
-                'default'   => 23));
+                'rights'    =>  array(CREATE  => __('Create'),
+                                      READ    => __('Read'),
+                                      PURGE   => array('short' => __('Purge'),
+                                      'long' => _x('button', 'Delete permanently'))),
+                'default'   => 21));
       return $rights;
    }
 

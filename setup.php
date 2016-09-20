@@ -42,9 +42,13 @@ function plugin_init_useditemsexport() {
 
       Plugin::registerClass('PluginUseditemsexportProfile', 
                               array('addtabon' => 'Profile'));
-      
-      Plugin::registerClass('PluginUseditemsexportExport', 
-                              array('addtabon' => 'User'));
+
+      if (Session::haveRightsOr('plugin_useditemsexport_export', 
+                                    array(READ, CREATE, PURGE))) {
+         
+         Plugin::registerClass('PluginUseditemsexportExport', 
+                                 array('addtabon' => 'User'));
+      }
    }
 }
 
