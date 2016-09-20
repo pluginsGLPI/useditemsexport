@@ -35,7 +35,13 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
-require ('../vendor/autoload.php');
+$autoload = dirname(__DIR__) . '/vendor/autoload.php';
+if (file_exists($autoload)) {
+   require_once $autoload;
+} else {
+  _e('Run "composer install --no-dev" in the plugin tree', 'useditemsexport');
+   die();
+}
 
 class PluginUseditemsexportExport extends CommonDBTM {
 
@@ -177,33 +183,28 @@ class PluginUseditemsexportExport extends CommonDBTM {
 
                if ($canpurge) {
                   echo "<td width='10'>";
-
-                  $sel = (isset($_GET["select"]) && ("all" == $_GET["select"]))
-                        ? "checked"
-                        : "";
-
-                  echo "<input type='checkbox' name='useditemsexport[" . $data["id"] . "]' value='1' " . $sel . ">";
+                  echo "<input type='checkbox' name='useditemsexport[" . $data["id"] . "]' value='1' />";
                   echo "</td>";
                }
 
                echo "<td class='center'>";
-               echo isset($data["refnumber"]) ? $data["refnumber"] : "-";
+               echo $data["refnumber"];
                echo "</td>";
 
                echo "<td class='center'>";
-               echo isset($data["date_mod"]) ? Html::convDateTime($data["date_mod"]) : "-";
+               echo Html::convDateTime($data["date_mod"]);
                echo "</td>";
 
                $User = new User();
                $User->getFromDB($data['authors_id']);
                echo "<td class='center'>";
-               echo isset($data["authors_id"]) ? $User->getLink() : "-";
+               echo $User->getLink();
                echo "</td>";
 
                $Doc = new Document();
                $Doc->getFromDB($data['documents_id']);
                echo "<td class='center'>";
-               echo isset($data["documents_id"]) ? $Doc->getDownloadLink() : "-";
+               echo $Doc->getDownloadLink();
                echo "</td>";
             echo "</tr>";
          }
@@ -241,7 +242,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
       ob_start();
       ?>
       <style type="text/css">
-         table { width: 100%; font-size: 10pt; font-family: helvetica, arial, sans-serif }
+         table { border: 1px solid #000000; width: 100%; font-size: 10pt; font-family: helvetica, arial, sans-serif; }
       </style>
       <page backtop="70mm" backleft="10mm" backright="10mm" backbottom="30mm">
          <page_header>
@@ -269,15 +270,15 @@ class PluginUseditemsexportExport extends CommonDBTM {
          </table>
 
          <br><br><br><br><br>
-         <table style="border: 1px solid #000000; width: 100%; text-align: center; border-spacing: 0px;">
+         <table>
             <tr>
-               <th style="width: 33%; font-size: 11px;">
+               <th>
                   SERIAL NUMBER
                </th>
-               <th style="width: 33%; font-size: 11px;">
+               <th>
                   NAME
                </th>
-               <th style="width: 34%; font-size: 11px;">
+               <th>
                   TYPE
                </th>
             </tr>
@@ -293,13 +294,13 @@ class PluginUseditemsexportExport extends CommonDBTM {
             
             ?>
             <tr>
-               <td style="width: 33%;">
+               <td>
                   <?php echo $item['serial']; ?>
                </td>
-               <td style="width: 33%;">
+               <td>
                   <?php echo $item['name']; ?>
                </td>
-               <td style="width: 33%;">
+               <td>
                   <?php echo $itemtype; ?>
                </td>
             </tr>
@@ -344,7 +345,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
       $content = ob_get_clean();
       
       // Generate PDF with HTML2PDF lib
-      $pdf = new HTML2PDF('P', 'A4', 'fr');
+      $pdf = new HTML2PDF('P', 'A4', 'fr', true, 'UTF-8'); 
       $pdf->pdf->SetDisplayMode('fullpage');
       $pdf->writeHTML($content);
 

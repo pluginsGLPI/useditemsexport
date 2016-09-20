@@ -71,6 +71,12 @@ function plugin_useditemsexport_check_prerequisites() {
       _e('This plugin requires GLPi >= 0.90 and < 9.2', 'useditemsexport');
       return false;
    }
+
+   $autoload = dirname(__DIR__) . '/useditemsexport/vendor/autoload.php';
+   if (!file_exists($autoload)) {
+      _e('Run "composer install --no-dev" in the plugin tree', 'useditemsexport');
+      return false;
+   }
    return true;
 }
 
