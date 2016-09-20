@@ -247,7 +247,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
          <page_header>
             <table>
                <tr>
-                  <td style="height: 60mm; width: 40%; text-align: center"><img src="../pics/logo.png" style="width:34mm; height:48mm"></td>
+                  <td style="height: 60mm; width: 40%; text-align: center"><img src="../pics/logo.png" /></td>
                   <td style="width: 60%; text-align: center;">
                      <strong style="font-size: 12pt">SOCIETE</strong><br />
                      SERVICE<br /><br /><br />
@@ -269,37 +269,37 @@ class PluginUseditemsexportExport extends CommonDBTM {
          </table>
 
          <br><br><br><br><br>
-         <table>
+         <table style="border: 1px solid #000000; width: 100%; text-align: center; border-spacing: 0px;">
             <tr>
-               <th style="width: 20%;">
-                  SERIAL NUMBER : 
+               <th style="width: 33%; font-size: 11px;">
+                  SERIAL NUMBER
                </th>
-               <th style="width: 20%;">
-                  NAME : 
+               <th style="width: 33%; font-size: 11px;">
+                  NAME
                </th>
-               <th style="width: 20%;">
-                  TYPE :
+               <th style="width: 34%; font-size: 11px;">
+                  TYPE
                </th>
             </tr>
             <?php
-/*
+
             $allUsedItemsForUser = self::getAllUsedItemsForUser($users_id);
 
-            foreach ($allUsedItemsForUser as $itemtype) {
+            foreach ($allUsedItemsForUser as $itemtype => $used_items) {
 
                $item = new $itemtype();
 
-               foreach ($itemtype as $item) {
+               foreach ($used_items as $item) {
             
             ?>
             <tr>
-               <td style="width: 80%;">
+               <td style="width: 33%;">
                   <?php echo $item['serial']; ?>
                </td>
-               <td style="width: 80%;">
+               <td style="width: 33%;">
                   <?php echo $item['name']; ?>
                </td>
-               <td style="width: 80%;">
+               <td style="width: 33%;">
                   <?php echo $itemtype; ?>
                </td>
             </tr>
@@ -307,7 +307,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
 
                }
             }
-*/
+
             ?>
          </table>
          <br><br><br><br><br>
