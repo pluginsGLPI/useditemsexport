@@ -40,14 +40,27 @@ function plugin_init_useditemsexport() {
 
    if (Session::getLoginUserID() && $plugin->isActivated('useditemsexport')) {
 
-      Plugin::registerClass('PluginUseditemsexportProfile', 
-                              array('addtabon' => 'Profile'));
+      PluginUseditemsexportConfig::loadInSession();
 
-      if (Session::haveRightsOr('plugin_useditemsexport_export', 
-                                    array(READ, CREATE, PURGE))) {
-         
-         Plugin::registerClass('PluginUseditemsexportExport', 
-                                 array('addtabon' => 'User'));
+      if (Session::haveRight('config', UPDATE)) {
+         $PLUGIN_HOOKS['config_page']['useditemsexport'] = 'front/config.form.php';
+      }
+
+      if (Session::haveRight('profile', UPDATE)) {
+         Plugin::registerClass('PluginUseditemsexportProfile', 
+                                 array('addtabon' => 'Profile'));
+      }
+
+       if (isset($_SESSION['plugins']['useditemsexport']['config'])) {
+
+          $useditemsexport_config = $_SESSION['plugins']['useditemsexport']['config'];
+
+         if (Session::haveRightsOr('plugin_useditemsexport_export', array(READ, CREATE, PURGE))
+               && $useditemsexport_config['is_active']) {
+            
+            Plugin::registerClass('PluginUseditemsexportExport', 
+                                    array('addtabon' => 'User'));
+         }
       }
    }
 }
