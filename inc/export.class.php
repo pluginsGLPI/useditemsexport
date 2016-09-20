@@ -478,6 +478,19 @@ class PluginUseditemsexportExport extends CommonDBTM {
    }
 
    /**
+    * Clean GLPi DB on export purge
+    *
+    * @return nothing
+    */
+   function cleanDBonPurge() {
+
+      // Clean Document GLPi
+      $doc = new Document();
+      $doc->getFromDB($this->fields['documents_id']);
+      $doc->delete(array('id' => $this->fields['documents_id']), true);
+   }
+
+   /**
     * Install all necessary table for the plugin
     *
     * @return boolean True if success
