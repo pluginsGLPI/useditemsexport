@@ -1,0 +1,14 @@
+{
+    "name": "pluginsGLPI/useditemsexport",
+    "description": "GLPi Plugins - Used items export",
+    "license": "GPL-2.0",
+    "type": "project",
+    "homepage": "https://github.com/pluginsGLPI/useditemsexport/",
+    "support": {
+        "issues": "https://github.com/pluginsGLPI/useditemsexport/issues",
+        "docs": "hhttps://github.com/pluginsGLPI/useditemsexport/wiki"
+    },
+    "require": {
+        "spipu/html2pdf": "4.6.0"
+    }
+}
