@@ -184,6 +184,17 @@ class PluginUseditemsexportConfig extends CommonDBTM {
          $query = "INSERT INTO `$table` (id) VALUES (1)";
          $DB->query($query) or die ($DB->error());
       }
+
+      $migration->displayMessage("Create useditemsexport dir");
+      if (!is_dir(GLPI_PLUGIN_DOC_DIR.'/useditemsexport')) {
+         mkdir(GLPI_PLUGIN_DOC_DIR.'/useditemsexport');
+      }
+
+      $migration->displayMessage("Copy default logo from GLPi core");
+      if (!file_exists(GLPI_PLUGIN_DOC_DIR.'/useditemsexport/logo.png')) {
+         copy(GLPI_ROOT.'/pics/logos/logo-GLPI-250-black.png', 
+               GLPI_PLUGIN_DOC_DIR.'/useditemsexport/logo.png');
+      }
    }
 
    /**
@@ -198,6 +209,10 @@ class PluginUseditemsexportConfig extends CommonDBTM {
 
       $query = "DROP TABLE IF EXISTS  `".$table."`";
       $DB->query($query) or die ($DB->error());
+
+      if (is_dir(GLPI_PLUGIN_DOC_DIR.'/useditemsexport')) {
+         Toolbox::deleteDir(GLPI_PLUGIN_DOC_DIR .'/useditemsexport');
+      }
    }
 
 }
