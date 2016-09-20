@@ -364,7 +364,13 @@ class PluginUseditemsexportExport extends CommonDBTM {
       $content = ob_get_clean();
       
       // Generate PDF with HTML2PDF lib
-      $pdf = new HTML2PDF('P', 'A4', 'fr', true, 'UTF-8'); 
+      $pdf = new HTML2PDF($useditemsexport_config['orientation'], 
+                          $useditemsexport_config['format'], 
+                          $useditemsexport_config['language'], 
+                          true, 
+                          'UTF-8'
+      );
+
       $pdf->pdf->SetDisplayMode('fullpage');
       $pdf->writeHTML($content);
 

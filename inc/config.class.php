@@ -68,13 +68,81 @@ class PluginUseditemsexportConfig extends CommonDBTM {
       Dropdown::showYesNo("is_active",$this->fields["is_active"]);
       echo "</td></tr>";
 
-      echo "<tr class='tab_bg_2'>";
+      echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Footer text', 'useditemsexport') . "</td>";
-      echo "<td><input type='text' name='footer_text' size='40' value='" 
+      echo "<td><input type='text' name='footer_text' size='60' value='" 
                   . $this->fields["footer_text"] . "'></td>";
       echo "</tr>";
 
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>" . __('Orientation', 'useditemsexport') . "</td>";
+      echo "<td>";
+         self::dropdownOrientation($this->fields["orientation"]);
+      echo "</td>";
+      echo "</tr>";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>" . __('Format', 'useditemsexport') . "</td>";
+      echo "<td>";
+         self::dropdownFormat($this->fields["format"]);
+      echo "</td>";
+      echo "</tr>";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>" . __('Language', 'useditemsexport') . "</td>";
+      echo "<td>";
+         self::dropdownLanguage($this->fields["language"]);
+      echo "</td>";
+      echo "</tr>";
+
       $this->showFormButtons($options);
+   }
+
+   /**
+    * Show dropdown Orientation (Landscape / Portrait)
+    * @param value (current preselected value)
+    * @return nothing (display dropdown)
+    */
+   function dropdownOrientation($value) {
+      Dropdown::showFromArray("orientation",
+                        array('L' => __('Landscape', 'useditemsexport'),
+                              'P' => __('Portrait', 'useditemsexport')),
+                        array('value'  => $value));
+   }
+
+   /**
+    * Show dropdown Format (A4, A3, etc...)
+    * @param value (current preselected value)
+    * @return nothing (display dropdown)
+    */
+   function dropdownFormat($value) {
+      Dropdown::showFromArray("format",
+                        array('A3' => __('A3'),
+                              'A4' => __('A4'),
+                              'A5' => __('A5')),
+                        array('value'  => $value));
+   }
+
+   /**
+    * Show dropdown Language (fr, en, it, etc...)
+    * @param value (current preselected value)
+    * @return nothing (display dropdown)
+    */
+   function dropdownLanguage($value) {
+      global $CFG_GLPI;
+
+      $supported_languages = array('ca','cs','da','de','en','es','fr','it','nl','pt','tr');
+
+      $languages = array();
+      foreach ($CFG_GLPI['languages'] as $lang => $datas) {
+         $short_code = substr($lang,0,2);
+         if (in_array($short_code, $supported_languages)) {
+            $languages[$short_code] = $datas[0];
+         }
+      }
+
+      Dropdown::showFromArray("language", $languages,
+                        array('value'  => $value));
    }
 
    /**
@@ -104,14 +172,16 @@ class PluginUseditemsexportConfig extends CommonDBTM {
 
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
                      `id` int(11) NOT NULL AUTO_INCREMENT,
-                     `footer_text` varchar(255) COLLATE utf8_unicode_ci DEFAULT '',
-                     `is_active` TINYINT(1) NOT NULL DEFAULT '0',
+                     `footer_text` VARCHAR(255) COLLATE utf8_unicode_ci DEFAULT '',
+                     `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+                     `orientation` VARCHAR(1) NOT NULL DEFAULT 'P',
+                     `format` VARCHAR(2) NOT NULL DEFAULT 'A4',
+                     `language` VARCHAR(2) NOT NULL DEFAULT 'fr',
                PRIMARY KEY  (`id`)
             ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
             $DB->query($query) or die ($DB->error());
 
-         $query = "INSERT INTO `$table` (id, footer_text, is_active)
-                     VALUES (1, 'FOOTER', 0)";
+         $query = "INSERT INTO `$table` (id) VALUES (1)";
          $DB->query($query) or die ($DB->error());
       }
    }
