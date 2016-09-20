@@ -1,0 +1,79 @@
+# French translations for PACKAGE package
+# Traductions françaises du paquet PACKAGE.
+# Copyright (C) 2016 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#  <francois@teclib.com>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-20 15:06+0200\n"
+"PO-Revision-Date: 2016-09-20 15:06+0200\n"
+"Last-Translator: francois@teclib.com\n"
+"Language-Team: French\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: setup.php:71 inc/export.class.php:52
+msgid "Used items export"
+msgstr "Export des éléments utilisés"
+
+#: setup.php:84
+msgid "This plugin requires GLPi >= 0.90 and < 9.2"
+msgstr "Ce plugin requiert GLPi >= 0.90 et < 9.2"
+
+#: setup.php:90 inc/export.class.php:42
+msgid "Run \"composer install --no-dev\" in the plugin tree"
+msgstr "Lancez la commande \"composer install --no-dev\" depuis le répertoire du plugin."
+
+#: front/export.form.php:41
+msgid "PDF successfully generated."
+msgstr "PDF généré avec succès"
+
+#: inc/config.class.php:49
+msgid "General setup of useditemsexport"
+msgstr "Configuration générale du plugin d'export des éléments utilisés"
+
+#: inc/config.class.php:72
+msgid "Footer text"
+msgstr "Texte de bas de page"
+
+#: inc/export.class.php:141
+msgid "Generate new export"
+msgstr "Générer un nouvel export"
+
+#: inc/export.class.php:162
+msgid "Used items export generated"
+msgstr "Liste des exports déjà générés"
+
+#: inc/export.class.php:175
+msgid "Reference number of export"
+msgstr "Numéro de référence"
+
+#: inc/export.class.php:176
+msgid "Date of export"
+msgstr "Date d'export"
+
+#: inc/export.class.php:177
+msgid "Author of export"
+msgstr "Auteur de l'export"
+
+#: inc/export.class.php:178
+msgid "Export document"
+msgstr "Document exporté"
+
+#: inc/export.class.php:290
+msgid "Asset export ref : "
+msgstr "Export numéro : "
+
+#: inc/export.class.php:349 inc/export.class.php:352
+msgid "Signature"
+msgstr "Signature"
+
+#: inc/export.class.php:406
+msgid "Used-Items-Export"
+msgstr "Used-Items-Export"
