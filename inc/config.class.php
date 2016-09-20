@@ -63,10 +63,16 @@ class PluginUseditemsexportConfig extends CommonDBTM {
       $this->showFormHeader($options);
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td >".__('Active')."</td>";
+      echo "<td>".__('Active')."</td>";
       echo "<td>";
       Dropdown::showYesNo("is_active",$this->fields["is_active"]);
       echo "</td></tr>";
+
+      echo "<tr class='tab_bg_2'>";
+      echo "<td>" . __('Footer text', 'useditemsexport') . "</td>";
+      echo "<td><input type='text' name='footer_text' size='40' value='" 
+                  . $this->fields["footer_text"] . "'></td>";
+      echo "</tr>";
 
       $this->showFormButtons($options);
    }
@@ -98,12 +104,14 @@ class PluginUseditemsexportConfig extends CommonDBTM {
 
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
                      `id` int(11) NOT NULL AUTO_INCREMENT,
+                     `footer_text` varchar(255) COLLATE utf8_unicode_ci DEFAULT '',
                      `is_active` TINYINT(1) NOT NULL DEFAULT '0',
                PRIMARY KEY  (`id`)
             ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
             $DB->query($query) or die ($DB->error());
 
-         $query = "INSERT INTO `$table` (id, is_active) VALUES (1, 0)";
+         $query = "INSERT INTO `$table` (id, footer_text, is_active)
+                     VALUES (1, 'FOOTER', 0)";
          $DB->query($query) or die ($DB->error());
       }
    }

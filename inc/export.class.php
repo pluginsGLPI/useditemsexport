@@ -239,6 +239,34 @@ class PluginUseditemsexportExport extends CommonDBTM {
       $num       = self::getNextNum();
       $refnumber = self::getNextRefnumber();
 
+      if (isset($_SESSION['plugins']['useditemsexport']['config'])) {
+         $useditemsexport_config = $_SESSION['plugins']['useditemsexport']['config'];
+      }
+
+      // Compile address from current_entity
+      $entity = new Entity();
+      $entity->getFromDB($_SESSION['glpiactive_entity']);
+      $entity_address = '<h3>' . $entity->fields["name"] . '</h3><br />';
+      $entity_address.= $entity->fields["address"] . '<br />';
+      $entity_address.= $entity->fields["postcode"] . ' - ' . $entity->fields['town'] . '<br />';
+      $entity_address.= $entity->fields["country"].'<br />';
+
+      if (isset($entity->fields["email"])) {
+         $entity_address.= __('Email') . ' : ' . $entity->fields["email"] . '<br />';
+      }
+
+      if (isset($entity->fields["phonenumber"])) {
+         $entity_address.= __('Phone') . ' : ' . $entity->fields["phonenumber"] . '<br />';
+      }
+
+      // Get User informations
+      $User = new User();
+      $User->getFromDB($users_id);
+
+      // Get Author informations
+      $Author = new User();
+      $Author->getFromDB(Session::getLoginUserID());
+
       ob_start();
       ?>
       <style type="text/css">
@@ -250,12 +278,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
                <tr>
                   <td style="height: 60mm; width: 40%; text-align: center"><img src="../pics/logo.png" /></td>
                   <td style="width: 60%; text-align: center;">
-                     <strong style="font-size: 12pt">SOCIETE</strong><br />
-                     SERVICE<br /><br /><br />
-                     ADRESS<br />
-                     CODEPOSTAL VILLE
-                     <br /><br /><br />
-                     Tel : 00.00.00.00.00 - Fax : 00.00.00.00.00
+                  <?php echo $entity_address; ?>
                   </td>
                </tr>
             </table>
@@ -264,7 +287,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
          <table>
             <tr>
                <td style="border: 1px solid #000000; text-align: center; width: 100%; font-size: 15pt; height: 8mm;">
-                  ASSET EXPORT N° <?php echo $refnumber; ?>
+                  <?php echo __('Asset export ref : ', 'useditemsexport') . $refnumber; ?>
                </td>
             </tr>
          </table>
@@ -272,14 +295,14 @@ class PluginUseditemsexportExport extends CommonDBTM {
          <br><br><br><br><br>
          <table>
             <tr>
-               <th>
-                  SERIAL NUMBER
+               <th style="width: 33%;">
+                  <?php echo __('Serial number'); ?>
                </th>
-               <th>
-                  NAME
+               <th style="width: 33%;">
+                  <?php echo __('Name'); ?>
                </th>
-               <th>
-                  TYPE
+               <th style="width: 33%;">
+                  <?php echo __('Type'); ?>
                </th>
             </tr>
             <?php
@@ -294,13 +317,13 @@ class PluginUseditemsexportExport extends CommonDBTM {
             
             ?>
             <tr>
-               <td>
+               <td style="width: 33%;">
                   <?php echo $item['serial']; ?>
                </td>
-               <td>
+               <td style="width: 33%;">
                   <?php echo $item['name']; ?>
                </td>
-               <td>
+               <td style="width: 33%;">
                   <?php echo $itemtype; ?>
                </td>
             </tr>
@@ -315,28 +338,24 @@ class PluginUseditemsexportExport extends CommonDBTM {
          <table style="border-collapse: collapse;">
             <tr>
                <td style="width: 50%; border-bottom: 1px solid #000000;">
-                  <strong>SOCIETE :</strong>
+                  <strong><?php echo $Author->getRawName(); ?> :</strong>
                </td>
                <td style="width: 50%; border-bottom: 1px solid #000000">
-                  <strong>UTILISATEUR :</strong>
+                  <strong><?php echo $User->getRawName(); ?> :</strong>
                </td>
             </tr>
             <tr>
                <td style="border: 1px solid #000000; width: 50%; vertical-align: top">
-                  Date : <strong><?php //echo $date->format('d/m/Y'); ?></strong><br><br>
-                  Nom : <strong><?php //echo ucfirst($user->getName()); ?></strong><br><br>
-                  Signature : <br><br><br><br><br>
+                  <?php echo __('Signature', 'useditemsexport'); ?> : <br><br><br><br><br>
                </td>
                <td style="border: 1px solid #000000; width: 50%; vertical-align: top;">
-                  Date : <br><br>
-                  Nom : <br><br>
-                  Signature : <br><br><br><br><br>
+                  <?php echo __('Signature', 'useditemsexport'); ?> : <br><br><br><br><br>
                </td>
             </tr>
          </table>
          <page_footer>
             <div style="width: 100%; text-align: center; font-size: 8pt">
-               - DES RÉCEPTION VEUILLEZ NOUS RETOURNER LE PRÉSENT DOCUMENT DATÉ ET SIGNÉ -
+               - <?php echo $useditemsexport_config['footer_text']; ?> -
             </div>
          </page_footer>
       </page>
