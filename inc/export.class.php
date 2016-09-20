@@ -314,20 +314,20 @@ class PluginUseditemsexportExport extends CommonDBTM {
 
             foreach ($allUsedItemsForUser as $itemtype => $used_items) {
 
-               $item = new $itemtype();
+               $item = getItemForItemtype($itemtype);
 
-               foreach ($used_items as $item) {
+               foreach ($used_items as $item_datas) {
             
             ?>
             <tr>
                <td style="width: 33%;">
-                  <?php echo $item['serial']; ?>
+                  <?php echo $item_datas['serial']; ?>
                </td>
                <td style="width: 33%;">
-                  <?php echo $item['name']; ?>
+                  <?php echo $item_datas['name']; ?>
                </td>
                <td style="width: 33%;">
-                  <?php echo $itemtype; ?>
+                  <?php echo $item->getTypeName(1); ?>
                </td>
             </tr>
             <?php
