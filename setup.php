@@ -31,8 +31,15 @@
  --------------------------------------------------------------------------
  */
 
+define("PLUGIN_USEDITEMEXPORT_VERSION", "1.0.0");
+
+// Minimal GLPI version, inclusive
+define("PLUGIN_USEDITEMEXPORT_MIN_GLPI", "0.90");
+// Maximum GLPI version, exclusive
+define("PLUGIN_USEDITEMEXPORT_MAX_GLPI", "9.2");
+
 function plugin_init_useditemsexport() {
-   global $PLUGIN_HOOKS,$CFG_GLPI;
+   global $PLUGIN_HOOKS, $CFG_GLPI;
 
    $plugin = new Plugin();
 
@@ -69,19 +76,25 @@ function plugin_version_useditemsexport() {
 
    return array (
       'name' => __('Used items export', 'useditemsexport'),
-      'version' => '1.0.0',
+      'version' => PLUGIN_USEDITEMEXPORT_VERSION,
       'oldname' => '',
       'license' => 'GPLv2+',
       'author'  => "TECLIB",
       'homepage'=>'https://github.com/pluginsGLPI/useditemsexport',
-      'minGlpiVersion' => '0.90',
+      'minGlpiVersion' => PLUGIN_USEDITEMEXPORT_MIN_GLPI,
    );
 }
 
 function plugin_useditemsexport_check_prerequisites() {
 
-   if (version_compare(GLPI_VERSION,'0.90','lt') || version_compare(GLPI_VERSION,'9.2','ge')) {
-      _e('This plugin requires GLPi >= 0.90 and < 9.2', 'useditemsexport');
+   if (version_compare(GLPI_VERSION, PLUGIN_USEDITEMEXPORT_MIN_GLPI,'lt')
+      || version_compare(GLPI_VERSION, PLUGIN_USEDITEMEXPORT_MAX_GLPI,'ge')
+   ) {
+      echo sprintf(
+         __('This plugin requires GLPi >= %1$s and < %2$s'),
+         PLUGIN_USEDITEMEXPORT_MIN_GLPI,
+         PLUGIN_USEDITEMEXPORT_MAX_GLPI
+      );
       return false;
    }
 
