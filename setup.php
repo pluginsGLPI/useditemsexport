@@ -31,13 +31,19 @@
  --------------------------------------------------------------------------
  */
 
+// Plugin version
 define("PLUGIN_USEDITEMEXPORT_VERSION", "1.0.0");
-
 // Minimal GLPI version, inclusive
 define("PLUGIN_USEDITEMEXPORT_MIN_GLPI", "0.90");
 // Maximum GLPI version, exclusive
 define("PLUGIN_USEDITEMEXPORT_MAX_GLPI", "9.2");
 
+/**
+ * Init hooks of the plugin.
+ * REQUIRED
+ *
+ * @return void
+ */
 function plugin_init_useditemsexport() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
 
@@ -72,6 +78,12 @@ function plugin_init_useditemsexport() {
    }
 }
 
+/**
+ * Get the name and the version of the plugin
+ * REQUIRED
+ *
+ * @return array
+ */
 function plugin_version_useditemsexport() {
 
    return array (
@@ -85,6 +97,12 @@ function plugin_version_useditemsexport() {
    );
 }
 
+/**
+ * Check pre-requisites before install
+ * OPTIONNAL, but recommanded
+ *
+ * @return boolean
+ */
 function plugin_useditemsexport_check_prerequisites() {
 
    if (version_compare(GLPI_VERSION, PLUGIN_USEDITEMEXPORT_MIN_GLPI,'lt')
@@ -106,7 +124,21 @@ function plugin_useditemsexport_check_prerequisites() {
    return true;
 }
 
-function plugin_useditemsexport_check_config() {
+/**
+ * Check configuration process
+ * OPTIONNAL, but recommanded
+ *
+ * @param boolean $verbose Whether to display message on failure. Defaults to false
+ *
+ * @return boolean
+ */
+function plugin_useditemsexport_check_config($verbose=false) {
+   if (true) { // Your configuration check
+      return true;
+   }
 
-   return true;
+   if ($verbose) {
+      _e('Installed / not configured', 'useditemsexport');
+   }
+   return false;
 }
