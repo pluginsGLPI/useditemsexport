@@ -298,13 +298,16 @@ class PluginUseditemsexportExport extends CommonDBTM {
          <br><br><br><br><br>
          <table>
             <tr>
-               <th style="width: 33%;">
+              <th style="width: 25%;">
                   <?php echo __('Serial number'); ?>
                </th>
-               <th style="width: 33%;">
+               <th style="width: 25%;">
+                  <?php echo __('Inventory number'); ?>
+               </th>
+               <th style="width: 25%;">
                   <?php echo __('Name'); ?>
                </th>
-               <th style="width: 33%;">
+               <th style="width: 25%;">
                   <?php echo __('Type'); ?>
                </th>
             </tr>
@@ -320,16 +323,22 @@ class PluginUseditemsexportExport extends CommonDBTM {
             
             ?>
             <tr>
-               <td style="width: 33%;">
+               <td style="width: 25%;">
                   <?php
                   if (isset($item_datas['serial'])) {
                      echo $item_datas['serial'];
                   } ?>
                </td>
-               <td style="width: 33%;">
+               <td style="width: 25%;">
+                  <?php
+                  if (isset($item_datas['otherserial'])) {
+                     echo $item_datas['otherserial'];
+                  } ?>
+               </td>
+               <td style="width: 25%;">
                   <?php echo $item_datas['name']; ?>
                </td>
-               <td style="width: 33%;">
+               <td style="width: 25%;">
                   <?php echo $item->getTypeName(1); ?>
                </td>
             </tr>
