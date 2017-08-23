@@ -139,7 +139,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
 
          echo "<table class='tab_cadre_fixehov'>";
             echo "<tr class='tab_bg_2'><th colspan='2'>".__('Generate new export', 'useditemsexport');
-               echo "&nbsp;&nbsp<input type='submit' name='generate' value=\""._sx('button', 'Create')."\" class='submit'>";
+               echo "&nbsp;&nbsp<input type='submit' name='generate' value=\"".__('Create')."\" class='submit'>";
                echo "<input type='hidden' name='users_id' value='$users_id'>";
             echo "</th></tr>";
          echo "</table>";
@@ -215,7 +215,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
 
             echo "</table>";
             Html::openArrowMassives("useditemsexport_form$rand", true);
-            Html::closeArrowMassives(array('purgeitem' => __('Purge')));
+            Html::closeArrowMassives(array('purgeitem' => __('Delete permanently')));
             Html::closeForm();
             echo "</div>";
 
