@@ -321,7 +321,10 @@ class PluginUseditemsexportExport extends CommonDBTM {
             ?>
             <tr>
                <td style="width: 33%;">
-                  <?php echo $item_datas['serial']; ?>
+                  <?php
+                  if (isset($item_datas['serial'])) {
+                     echo $item_datas['serial'];
+                  } ?>
                </td>
                <td style="width: 33%;">
                   <?php echo $item_datas['name']; ?>
