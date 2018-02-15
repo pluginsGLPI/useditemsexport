@@ -55,7 +55,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
    /**
     * @see CommonGLPI::getTabNameForItem()
    **/
-   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       if ($item->getType()=='User') {
          if ($_SESSION['glpishow_count_on_tabs']) {
@@ -69,12 +69,12 @@ class PluginUseditemsexportExport extends CommonDBTM {
    /**
     * @see CommonGLPI::displayTabContentForItem()
    **/
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       global $CFG_GLPI;
 
       if ($item->getType()=='User') {
-         if (Session::haveRightsOr('plugin_useditemsexport_export', array(READ, CREATE, PURGE))) {
-            
+         if (Session::haveRightsOr('plugin_useditemsexport_export', [READ, CREATE, PURGE])) {
+
             $PluginUseditemsexportExport = new self();
             $PluginUseditemsexportExport->showForUser($item);
 
@@ -91,7 +91,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
     * @param $item    CommonDBTM object
    **/
    public static function countForItem(CommonDBTM $item) {
-      return countElementsInTable(getTableForItemType(__CLASS__), 
+      return countElementsInTable(getTableForItemType(__CLASS__),
                                     "`users_id` = '".$item->getID()."'");
    }
 
@@ -105,7 +105,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
    static function getAllForUser($users_id) {
       global $DB;
 
-      $exports = array();
+      $exports = [];
 
       // Get default one
       foreach ($DB->request(getTableForItemType(__CLASS__), "`users_id` = '$users_id'") as $data) {
@@ -120,7 +120,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
     * @param array $options
     * @return nothing
     */
-   function showForUser($item, $options = array()) {
+   function showForUser($item, $options = []) {
       global $DB, $CFG_GLPI;
 
       $users_id = $item->getField('id');
@@ -158,7 +158,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
       }
 
       echo "<table class='tab_cadre_fixehov'>";
-      echo "<tr><th colspan='" . ($canpurge ? 5 : 4) . "'>" 
+      echo "<tr><th colspan='" . ($canpurge ? 5 : 4) . "'>"
                      . __('Used items export generated', 'useditemsexport') . "</th></tr><tr>";
 
       if (count($exports) == 0) {
@@ -170,7 +170,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
 
       } else {
 
-         if ($canpurge)   {
+         if ($canpurge) {
             echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . "</th>";
          }
          echo "<th>" . __('Reference number of export', 'useditemsexport') . "</th>";
@@ -182,11 +182,11 @@ class PluginUseditemsexportExport extends CommonDBTM {
          foreach ($exports as $data) {
             echo "<tr class='tab_bg_1'>";
 
-               if ($canpurge) {
-                  echo "<td width='10'>";
-                  Html::showMassiveActionCheckBox(__CLASS__, $data["id"]);
-                  echo "</td>";
-               }
+            if ($canpurge) {
+               echo "<td width='10'>";
+               Html::showMassiveActionCheckBox(__CLASS__, $data["id"]);
+               echo "</td>";
+            }
 
                echo "<td class='center'>";
                echo $data["refnumber"];
@@ -213,7 +213,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
       }
 
       echo "</table>";
-      if ($canpurge && count($exports) > 0)   {
+      if ($canpurge && count($exports) > 0) {
          $massiveactionparams['ontop'] = false;
          Html::showMassiveActions($massiveactionparams);
          Html::closeForm();
@@ -317,7 +317,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
                $item = getItemForItemtype($itemtype);
 
                foreach ($used_items as $item_datas) {
-            
+
             ?>
             <tr>
                <td style="width: 25%;">
@@ -371,15 +371,15 @@ class PluginUseditemsexportExport extends CommonDBTM {
             </div>
          </page_footer>
       </page>
-      <?php 
+      <?php
 
       $content = ob_get_clean();
-      
+
       // Generate PDF with HTML2PDF lib
-      $pdf = new HTML2PDF($useditemsexport_config['orientation'], 
-                          $useditemsexport_config['format'], 
-                          $useditemsexport_config['language'], 
-                          true, 
+      $pdf = new HTML2PDF($useditemsexport_config['orientation'],
+                          $useditemsexport_config['format'],
+                          $useditemsexport_config['language'],
+                          true,
                           'UTF-8'
       );
 
@@ -395,7 +395,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
       // Add log for last generated PDF
       $export = new self();
 
-      $input = array();
+      $input = [];
       $input['users_id']     = $users_id;
       $input['date_mod']     = date("Y-m-d H:i:s");
       $input['num']          = $num;
@@ -403,7 +403,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
       $input['authors_id']   = Session::getLoginUserID();
       $input['documents_id'] = $documents_id;
 
-      if($export->add($input)) {
+      if ($export->add($input)) {
          return true;
       }
 
@@ -419,7 +419,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
 
       $doc = new Document();
 
-      $input                          = array();
+      $input                          = [];
       $input["entities_id"]           = $_SESSION['glpiactive_entity'];
       $input["name"]                  = __('Used-Items-Export', 'useditemsexport').'-'.$refnumber;
       $input["upload_file"]           = $refnumber.'.pdf';
@@ -465,7 +465,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
    static function getNextRefnumber() {
       global $DB;
 
-      if($nextNum = self::getNextNum()) {
+      if ($nextNum = self::getNextNum()) {
          $nextRefnumber = str_pad($nextNum, 4, "0", STR_PAD_LEFT);
          $date = new DateTime();
          return $nextRefnumber . '-' . $date->format('Y');
@@ -482,7 +482,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
    static function getAllUsedItemsForUser($ID) {
       global $DB, $CFG_GLPI;
 
-      $items = array();
+      $items = [];
 
       foreach ($CFG_GLPI['linkuser_types'] as $itemtype) {
          if (!($item = getItemForItemtype($itemtype))) {
@@ -525,7 +525,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
       // Clean Document GLPi
       $doc = new Document();
       $doc->getFromDB($this->fields['documents_id']);
-      $doc->delete(array('id' => $this->fields['documents_id']), true);
+      $doc->delete(['id' => $this->fields['documents_id']], true);
    }
 
    /**

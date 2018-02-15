@@ -35,7 +35,7 @@ include ('../../../inc/includes.php');
 
 Session::haveRight("config", UPDATE);
 
-Html::header(PluginUseditemsexportConfig::getTypeName(1), 
+Html::header(PluginUseditemsexportConfig::getTypeName(1),
                $_SERVER['PHP_SELF'], "plugins", "useditemsexport", "config");
 
 if (!isset($_GET["id"])) {
