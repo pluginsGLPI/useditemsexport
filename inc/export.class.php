@@ -39,7 +39,7 @@ $autoload = dirname(__DIR__) . '/vendor/autoload.php';
 if (file_exists($autoload)) {
    require_once $autoload;
 } else {
-  _e('Run "composer install --no-dev" in the plugin tree', 'useditemsexport');
+   echo __('Run "composer install --no-dev" in the plugin tree', 'useditemsexport');
    die();
 }
 
@@ -150,11 +150,11 @@ class PluginUseditemsexportExport extends CommonDBTM {
 
       echo "<div class='center'>";
 
-      if ($canpurge) {
+      if ($canpurge && count($exports) > 0) {
          $rand = mt_rand();
-
-         echo "<form method='post' name='useditemsexport_form$rand' id='useditemsexport_form$rand'
-                  action=\"" . $CFG_GLPI["root_doc"] . "/plugins/useditemsexport/front/export.form.php\">";
+         Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
+         $massiveactionparams = ['item' => $item, 'container' => 'mass'.__CLASS__.$rand];
+         Html::showMassiveActions($massiveactionparams);
       }
 
       echo "<table class='tab_cadre_fixehov'>";
@@ -169,8 +169,9 @@ class PluginUseditemsexportExport extends CommonDBTM {
          echo "</tr>";
 
       } else {
-         if ($canpurge) {
-            echo "<th>&nbsp;</th>";
+
+         if ($canpurge)   {
+            echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . "</th>";
          }
          echo "<th>" . __('Reference number of export', 'useditemsexport') . "</th>";
          echo "<th>" . __('Date of export', 'useditemsexport') . "</th>";
@@ -183,7 +184,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
 
                if ($canpurge) {
                   echo "<td width='10'>";
-                  echo "<input type='checkbox' name='useditemsexport[" . $data["id"] . "]' value='1' />";
+                  Html::showMassiveActionCheckBox(__CLASS__, $data["id"]);
                   echo "</td>";
                }
 
@@ -211,18 +212,14 @@ class PluginUseditemsexportExport extends CommonDBTM {
 
       }
 
+      echo "</table>";
       if ($canpurge && count($exports) > 0)   {
+         $massiveactionparams['ontop'] = false;
+         Html::showMassiveActions($massiveactionparams);
+         Html::closeForm();
 
-            echo "</table>";
-            Html::openArrowMassives("useditemsexport_form$rand", true);
-            Html::closeArrowMassives(array('purgeitem' => __('Delete permanently')));
-            Html::closeForm();
-            echo "</div>";
-
-      } else {
-
-         echo "</table></div>";
       }
+      echo "</div>";
 
    }
 
@@ -392,7 +389,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
       $contentPDF = $pdf->Output('', 'S');
 
       // Store PDF in GLPi upload dir and create document
-      file_put_contents(GLPI_UPLOAD_DIR . '/' . $refnumber.'.pdf', $contentPDF);
+      file_put_contents(GLPI_TMP_DIR . '/' . $refnumber.'.pdf', $contentPDF);
       $documents_id = self::createDocument($refnumber);
 
       // Add log for last generated PDF
@@ -541,7 +538,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
 
       $table = getTableForItemType(__CLASS__);
 
-      if (!TableExists($table)) {
+      if (!$DB->tableExists($table)) {
          $migration->displayMessage("Installing $table");
 
          $query = "CREATE TABLE IF NOT EXISTS `$table` (

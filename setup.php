@@ -32,11 +32,11 @@
  */
 
 // Plugin version
-define("PLUGIN_USEDITEMEXPORT_VERSION", "1.0.0");
+define("PLUGIN_USEDITEMEXPORT_VERSION", "1.1.0");
 // Minimal GLPI version, inclusive
-define("PLUGIN_USEDITEMEXPORT_MIN_GLPI", "0.90");
+define("PLUGIN_USEDITEMEXPORT_MIN_GLPI", "9.2");
 // Maximum GLPI version, exclusive
-define("PLUGIN_USEDITEMEXPORT_MAX_GLPI", "9.2");
+define("PLUGIN_USEDITEMEXPORT_MAX_GLPI", "9.3");
 
 /**
  * Init hooks of the plugin.
@@ -118,7 +118,7 @@ function plugin_useditemsexport_check_prerequisites() {
 
    $autoload = dirname(__DIR__) . '/useditemsexport/vendor/autoload.php';
    if (!file_exists($autoload)) {
-      _e('Run "composer install --no-dev" in the plugin tree', 'useditemsexport');
+      echo __('Run "composer install --no-dev" in the plugin tree', 'useditemsexport');
       return false;
    }
    return true;
@@ -138,7 +138,7 @@ function plugin_useditemsexport_check_config($verbose=false) {
    }
 
    if ($verbose) {
-      _e('Installed / not configured', 'useditemsexport');
+      echo __('Installed / not configured', 'useditemsexport');
    }
    return false;
 }
