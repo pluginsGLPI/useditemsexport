@@ -43,7 +43,7 @@ class PluginUseditemsexportProfile extends CommonDBTM {
    /**
     * @see CommonGLPI::getTabNameForItem()
    **/
-   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       if ($item->getType()=='Profile' && $item->getField('interface')!='helpdesk') {
             return PluginUseditemsexportExport::getTypeName();
@@ -54,7 +54,7 @@ class PluginUseditemsexportProfile extends CommonDBTM {
    /**
     * @see CommonGLPI::displayTabContentForItem()
    **/
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       global $CFG_GLPI;
 
       if ($item->getType()=='Profile') {
@@ -62,7 +62,7 @@ class PluginUseditemsexportProfile extends CommonDBTM {
          $prof = new self();
          //In case there's no right for this profile, create it
          foreach (self::getAllRights() as $right) {
-            self::addDefaultProfileInfos($ID, array($right['field'] => 0));
+            self::addDefaultProfileInfos($ID, [$right['field'] => 0]);
          }
          $prof->showForm($ID);
       }
@@ -75,15 +75,15 @@ class PluginUseditemsexportProfile extends CommonDBTM {
    **/
    static function getAllRights() {
 
-      $rights = array(
-          array('itemtype'  => 'PluginUseditemsexportExport',
+      $rights = [
+          ['itemtype'  => 'PluginUseditemsexportExport',
                 'label'     => PluginUseditemsexportExport::getTypeName(),
                 'field'     => 'plugin_useditemsexport_export',
-                'rights'    =>  array(CREATE  => __('Create'),
+                'rights'    =>  [CREATE  => __('Create'),
                                       READ    => __('Read'),
-                                      PURGE   => array('short' => __('Purge'),
-                                      'long' => _x('button', 'Delete permanently'))),
-                'default'   => 21));
+                                      PURGE   => ['short' => __('Purge'),
+                                      'long' => _x('button', 'Delete permanently')]],
+                'default'   => 21]];
       return $rights;
    }
 
@@ -116,10 +116,10 @@ class PluginUseditemsexportProfile extends CommonDBTM {
    *
    * @return nothing
    **/
-   function showForm($profiles_id=0, $openform=TRUE, $closeform=TRUE) {
+   function showForm($profiles_id = 0, $openform = true, $closeform = true) {
 
       echo "<div class='firstbloc'>";
-      if (($canedit = Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, PURGE)))
+      if (($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]))
           && $openform) {
          $profile = new Profile();
          echo "<form method='post' action='".$profile->getFormURL()."'>";
@@ -129,16 +129,16 @@ class PluginUseditemsexportProfile extends CommonDBTM {
       $profile->getFromDB($profiles_id);
       if ($profile->getField('interface') == 'central') {
          $rights = $this->getAllRights();
-         $profile->displayRightsChoiceMatrix($rights, array('canedit'       => $canedit,
+         $profile->displayRightsChoiceMatrix($rights, ['canedit'       => $canedit,
                                                          'default_class' => 'tab_bg_2',
-                                                         'title'         => __('General')));
+                                                         'title'         => __('General')]);
       }
-      
+
       if ($canedit
           && $closeform) {
          echo "<div class='center'>";
-         echo Html::hidden('id', array('value' => $profiles_id));
-         echo Html::submit(_sx('button', 'Save'), array('name' => 'update'));
+         echo Html::hidden('id', ['value' => $profiles_id]);
+         echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
          echo "</div>\n";
          Html::closeForm();
       }
@@ -151,10 +151,10 @@ class PluginUseditemsexportProfile extends CommonDBTM {
     * @return boolean True if success
     */
    static function install(Migration $migration) {
-      
+
       foreach (self::getAllRights() as $right) {
-         self::addDefaultProfileInfos($_SESSION['glpiactiveprofile']['id'], 
-                                       array($right['field'] => $right['default']));
+         self::addDefaultProfileInfos($_SESSION['glpiactiveprofile']['id'],
+                                       [$right['field'] => $right['default']]);
       }
    }
 

@@ -60,19 +60,19 @@ function plugin_init_useditemsexport() {
       }
 
       if (Session::haveRight('profile', UPDATE)) {
-         Plugin::registerClass('PluginUseditemsexportProfile', 
-                                 array('addtabon' => 'Profile'));
+         Plugin::registerClass('PluginUseditemsexportProfile',
+                                 ['addtabon' => 'Profile']);
       }
 
-       if (isset($_SESSION['plugins']['useditemsexport']['config'])) {
+      if (isset($_SESSION['plugins']['useditemsexport']['config'])) {
 
-          $useditemsexport_config = $_SESSION['plugins']['useditemsexport']['config'];
+         $useditemsexport_config = $_SESSION['plugins']['useditemsexport']['config'];
 
-         if (Session::haveRightsOr('plugin_useditemsexport_export', array(READ, CREATE, PURGE))
-               && $useditemsexport_config['is_active']) {
-            
-            Plugin::registerClass('PluginUseditemsexportExport', 
-                                    array('addtabon' => 'User'));
+         if (Session::haveRightsOr('plugin_useditemsexport_export', [READ, CREATE, PURGE])
+              && $useditemsexport_config['is_active']) {
+
+            Plugin::registerClass('PluginUseditemsexportExport',
+                                    ['addtabon' => 'User']);
          }
       }
    }
@@ -86,7 +86,7 @@ function plugin_init_useditemsexport() {
  */
 function plugin_version_useditemsexport() {
 
-   return array (
+   return  [
       'name' => __('Used items export', 'useditemsexport'),
       'version' => PLUGIN_USEDITEMEXPORT_VERSION,
       'oldname' => '',
@@ -94,7 +94,7 @@ function plugin_version_useditemsexport() {
       'author'  => "TECLIB",
       'homepage'=>'https://github.com/pluginsGLPI/useditemsexport',
       'minGlpiVersion' => PLUGIN_USEDITEMEXPORT_MIN_GLPI,
-   );
+   ];
 }
 
 /**
@@ -105,8 +105,8 @@ function plugin_version_useditemsexport() {
  */
 function plugin_useditemsexport_check_prerequisites() {
 
-   if (version_compare(GLPI_VERSION, PLUGIN_USEDITEMEXPORT_MIN_GLPI,'lt')
-      || version_compare(GLPI_VERSION, PLUGIN_USEDITEMEXPORT_MAX_GLPI,'ge')
+   if (version_compare(GLPI_VERSION, PLUGIN_USEDITEMEXPORT_MIN_GLPI, 'lt')
+      || version_compare(GLPI_VERSION, PLUGIN_USEDITEMEXPORT_MAX_GLPI, 'ge')
    ) {
       echo sprintf(
          __('This plugin requires GLPi >= %1$s and < %2$s'),
@@ -132,7 +132,7 @@ function plugin_useditemsexport_check_prerequisites() {
  *
  * @return boolean
  */
-function plugin_useditemsexport_check_config($verbose=false) {
+function plugin_useditemsexport_check_config($verbose = false) {
    if (true) { // Your configuration check
       return true;
    }
