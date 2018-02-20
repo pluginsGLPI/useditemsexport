@@ -44,7 +44,7 @@ class PluginUseditemsexportConfig extends CommonDBTM {
     *
     * @return value name of this itemtype
     **/
-   static function getTypeName($nb=0) {
+   static function getTypeName($nb = 0) {
 
       return __('General setup of useditemsexport', 'useditemsexport');
    }
@@ -57,7 +57,7 @@ class PluginUseditemsexportConfig extends CommonDBTM {
     *
     * @return Nothing (display)
    **/
-   function showForm($ID, $options=array()) {
+   function showForm($ID, $options = []) {
 
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
@@ -65,12 +65,12 @@ class PluginUseditemsexportConfig extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__('Active')."</td>";
       echo "<td>";
-      Dropdown::showYesNo("is_active",$this->fields["is_active"]);
+      Dropdown::showYesNo("is_active", $this->fields["is_active"]);
       echo "</td></tr>";
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Footer text', 'useditemsexport') . "</td>";
-      echo "<td><input type='text' name='footer_text' size='60' value='" 
+      echo "<td><input type='text' name='footer_text' size='60' value='"
                   . $this->fields["footer_text"] . "'></td>";
       echo "</tr>";
 
@@ -105,9 +105,9 @@ class PluginUseditemsexportConfig extends CommonDBTM {
     */
    function dropdownOrientation($value) {
       Dropdown::showFromArray("orientation",
-                        array('L' => __('Landscape', 'useditemsexport'),
-                              'P' => __('Portrait', 'useditemsexport')),
-                        array('value'  => $value));
+                        ['L' => __('Landscape', 'useditemsexport'),
+                              'P' => __('Portrait', 'useditemsexport')],
+                        ['value'  => $value]);
    }
 
    /**
@@ -117,10 +117,10 @@ class PluginUseditemsexportConfig extends CommonDBTM {
     */
    function dropdownFormat($value) {
       Dropdown::showFromArray("format",
-                        array('A3' => __('A3'),
+                        ['A3' => __('A3'),
                               'A4' => __('A4'),
-                              'A5' => __('A5')),
-                        array('value'  => $value));
+                              'A5' => __('A5')],
+                        ['value'  => $value]);
    }
 
    /**
@@ -131,18 +131,18 @@ class PluginUseditemsexportConfig extends CommonDBTM {
    function dropdownLanguage($value) {
       global $CFG_GLPI;
 
-      $supported_languages = array('ca','cs','da','de','en','es','fr','it','nl','pt','tr');
+      $supported_languages = ['ca','cs','da','de','en','es','fr','it','nl','pt','tr'];
 
-      $languages = array();
+      $languages = [];
       foreach ($CFG_GLPI['languages'] as $lang => $datas) {
-         $short_code = substr($lang,0,2);
+         $short_code = substr($lang, 0, 2);
          if (in_array($short_code, $supported_languages)) {
             $languages[$short_code] = $datas[0];
          }
       }
 
       Dropdown::showFromArray("language", $languages,
-                        array('value'  => $value));
+                        ['value'  => $value]);
    }
 
    /**
@@ -167,7 +167,7 @@ class PluginUseditemsexportConfig extends CommonDBTM {
 
       $table = getTableForItemType(__CLASS__);
 
-      if (!TableExists($table)) {
+      if (!$DB->tableExists($table)) {
          $migration->displayMessage("Installing $table");
 
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
@@ -192,7 +192,7 @@ class PluginUseditemsexportConfig extends CommonDBTM {
 
       $migration->displayMessage("Copy default logo from GLPi core");
       if (!file_exists(GLPI_PLUGIN_DOC_DIR.'/useditemsexport/logo.png')) {
-         copy(GLPI_ROOT.'/pics/logos/logo-GLPI-250-black.png', 
+         copy(GLPI_ROOT.'/pics/logos/logo-GLPI-250-black.png',
                GLPI_PLUGIN_DOC_DIR.'/useditemsexport/logo.png');
       }
    }
