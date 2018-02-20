@@ -32,7 +32,7 @@
  */
 
 // Plugin version
-define("PLUGIN_USEDITEMEXPORT_VERSION", "1.1.0");
+define("PLUGIN_USEDITEMEXPORT_VERSION", "2.0.0");
 // Minimal GLPI version, inclusive
 define("PLUGIN_USEDITEMEXPORT_MIN_GLPI", "9.2");
 // Maximum GLPI version, exclusive
@@ -93,52 +93,32 @@ function plugin_version_useditemsexport() {
       'license' => 'GPLv2+',
       'author'  => "TECLIB",
       'homepage'=>'https://github.com/pluginsGLPI/useditemsexport',
-      'minGlpiVersion' => PLUGIN_USEDITEMEXPORT_MIN_GLPI,
+      'requirements'   => [
+         'glpi' => [
+            'min' => PLUGIN_USEDITEMEXPORT_MIN_GLPI,
+            'max' => PLUGIN_USEDITEMEXPORT_MAX_GLPI,
+            'dev' => true
+         ]
+      ]
    ];
 }
 
 /**
  * Check pre-requisites before install
- * OPTIONNAL, but recommanded
  *
  * @return boolean
  */
 function plugin_useditemsexport_check_prerequisites() {
-
-   if (version_compare(GLPI_VERSION, PLUGIN_USEDITEMEXPORT_MIN_GLPI, 'lt')
-      || version_compare(GLPI_VERSION, PLUGIN_USEDITEMEXPORT_MAX_GLPI, 'ge')
-   ) {
-      echo sprintf(
-         __('This plugin requires GLPi >= %1$s and < %2$s'),
-         PLUGIN_USEDITEMEXPORT_MIN_GLPI,
-         PLUGIN_USEDITEMEXPORT_MAX_GLPI
-      );
-      return false;
-   }
-
-   $autoload = dirname(__DIR__) . '/useditemsexport/vendor/autoload.php';
-   if (!file_exists($autoload)) {
-      echo __('Run "composer install --no-dev" in the plugin tree', 'useditemsexport');
-      return false;
-   }
    return true;
 }
 
 /**
  * Check configuration process
- * OPTIONNAL, but recommanded
  *
  * @param boolean $verbose Whether to display message on failure. Defaults to false
  *
  * @return boolean
  */
 function plugin_useditemsexport_check_config($verbose = false) {
-   if (true) { // Your configuration check
-      return true;
-   }
-
-   if ($verbose) {
-      echo __('Installed / not configured', 'useditemsexport');
-   }
-   return false;
+   return true;
 }
