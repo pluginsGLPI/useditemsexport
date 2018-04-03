@@ -1,0 +1,95 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-02-20 13:50+0100\n"
+"PO-Revision-Date: 2018-04-03 14:29+0200\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.4\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Language: cs_CZ\n"
+
+#: setup.php:90 inc/export.class.php:52
+msgid "Used items export"
+msgstr "Export používaných položek"
+
+#: front/export.form.php:41
+msgid "PDF successfully generated."
+msgstr "PDF úspěšně vytvořeno."
+
+#: inc/export.class.php:42
+msgid "Run \"composer install --no-dev\" in the plugin tree"
+msgstr "Ve složce tohoto zásuvného modulu spusťte příkaz „composer install --no-dev“."
+
+#: inc/export.class.php:141
+msgid "Generate new export"
+msgstr "Vytvořit nový export"
+
+#: inc/export.class.php:162
+msgid "Used items export generated"
+msgstr "Export používaných položek vytvořen"
+
+#: inc/export.class.php:176
+msgid "Reference number of export"
+msgstr "Referenční číslo exportu"
+
+#: inc/export.class.php:177
+msgid "Date of export"
+msgstr "Datum exportu"
+
+#: inc/export.class.php:178
+msgid "Author of export"
+msgstr "Autor exportu"
+
+#: inc/export.class.php:179
+msgid "Export document"
+msgstr "Dokument exportu"
+
+#: inc/export.class.php:290
+msgid "Asset export ref : "
+msgstr "Reference exportu majetku: "
+
+#: inc/export.class.php:361 inc/export.class.php:364
+msgid "Signature"
+msgstr "Podpis"
+
+#: inc/export.class.php:424
+msgid "Used-Items-Export"
+msgstr ""
+
+#: inc/config.class.php:49
+msgid "General setup of useditemsexport"
+msgstr "Obecná nastavení useditemexport"
+
+#: inc/config.class.php:72
+msgid "Footer text"
+msgstr "Text zápatí"
+
+#: inc/config.class.php:78
+msgid "Orientation"
+msgstr "Orientace"
+
+#: inc/config.class.php:85
+msgid "Format"
+msgstr "Formát"
+
+#: inc/config.class.php:92
+msgid "Language"
+msgstr "Jazyk"
+
+#: inc/config.class.php:108
+msgid "Landscape"
+msgstr "Na šířku"
+
+#: inc/config.class.php:109
+msgid "Portrait"
+msgstr "Na výšku"
