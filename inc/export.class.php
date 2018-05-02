@@ -248,11 +248,11 @@ class PluginUseditemsexportExport extends CommonDBTM {
          $entity_address.= __('Phone') . ' : ' . $entity->fields["phonenumber"] . '<br />';
       }
 
-      // Get User informations
+      // Get User information
       $User = new User();
       $User->getFromDB($users_id);
 
-      // Get Author informations
+      // Get Author information
       $Author = new User();
       $Author->getFromDB(Session::getLoginUserID());
 
@@ -521,7 +521,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
    }
 
    /**
-    * Install all necessary table for the plugin
+    * Install all necessary tables for the plugin
     *
     * @return boolean True if success
     */
@@ -548,7 +548,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
    }
 
    /**
-    * Uninstall previously installed table of the plugin
+    * Uninstall previously installed tables of the plugin
     *
     * @return boolean True if success
     */

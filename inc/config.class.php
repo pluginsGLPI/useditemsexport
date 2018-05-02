@@ -150,7 +150,7 @@ class PluginUseditemsexportConfig extends CommonDBTM {
    }
 
    /**
-    * Install all necessary table for the plugin
+    * Install all necessary tables for the plugin
     *
     * @return boolean True if success
     */
@@ -190,7 +190,7 @@ class PluginUseditemsexportConfig extends CommonDBTM {
    }
 
    /**
-    * Uninstall previously installed table of the plugin
+    * Uninstall previously installed tables of the plugin
     *
     * @return boolean True if success
     */

@@ -29,7 +29,7 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginUseditemsexportProfile extends CommonDBTM {
 
-   // Necassary rights to edit the rights of this plugin
+   // Necessary rights to edit the rights of this plugin
    static $rightname = "profile";
 
    /**
@@ -62,7 +62,7 @@ class PluginUseditemsexportProfile extends CommonDBTM {
    }
 
    /**
-    * Describe all prossible rights for the plugin
+    * Describe all possible rights for the plugin
     * @return array
    **/
    static function getAllRights() {
