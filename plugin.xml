@@ -14,7 +14,7 @@
          <en><![CDATA[This plugin allows you to export a PDF of the used items by a user.]]></en>
       </long>
    </description>
-   <homepage>https://github.com/pluginsGLPI/useditemsexport</homepage>
+   <homepage>https://pluginsglpi.github.io/useditemsexport/</homepage>
    <download>https://github.com/pluginsGLPI/useditemsexport/releases</download>
    <issues>https://github.com/pluginsGLPI/useditemsexport/issues</issues>
    <readme>https://raw.githubusercontent.com/pluginsGLPI/useditemsexport/master/README.md</readme>
