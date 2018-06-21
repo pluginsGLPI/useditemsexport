@@ -30,7 +30,7 @@
  */
 function plugin_useditemsexport_install() {
 
-   $migration = new Migration(PLUGIN_USEDITEMEXPORT_VERSION);
+   $migration = new Migration(PLUGIN_USEDITEMSEXPORT_VERSION);
 
    // Parse inc directory
    foreach (glob(dirname(__FILE__).'/inc/*') as $filepath) {

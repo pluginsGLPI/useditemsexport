@@ -24,11 +24,12 @@
  */
 
 // Plugin version
-define("PLUGIN_USEDITEMEXPORT_VERSION", "2.0.0");
+define("PLUGIN_USEDITEMSEXPORT_VERSION", "2.0.0");
+
 // Minimal GLPI version, inclusive
-define("PLUGIN_USEDITEMEXPORT_MIN_GLPI", "9.2");
+define("PLUGIN_USEDITEMSEXPORT_MIN_GLPI", "9.2");
 // Maximum GLPI version, exclusive
-define("PLUGIN_USEDITEMEXPORT_MAX_GLPI", "9.3");
+define("PLUGIN_USEDITEMSEXPORT_MAX_GLPI", "9.3");
 
 /**
  * Init hooks of the plugin.
@@ -80,15 +81,15 @@ function plugin_version_useditemsexport() {
 
    return  [
       'name' => __('Used items export', 'useditemsexport'),
-      'version' => PLUGIN_USEDITEMEXPORT_VERSION,
+      'version' => PLUGIN_USEDITEMSEXPORT_VERSION,
       'oldname' => '',
       'license' => 'GPLv2+',
       'author'  => "TECLIB",
       'homepage'=>'https://github.com/pluginsGLPI/useditemsexport',
       'requirements'   => [
          'glpi' => [
-            'min' => PLUGIN_USEDITEMEXPORT_MIN_GLPI,
-            'max' => PLUGIN_USEDITEMEXPORT_MAX_GLPI,
+            'min' => PLUGIN_USEDITEMSEXPORT_MIN_GLPI,
+            'max' => PLUGIN_USEDITEMSEXPORT_MAX_GLPI,
             'dev' => true
          ]
       ]
