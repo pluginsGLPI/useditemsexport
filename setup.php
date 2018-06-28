@@ -1,42 +1,35 @@
 <?php
-/*
- * @version $Id$
- -------------------------------------------------------------------------
- GLPI - Gestionnaire Libre de Parc Informatique
- Copyright (C) 2015-2016 Teclib'.
-
- http://glpi-project.org
-
- based on GLPI - Gestionnaire Libre de Parc Informatique
- Copyright (C) 2003-2014 by the INDEPNET Development Team.
-
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of GLPI.
-
- GLPI is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- GLPI is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with GLPI. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * --------------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of useditemsexport.
+ *
+ * useditemsexport is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * useditemsexport is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * --------------------------------------------------------------------------
+ * @author    François Legastelois
+ * @copyright Copyright © 2015 - 2018 Teclib'
+ * @license   AGPLv3+ http://www.gnu.org/licenses/agpl.txt
+ * @link      https://github.com/pluginsGLPI/useditemsexport
+ * @link      https://pluginsglpi.github.io/useditemsexport/
+ * -------------------------------------------------------------------------
  */
 
 // Plugin version
-define("PLUGIN_USEDITEMEXPORT_VERSION", "2.0.0");
+define("PLUGIN_USEDITEMSEXPORT_VERSION", "2.1.0");
+
 // Minimal GLPI version, inclusive
-define("PLUGIN_USEDITEMEXPORT_MIN_GLPI", "9.2");
+define("PLUGIN_USEDITEMSEXPORT_MIN_GLPI", "9.2");
 // Maximum GLPI version, exclusive
-define("PLUGIN_USEDITEMEXPORT_MAX_GLPI", "9.3");
+define("PLUGIN_USEDITEMSEXPORT_MAX_GLPI", "9.4");
 
 /**
  * Init hooks of the plugin.
@@ -88,15 +81,15 @@ function plugin_version_useditemsexport() {
 
    return  [
       'name' => __('Used items export', 'useditemsexport'),
-      'version' => PLUGIN_USEDITEMEXPORT_VERSION,
+      'version' => PLUGIN_USEDITEMSEXPORT_VERSION,
       'oldname' => '',
       'license' => 'GPLv2+',
       'author'  => "TECLIB",
       'homepage'=>'https://github.com/pluginsGLPI/useditemsexport',
       'requirements'   => [
          'glpi' => [
-            'min' => PLUGIN_USEDITEMEXPORT_MIN_GLPI,
-            'max' => PLUGIN_USEDITEMEXPORT_MAX_GLPI,
+            'min' => PLUGIN_USEDITEMSEXPORT_MIN_GLPI,
+            'max' => PLUGIN_USEDITEMSEXPORT_MAX_GLPI,
             'dev' => true
          ]
       ]
@@ -109,6 +102,25 @@ function plugin_version_useditemsexport() {
  * @return boolean
  */
 function plugin_useditemsexport_check_prerequisites() {
+
+   //Version check is not done by core in GLPI < 9.2 but has to be delegated to core in GLPI >= 9.2.
+   $version = preg_replace('/^((\d+\.?)+).*$/', '$1', GLPI_VERSION);
+   if (version_compare($version, '9.2', '<')) {
+      $matchMinGlpiReq = version_compare($version, PLUGIN_USEDITEMSEXPORT_MIN_GLPI, '>=');
+      $matchMaxGlpiReq = version_compare($version, PLUGIN_USEDITEMSEXPORT_MAX_GLPI, '<');
+
+      if (!$matchMinGlpiReq || !$matchMaxGlpiReq) {
+         echo vsprintf(
+            'This plugin requires GLPI >= %1$s and < %2$s.',
+            [
+               PLUGIN_USEDITEMSEXPORT_MIN_GLPI,
+               PLUGIN_USEDITEMSEXPORT_MAX_GLPI,
+            ]
+         );
+         return false;
+      }
+   }
+
    return true;
 }
 
