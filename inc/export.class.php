@@ -310,7 +310,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
 
                foreach ($used_items as $item_datas) {
 
-            ?>
+                  ?>
             <tr>
                <td style="width: 25%;">
                   <?php
@@ -331,7 +331,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
                   <?php echo $item->getTypeName(1); ?>
                </td>
             </tr>
-            <?php
+                  <?php
 
                }
             }
