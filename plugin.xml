@@ -8,10 +8,12 @@
       <short>
          <fr><![CDATA[Ce plugin permet d'exporter en PDF une liste des éléments utilisés par un utilisateur.]]></fr>
          <en><![CDATA[This plugin allows you to export a PDF of the used items by a user.]]></en>
+         <cs><![CDATA[Tento zásuvný modul umožňuje exportovat do PDF položky, evidované na daného uživatele.]]></cs>
       </short>
       <long>
          <fr><![CDATA[Ce plugin permet d'exporter en PDF une liste des éléments utilisés par un utilisateur.]]></fr>
          <en><![CDATA[This plugin allows you to export a PDF of the used items by a user.]]></en>
+         <cs><![CDATA[Tento zásuvný modul umožňuje exportovat do PDF položky, evidované na daného uživatele.]]></cs>
       </long>
    </description>
    <homepage>https://pluginsglpi.github.io/useditemsexport/</homepage>
@@ -38,6 +40,7 @@
       </version>
    </versions>
    <langs>
+      <lang>cs_CZ</lang>
       <lang>fr_FR</lang>
       <lang>en_GB</lang>
    </langs>
@@ -56,6 +59,12 @@
             <tag>pdf</tag>
             <tag>user</tag>
          </en>
+         <cs>
+            <tag>majetek</tag>
+            <tag>export</tag>
+            <tag>pdf</tag>
+            <tag>uživatel</tag>
+         </cs>
    </tags>
    <screenshots>
       <screenshot>https://raw.githubusercontent.com/pluginsGLPI/useditemsexport/master/screenshots/fr_useditemsexport-tab.png</screenshot>
