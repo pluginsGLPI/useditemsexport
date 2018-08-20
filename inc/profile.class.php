@@ -88,7 +88,7 @@ class PluginUseditemsexportProfile extends CommonDBTM {
       $profileRight = new ProfileRight();
       foreach ($rights as $right => $value) {
          if (!countElementsInTable('glpi_profilerights',
-                                   "`profiles_id`='$profiles_id' AND `name`='$right'")) {
+                                   ['profiles_id' => $profiles_id, 'name' => $right])) {
             $myright['profiles_id'] = $profiles_id;
             $myright['name']        = $right;
             $myright['rights']      = $value;
@@ -159,7 +159,7 @@ class PluginUseditemsexportProfile extends CommonDBTM {
       global $DB;
 
       foreach (self::getAllRights() as $right) {
-         $query = "DELETE FROM `glpi_profilerights` 
+         $query = "DELETE FROM `glpi_profilerights`
                    WHERE `name` = '".$right['field']."'";
          $DB->query($query);
 

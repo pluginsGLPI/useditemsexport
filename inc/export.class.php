@@ -83,8 +83,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
     * @param $item    CommonDBTM object
    **/
    public static function countForItem(CommonDBTM $item) {
-      return countElementsInTable(getTableForItemType(__CLASS__),
-                                    "`users_id` = '".$item->getID()."'");
+      return countElementsInTable(getTableForItemType(__CLASS__), ['users_id' => $item->getID()]);
    }
 
    /**
@@ -434,7 +433,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
    static function getNextNum() {
       global $DB;
 
-      $query = "SELECT MAX(num) as num 
+      $query = "SELECT MAX(num) as num
                   FROM " . self::getTable();
 
       $result = $DB->query($query);
