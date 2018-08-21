@@ -170,7 +170,7 @@ class PluginUseditemsexportConfig extends CommonDBTM {
                      `format` VARCHAR(2) NOT NULL DEFAULT 'A4',
                      `language` VARCHAR(2) NOT NULL DEFAULT 'fr',
                PRIMARY KEY  (`id`)
-            ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+            ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
             $DB->query($query) or die ($DB->error());
 
          $query = "INSERT INTO `$table` (id) VALUES (1)";

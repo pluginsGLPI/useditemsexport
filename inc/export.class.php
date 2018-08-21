@@ -541,7 +541,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
                   `authors_id` INT(11) NOT NULL DEFAULT '0',
                   `documents_id` INT(11) NOT NULL DEFAULT '0',
                PRIMARY KEY  (`id`)
-            ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+            ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
             $DB->query($query) or die ($DB->error());
       }
    }
