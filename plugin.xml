@@ -6,14 +6,14 @@
    <logo>https://raw.githubusercontent.com/pluginsGLPI/useditemsexport/master/plugin.png</logo>
    <description>
       <short>
-         <fr><![CDATA[Ce plugin permet d'exporter en PDF une liste des éléments utilisés par un utilisateur.]]></fr>
+         <cs><![CDATA[Tento zásuvný modul umožňuje exportovat do PDF položky, evidované u daného uživatele.]]></cs>
          <en><![CDATA[This plugin allows you to export a PDF of the used items by a user.]]></en>
-         <cs><![CDATA[Tento zásuvný modul umožňuje exportovat do PDF položky, evidované na daného uživatele.]]></cs>
+         <fr><![CDATA[Ce plugin permet d'exporter en PDF une liste des éléments utilisés par un utilisateur.]]></fr>
       </short>
       <long>
-         <fr><![CDATA[Ce plugin permet d'exporter en PDF une liste des éléments utilisés par un utilisateur.]]></fr>
+         <cs><![CDATA[Tento zásuvný modul umožňuje exportovat do PDF položky, evidované u daného uživatele.]]></cs>
          <en><![CDATA[This plugin allows you to export a PDF of the used items by a user.]]></en>
-         <cs><![CDATA[Tento zásuvný modul umožňuje exportovat do PDF položky, evidované na daného uživatele.]]></cs>
+         <fr><![CDATA[Ce plugin permet d'exporter en PDF une liste des éléments utilisés par un utilisateur.]]></fr>
       </long>
    </description>
    <homepage>https://pluginsglpi.github.io/useditemsexport/</homepage>
@@ -41,30 +41,31 @@
    </versions>
    <langs>
       <lang>cs_CZ</lang>
-      <lang>fr_FR</lang>
       <lang>en_GB</lang>
+      <lang>fi_FI</lang>
+      <lang>fr_FR</lang>
    </langs>
    <license>GPLv3</license>
    <category></category>
    <tags>
-         <fr>
-            <tag>parc</tag>
-            <tag>export</tag>
-            <tag>pdf</tag>
-            <tag>utilisateur</tag>
-         </fr>
-         <en>
-            <tag>asset</tag>
-            <tag>export</tag>
-            <tag>pdf</tag>
-            <tag>user</tag>
-         </en>
          <cs>
             <tag>majetek</tag>
             <tag>export</tag>
             <tag>pdf</tag>
             <tag>uživatel</tag>
          </cs>
+         <en>
+            <tag>asset</tag>
+            <tag>export</tag>
+            <tag>pdf</tag>
+            <tag>user</tag>
+         </en>
+         <fr>
+            <tag>parc</tag>
+            <tag>export</tag>
+            <tag>pdf</tag>
+            <tag>utilisateur</tag>
+         </fr>
    </tags>
    <screenshots>
       <screenshot>https://raw.githubusercontent.com/pluginsGLPI/useditemsexport/master/screenshots/fr_useditemsexport-tab.png</screenshot>
