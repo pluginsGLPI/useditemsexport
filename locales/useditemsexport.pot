@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-28 12:14+0000\n"
+"POT-Creation-Date: 2018-08-24 14:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -57,38 +57,38 @@ msgstr ""
 msgid "Used items export"
 msgstr ""
 
-#: inc/export.class.php:133
+#: inc/export.class.php:132
 msgid "Generate new export"
 msgstr ""
 
-#: inc/export.class.php:154
+#: inc/export.class.php:153
 msgid "Used items export generated"
 msgstr ""
 
-#: inc/export.class.php:168
+#: inc/export.class.php:167
 msgid "Reference number of export"
 msgstr ""
 
-#: inc/export.class.php:169
+#: inc/export.class.php:168
 msgid "Date of export"
 msgstr ""
 
-#: inc/export.class.php:170
+#: inc/export.class.php:169
 msgid "Author of export"
 msgstr ""
 
-#: inc/export.class.php:171
+#: inc/export.class.php:170
 msgid "Export document"
 msgstr ""
 
-#: inc/export.class.php:282
+#: inc/export.class.php:281
 msgid "Asset export ref : "
 msgstr ""
 
-#: inc/export.class.php:353 inc/export.class.php:356
+#: inc/export.class.php:352 inc/export.class.php:355
 msgid "Signature"
 msgstr ""
 
-#: inc/export.class.php:416
+#: inc/export.class.php:415
 msgid "Used-Items-Export"
 msgstr ""
