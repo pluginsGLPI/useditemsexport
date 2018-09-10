@@ -83,8 +83,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
     * @param $item    CommonDBTM object
    **/
    public static function countForItem(CommonDBTM $item) {
-      return countElementsInTable(getTableForItemType(__CLASS__),
-                                    "`users_id` = '".$item->getID()."'");
+      return countElementsInTable(getTableForItemType(__CLASS__), ['users_id' => $item->getID()]);
    }
 
    /**
@@ -434,7 +433,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
    static function getNextNum() {
       global $DB;
 
-      $query = "SELECT MAX(num) as num 
+      $query = "SELECT MAX(num) as num
                   FROM " . self::getTable();
 
       $result = $DB->query($query);
@@ -542,7 +541,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
                   `authors_id` INT(11) NOT NULL DEFAULT '0',
                   `documents_id` INT(11) NOT NULL DEFAULT '0',
                PRIMARY KEY  (`id`)
-            ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+            ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
             $DB->query($query) or die ($DB->error());
       }
    }
