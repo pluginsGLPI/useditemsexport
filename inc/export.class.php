@@ -503,6 +503,30 @@ class PluginUseditemsexportExport extends CommonDBTM {
          }
       }
 
+      // Consumables
+      $consumables = $DB->request(
+         [
+            'SELECT' => ['name', 'otherserial'],
+            'FROM'   => ConsumableItem::getTable(),
+            'WHERE'  => [
+               'id' => new QuerySubQuery(
+                  [
+                     'SELECT' => 'consumableitems_id',
+                     'FROM'   => Consumable::getTable(),
+                     'WHERE'  => [
+                        'itemtype' => User::class,
+                        'items_id' => $ID
+                     ],
+                  ]
+               )
+            ],
+         ]
+      );
+
+      foreach ($consumables as $data) {
+         $items['ConsumableItem'][] = $data;
+      }
+
       return $items;
    }
 
