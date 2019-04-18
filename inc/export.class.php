@@ -380,7 +380,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
       $contentPDF = $pdf->Output('', 'S');
 
       // Store PDF in GLPi upload dir and create document
-      file_put_contents(GLPI_TMP_DIR . '/' . $refnumber.'.pdf', $contentPDF);
+      file_put_contents(GLPI_UPLOAD_DIR . '/' . $refnumber.'.pdf', $contentPDF);
       $documents_id = self::createDocument($refnumber);
 
       // Add log for last generated PDF
