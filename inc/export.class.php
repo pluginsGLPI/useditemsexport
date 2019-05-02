@@ -380,7 +380,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
       $contentPDF = $pdf->Output('', 'S');
 
       // Store PDF in GLPi upload dir and create document
-      file_put_contents(GLPI_TMP_DIR . '/' . $refnumber.'.pdf', $contentPDF);
+      file_put_contents(GLPI_UPLOAD_DIR . '/' . $refnumber.'.pdf', $contentPDF);
       $documents_id = self::createDocument($refnumber);
 
       // Add log for last generated PDF
@@ -501,6 +501,30 @@ class PluginUseditemsexportExport extends CommonDBTM {
                }
             }
          }
+      }
+
+      // Consumables
+      $consumables = $DB->request(
+         [
+            'SELECT' => ['name', 'otherserial'],
+            'FROM'   => ConsumableItem::getTable(),
+            'WHERE'  => [
+               'id' => new QuerySubQuery(
+                  [
+                     'SELECT' => 'consumableitems_id',
+                     'FROM'   => Consumable::getTable(),
+                     'WHERE'  => [
+                        'itemtype' => User::class,
+                        'items_id' => $ID
+                     ],
+                  ]
+               )
+            ],
+         ]
+      );
+
+      foreach ($consumables as $data) {
+         $items['ConsumableItem'][] = $data;
       }
 
       return $items;
