@@ -24,7 +24,7 @@
  */
 
 // Plugin version
-define("PLUGIN_USEDITEMSEXPORT_VERSION", "2.2.0");
+define("PLUGIN_USEDITEMSEXPORT_VERSION", "2.3.0");
 
 // Minimal GLPI version, inclusive
 define("PLUGIN_USEDITEMSEXPORT_MIN_GLPI", "9.2");
