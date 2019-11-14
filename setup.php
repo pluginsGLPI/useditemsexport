@@ -29,7 +29,7 @@ define("PLUGIN_USEDITEMSEXPORT_VERSION", "2.3.0");
 // Minimal GLPI version, inclusive
 define("PLUGIN_USEDITEMSEXPORT_MIN_GLPI", "9.2");
 // Maximum GLPI version, exclusive
-define("PLUGIN_USEDITEMSEXPORT_MAX_GLPI", "9.5");
+define("PLUGIN_USEDITEMSEXPORT_MAX_GLPI", "9.6");
 
 /**
  * Init hooks of the plugin.
