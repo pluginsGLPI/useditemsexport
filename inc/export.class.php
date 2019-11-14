@@ -126,7 +126,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
 
          echo "<div class='center'>";
          echo "<form method='post' name='useditemsexport_form$rand' id='useditemsexport_form$rand'
-                  action=\"" . $CFG_GLPI["root_doc"] . "/plugins/useditemsexport/front/export.form.php\">";
+                  action=\"" . Plugin::getWebDir('useditemsexport') . "/front/export.form.php\">";
 
          echo "<table class='tab_cadre_fixehov'>";
             echo "<tr class='tab_bg_2'><th colspan='2'>".__('Generate new export', 'useditemsexport');
@@ -341,10 +341,10 @@ class PluginUseditemsexportExport extends CommonDBTM {
          <table style="border-collapse: collapse;">
             <tr>
                <td style="width: 50%; border-bottom: 1px solid #000000;">
-                  <strong><?php echo $Author->getRawName(); ?> :</strong>
+                  <strong><?php echo $Author->getFriendlyName(); ?> :</strong>
                </td>
                <td style="width: 50%; border-bottom: 1px solid #000000">
-                  <strong><?php echo $User->getRawName(); ?> :</strong>
+                  <strong><?php echo $User->getFriendlyName(); ?> :</strong>
                </td>
             </tr>
             <tr>
@@ -496,7 +496,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
             $type_name = $item->getTypeName();
 
             if ($DB->numrows($result) > 0) {
-               while ($data = $DB->fetch_assoc($result)) {
+               while ($data = $DB->fetchAssoc($result)) {
                   $items[$itemtype][] = $data;
                }
             }
@@ -559,7 +559,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
                   `id` INT(11) NOT NULL AUTO_INCREMENT,
                   `users_id` INT(11) NOT NULL DEFAULT '0',
-                  `date_mod` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+                  `date_mod` TIMESTAMP NULL DEFAULT NULL,
                   `num` SMALLINT(2) NOT NULL DEFAULT 0,
                   `refnumber` VARCHAR(9) NOT NULL DEFAULT '0000-0000',
                   `authors_id` INT(11) NOT NULL DEFAULT '0',
