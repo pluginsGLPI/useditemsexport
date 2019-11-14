@@ -496,7 +496,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
             $type_name = $item->getTypeName();
 
             if ($DB->numrows($result) > 0) {
-               while ($data = $DB->fetch_assoc($result)) {
+               while ($data = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($result) : $DB->fetch_assoc($result))) {
                   $items[$itemtype][] = $data;
                }
             }
