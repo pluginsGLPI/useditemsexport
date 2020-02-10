@@ -559,7 +559,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
                   `id` INT(11) NOT NULL AUTO_INCREMENT,
                   `users_id` INT(11) NOT NULL DEFAULT '0',
-                  `date_mod` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+                  `date_mod` TIMESTAMP NULL DEFAULT NULL,
                   `num` SMALLINT(2) NOT NULL DEFAULT 0,
                   `refnumber` VARCHAR(9) NOT NULL DEFAULT '0000-0000',
                   `authors_id` INT(11) NOT NULL DEFAULT '0',
