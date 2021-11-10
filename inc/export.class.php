@@ -28,17 +28,11 @@
  * @link      https://github.com/pluginsGLPI/useditemsexport
  * -------------------------------------------------------------------------
  */
+Use Mpdf\Mpdf;
+use Mpdf\Output\Destination;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
-}
-
-$autoload = dirname(__DIR__) . '/vendor/autoload.php';
-if (file_exists($autoload)) {
-   require_once $autoload;
-} else {
-   echo __('Run "composer install --no-dev" in the plugin tree', 'useditemsexport');
-   die();
 }
 
 class PluginUseditemsexportExport extends CommonDBTM {
@@ -130,7 +124,6 @@ class PluginUseditemsexportExport extends CommonDBTM {
       if ($cancreate) {
          $rand = mt_rand();
 
-         echo "<div class='center'>";
          echo "<form method='post' name='useditemsexport_form$rand' id='useditemsexport_form$rand'
                   action=\"" . Plugin::getWebDir('useditemsexport') . "/front/export.form.php\">";
 
@@ -142,10 +135,7 @@ class PluginUseditemsexportExport extends CommonDBTM {
          echo "</table>";
 
          Html::closeForm();
-         echo "</div>";
       }
-
-      echo "<div class='center'>";
 
       if ($canpurge && count($exports) > 0) {
          $rand = mt_rand();
@@ -216,7 +206,6 @@ class PluginUseditemsexportExport extends CommonDBTM {
          Html::closeForm();
 
       }
-      echo "</div>";
 
    }
 
@@ -372,18 +361,15 @@ class PluginUseditemsexportExport extends CommonDBTM {
 
       $content = ob_get_clean();
 
-      // Generate PDF with HTML2PDF lib
-      $pdf = new HTML2PDF($useditemsexport_config['orientation'],
-                          $useditemsexport_config['format'],
-                          $useditemsexport_config['language'],
-                          true,
-                          'UTF-8'
-      );
-
-      $pdf->pdf->SetDisplayMode('fullpage');
-      $pdf->writeHTML($content);
-
-      $contentPDF = $pdf->Output('', 'S');
+      // Generate PDF using mdpf lib
+      $mpdf = new Mpdf([
+          'orientation' => $useditemsexport_config['orientation'],
+          'format'      => $useditemsexport_config['format'],
+          'mode'        => $useditemsexport_config['language'],
+      ]);
+      $mpdf->SetDisplayMode('fullpage');
+      $mpdf->WriteHTML($content);
+      $contentPDF = $mpdf->Output('', Destination::STRING_RETURN);
 
       // Store PDF in GLPi upload dir and create document
       file_put_contents(GLPI_UPLOAD_DIR . '/' . $refnumber.'.pdf', $contentPDF);
@@ -557,21 +543,25 @@ class PluginUseditemsexportExport extends CommonDBTM {
    static function install(Migration $migration) {
       global $DB;
 
+      $default_charset = DBConnection::getDefaultCharset();
+      $default_collation = DBConnection::getDefaultCollation();
+      $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
+
       $table = getTableForItemType(__CLASS__);
 
       if (!$DB->tableExists($table)) {
          $migration->displayMessage("Installing $table");
 
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
-                  `id` INT(11) NOT NULL AUTO_INCREMENT,
-                  `users_id` INT(11) NOT NULL DEFAULT '0',
+                  `id` INT {$default_key_sign} NOT NULL AUTO_INCREMENT,
+                  `users_id` INT {$default_key_sign} NOT NULL DEFAULT '0',
                   `date_mod` TIMESTAMP NULL DEFAULT NULL,
-                  `num` SMALLINT(2) NOT NULL DEFAULT 0,
+                  `num` SMALLINT NOT NULL DEFAULT 0,
                   `refnumber` VARCHAR(9) NOT NULL DEFAULT '0000-0000',
-                  `authors_id` INT(11) NOT NULL DEFAULT '0',
-                  `documents_id` INT(11) NOT NULL DEFAULT '0',
+                  `authors_id` INT {$default_key_sign} NOT NULL DEFAULT '0',
+                  `documents_id` INT {$default_key_sign} NOT NULL DEFAULT '0',
                PRIMARY KEY  (`id`)
-            ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+            ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
             $DB->query($query) or die ($DB->error());
       }
    }

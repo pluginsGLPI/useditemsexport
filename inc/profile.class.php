@@ -105,26 +105,16 @@ class PluginUseditemsexportProfile extends CommonDBTM {
       }
    }
 
-
-   /**
-   * Show profile form
-   *
-   * @param $items_id integer id of the profile
-   * @param $target value url of target
-   *
-   * @return nothing
-   **/
-   function showForm($profiles_id = 0, $openform = true, $closeform = true) {
+   function showForm($ID, array $options = []) {
 
       echo "<div class='firstbloc'>";
-      if (($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]))
-          && $openform) {
+      if ($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE])) {
          $profile = new Profile();
          echo "<form method='post' action='".$profile->getFormURL()."'>";
       }
 
       $profile = new Profile();
-      $profile->getFromDB($profiles_id);
+      $profile->getFromDB($ID);
       if ($profile->getField('interface') == 'central') {
          $rights = $this->getAllRights();
          $profile->displayRightsChoiceMatrix($rights, ['canedit'       => $canedit,
@@ -132,10 +122,9 @@ class PluginUseditemsexportProfile extends CommonDBTM {
                                                          'title'         => __('General')]);
       }
 
-      if ($canedit
-          && $closeform) {
+      if ($canedit) {
          echo "<div class='center'>";
-         echo Html::hidden('id', ['value' => $profiles_id]);
+         echo Html::hidden('id', ['value' => $ID]);
          echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
          echo "</div>\n";
          Html::closeForm();

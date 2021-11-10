@@ -163,20 +163,24 @@ class PluginUseditemsexportConfig extends CommonDBTM {
    static function install(Migration $migration) {
       global $DB;
 
+      $default_charset = DBConnection::getDefaultCharset();
+      $default_collation = DBConnection::getDefaultCollation();
+      $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
+
       $table = getTableForItemType(__CLASS__);
 
       if (!$DB->tableExists($table)) {
          $migration->displayMessage("Installing $table");
 
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
-                     `id` int(11) NOT NULL AUTO_INCREMENT,
-                     `footer_text` VARCHAR(255) COLLATE utf8_unicode_ci DEFAULT '',
-                     `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+                     `id` int {$default_key_sign} NOT NULL AUTO_INCREMENT,
+                     `footer_text` VARCHAR(255) DEFAULT '',
+                     `is_active` TINYINT NOT NULL DEFAULT 1,
                      `orientation` VARCHAR(1) NOT NULL DEFAULT 'P',
                      `format` VARCHAR(2) NOT NULL DEFAULT 'A4',
                      `language` VARCHAR(2) NOT NULL DEFAULT 'fr',
                PRIMARY KEY  (`id`)
-            ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+            ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
             $DB->query($query) or die ($DB->error());
 
          $query = "INSERT INTO `$table` (id) VALUES (1)";
