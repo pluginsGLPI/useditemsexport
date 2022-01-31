@@ -4,7 +4,7 @@
         "spipu/html2pdf": "^4.6"
     },
     "require-dev": {
-        "glpi-project/tools": "^0.1"
+        "glpi-project/tools": "^0.4"
     },
     "config": {
         "optimize-autoloader": true,
