@@ -1,7 +1,7 @@
 {
     "require": {
         "php": "^7.2",
-        "spipu/html2pdf": "^4.6"
+        "spipu/html2pdf": "^5.2"
     },
     "require-dev": {
         "glpi-project/tools": "^0.4"
