@@ -1,14 +1,14 @@
 # English translations for PACKAGE package.
-# Copyright (C) 2020 THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) 2022 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Automatically generated, 2020.
+# Automatically generated, 2022.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-05 11:46+0000\n"
-"PO-Revision-Date: 2020-07-05 11:46+0000\n"
+"POT-Creation-Date: 2022-04-20 14:43+0000\n"
+"PO-Revision-Date: 2022-04-20 14:43+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en_GB\n"
@@ -17,78 +17,74 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: front/export.form.php:33
-msgid "PDF successfully generated."
-msgstr "PDF successfully generated."
-
-#: inc/config.class.php:41
-msgid "General setup of useditemsexport"
-msgstr "General setup of useditemsexport"
-
-#: inc/config.class.php:64
-msgid "Footer text"
-msgstr "Footer text"
-
-#: inc/config.class.php:70
-msgid "Orientation"
-msgstr "Orientation"
-
-#: inc/config.class.php:77
-msgid "Format"
-msgstr "Format"
-
-#: inc/config.class.php:84
-msgid "Language"
-msgstr "Language"
-
-#: inc/config.class.php:100
-msgid "Landscape"
-msgstr "Landscape"
-
-#: inc/config.class.php:101
-msgid "Portrait"
-msgstr "Portrait"
-
-#: inc/export.class.php:34
-msgid "Run \"composer install --no-dev\" in the plugin tree"
-msgstr "Run \"composer install --no-dev\" in the plugin tree"
-
-#: inc/export.class.php:44 setup.php:83
-msgid "Used items export"
-msgstr "Used items export"
-
-#: inc/export.class.php:132
-msgid "Generate new export"
-msgstr "Generate new export"
-
-#: inc/export.class.php:153
-msgid "Used items export generated"
-msgstr "Used items export generated"
-
-#: inc/export.class.php:167
-msgid "Reference number of export"
-msgstr "Reference number of export"
-
-#: inc/export.class.php:168
-msgid "Date of export"
-msgstr "Date of export"
-
-#: inc/export.class.php:169
-msgid "Author of export"
-msgstr "Author of export"
-
-#: inc/export.class.php:170
-msgid "Export document"
-msgstr "Export document"
-
-#: inc/export.class.php:281
+#: inc/export.class.php:276
 msgid "Asset export ref : "
 msgstr "Asset export ref : "
 
-#: inc/export.class.php:352 inc/export.class.php:355
+#: inc/export.class.php:165
+msgid "Author of export"
+msgstr "Author of export"
+
+#: inc/export.class.php:164
+msgid "Date of export"
+msgstr "Date of export"
+
+#: inc/export.class.php:166
+msgid "Export document"
+msgstr "Export document"
+
+#: inc/config.class.php:70
+msgid "Footer text"
+msgstr "Footer text"
+
+#: inc/config.class.php:83
+msgid "Format"
+msgstr "Format"
+
+#: inc/config.class.php:47
+msgid "General setup of useditemsexport"
+msgstr "General setup of useditemsexport"
+
+#: inc/export.class.php:131
+msgid "Generate new export"
+msgstr "Generate new export"
+
+#: inc/config.class.php:106
+msgid "Landscape"
+msgstr "Landscape"
+
+#: inc/config.class.php:90
+msgid "Language"
+msgstr "Language"
+
+#: inc/config.class.php:76
+msgid "Orientation"
+msgstr "Orientation"
+
+#: front/export.form.php:39
+msgid "PDF successfully generated."
+msgstr "PDF successfully generated."
+
+#: inc/config.class.php:107
+msgid "Portrait"
+msgstr "Portrait"
+
+#: inc/export.class.php:163
+msgid "Reference number of export"
+msgstr "Reference number of export"
+
+#: inc/export.class.php:347 inc/export.class.php:350
 msgid "Signature"
 msgstr "Signature"
 
-#: inc/export.class.php:415
+#: inc/export.class.php:44 setup.php:89
+msgid "Used items export"
+msgstr "Used items export"
+
+#: inc/export.class.php:149
+msgid "Used items export generated"
+msgstr "Used items export generated"
+
+#: inc/export.class.php:407
 msgid "Used-Items-Export"
 msgstr "Used-Items-Export"
