@@ -28,8 +28,6 @@
  * @link      https://github.com/pluginsGLPI/useditemsexport
  * -------------------------------------------------------------------------
  */
-Use Mpdf\Mpdf;
-use Mpdf\Output\Destination;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
@@ -361,15 +359,16 @@ class PluginUseditemsexportExport extends CommonDBTM {
 
       $content = ob_get_clean();
 
-      // Generate PDF using mdpf lib
-      $mpdf = new Mpdf([
-          'orientation' => $useditemsexport_config['orientation'],
-          'format'      => $useditemsexport_config['format'],
-          'mode'        => $useditemsexport_config['language'],
-      ]);
-      $mpdf->SetDisplayMode('fullpage');
-      $mpdf->WriteHTML($content);
-      $contentPDF = $mpdf->Output('', Destination::STRING_RETURN);
+      // Generate PDF
+      $pdf = new TCPDF(
+          $useditemsexport_config['orientation'],
+          'mm',
+          $useditemsexport_config['format'],
+      );
+      $pdf->SetDisplayMode('fullpage');
+      $pdf->AddPage();
+      $pdf->WriteHTML($content);
+      $contentPDF = $pdf->Output('', 'S');
 
       // Store PDF in GLPi upload dir and create document
       file_put_contents(GLPI_UPLOAD_DIR . '/' . $refnumber.'.pdf', $contentPDF);
