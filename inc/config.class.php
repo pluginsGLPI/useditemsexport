@@ -86,13 +86,6 @@ class PluginUseditemsexportConfig extends CommonDBTM {
       echo "</td>";
       echo "</tr>";
 
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Language', 'useditemsexport') . "</td>";
-      echo "<td>";
-         self::dropdownLanguage($this->fields["language"]);
-      echo "</td>";
-      echo "</tr>";
-
       $this->showFormButtons($options);
    }
 
@@ -118,28 +111,6 @@ class PluginUseditemsexportConfig extends CommonDBTM {
                         ['A3' => __('A3'),
                               'A4' => __('A4'),
                               'A5' => __('A5')],
-                        ['value'  => $value]);
-   }
-
-   /**
-    * Show dropdown Language (fr, en, it, etc...)
-    * @param value (current preselected value)
-    * @return nothing (display dropdown)
-    */
-   function dropdownLanguage($value) {
-      global $CFG_GLPI;
-
-      $supported_languages = ['ca','cs','da','de','en','es','fr','it','nl','pt','tr'];
-
-      $languages = [];
-      foreach ($CFG_GLPI['languages'] as $lang => $datas) {
-         $short_code = substr($lang, 0, 2);
-         if (in_array($short_code, $supported_languages)) {
-            $languages[$short_code] = $datas[0];
-         }
-      }
-
-      Dropdown::showFromArray("language", $languages,
                         ['value'  => $value]);
    }
 
@@ -178,7 +149,6 @@ class PluginUseditemsexportConfig extends CommonDBTM {
                      `is_active` TINYINT NOT NULL DEFAULT 1,
                      `orientation` VARCHAR(1) NOT NULL DEFAULT 'P',
                      `format` VARCHAR(2) NOT NULL DEFAULT 'A4',
-                     `language` VARCHAR(2) NOT NULL DEFAULT 'fr',
                PRIMARY KEY  (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
             $DB->query($query) or die ($DB->error());
@@ -186,6 +156,7 @@ class PluginUseditemsexportConfig extends CommonDBTM {
          $query = "INSERT INTO `$table` (id) VALUES (1)";
          $DB->query($query) or die ($DB->error());
       }
+      $migration->dropField($table, 'language'); // useless field removed in 2.5.1
 
       $migration->displayMessage("Create useditemsexport dir");
       if (!is_dir(GLPI_PLUGIN_DOC_DIR.'/useditemsexport')) {
