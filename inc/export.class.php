@@ -360,13 +360,10 @@ class PluginUseditemsexportExport extends CommonDBTM {
       $content = ob_get_clean();
 
       // Generate PDF
-      $pdf = new TCPDF(
-          $useditemsexport_config['orientation'],
-          'mm',
-          $useditemsexport_config['format'],
-      );
-      $pdf->SetDisplayMode('fullpage');
-      $pdf->AddPage();
+      $pdf = new GLPIPDF([
+         'orientation' => $useditemsexport_config['orientation'],
+         'format'      => $useditemsexport_config['format'],
+      ]);
       $pdf->WriteHTML($content);
       $contentPDF = $pdf->Output('', 'S');
 
