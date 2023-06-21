@@ -153,8 +153,7 @@ class PluginUseditemsexportConfig extends CommonDBTM {
             ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
             $DB->query($query) or die ($DB->error());
 
-         $query = "INSERT INTO `$table` (id) VALUES (1)";
-         $DB->query($query) or die ($DB->error());
+         $DB->insertOrDie($table, ['id' => 1]);
       }
       $migration->dropField($table, 'language'); // useless field removed in 2.5.1
 

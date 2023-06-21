@@ -154,9 +154,7 @@ class PluginUseditemsexportProfile extends CommonDBTM {
       global $DB;
 
       foreach (self::getAllRights() as $right) {
-         $query = "DELETE FROM `glpi_profilerights`
-                   WHERE `name` = '".$right['field']."'";
-         $DB->query($query);
+         $DB->delete('glpi_profilerights', ['name' => $right['field']]);
 
          if (isset($_SESSION['glpiactiveprofile'][$right['field']])) {
             unset($_SESSION['glpiactiveprofile'][$right['field']]);
