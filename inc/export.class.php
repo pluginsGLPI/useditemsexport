@@ -97,7 +97,11 @@ class PluginUseditemsexportExport extends CommonDBTM {
       $exports = [];
 
       // Get default one
-      foreach ($DB->request(getTableForItemType(__CLASS__), "`users_id` = '$users_id'") as $data) {
+      $it = $DB->request([
+         'FROM' => getTableForItemType(__CLASS__),
+         'WHERE' => ['users_id' => $users_id]
+      ]);
+      foreach ($it as $data) {
          $exports[$data['id']] = $data;
       }
 
@@ -421,11 +425,11 @@ class PluginUseditemsexportExport extends CommonDBTM {
    static function getNextNum() {
       global $DB;
 
-      $query = "SELECT MAX(num) as num
-                  FROM " . self::getTable();
-
-      $result = $DB->query($query);
-      $nextNum = $DB->result($result, 0, 'num');
+      $result = $DB->request([
+         'SELECT' => [new QueryExpression('MAX(' . $DB::quoteName('num') . ') AS ' . $DB::quoteName('num'))],
+         'FROM'   => self::getTable(),
+      ]);
+      $nextNum = count($result) ? $result->current()['num'] : false;
       if (!$nextNum) {
          return 1;
       } else {
@@ -469,22 +473,23 @@ class PluginUseditemsexportExport extends CommonDBTM {
          }
          if ($item->canView()) {
             $itemtable = getTableForItemType($itemtype);
-            $query = "SELECT *
-                      FROM `$itemtable`
-                      WHERE `users_id` = '$ID'";
+            $criteria = [
+               'FROM' => $itemtable,
+               'WHERE' => ['users_id' => $ID]
+            ];
 
             if ($item->maybeTemplate()) {
-               $query .= " AND `is_template` = '0' ";
+               $criteria['WHERE']['is_template'] = '0';
             }
             if ($item->maybeDeleted()) {
-               $query .= " AND `is_deleted` = '0' ";
+               $criteria['WHERE']['is_deleted'] = '0';
             }
-            $result    = $DB->query($query);
+            $result    = $DB->request($criteria);
 
             $type_name = $item->getTypeName();
 
-            if ($DB->numrows($result) > 0) {
-               while ($data = $DB->fetchAssoc($result)) {
+            if (count($result) > 0) {
+               foreach ($result as $data) {
                   $items[$itemtype][] = $data;
                }
             }
