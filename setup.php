@@ -45,7 +45,8 @@ define("PLUGIN_USEDITEMSEXPORT_MAX_GLPI", "10.0.99");
  */
 function plugin_init_useditemsexport()
 {
-    global $PLUGIN_HOOKS, $CFG_GLPI;
+    /** @var array $PLUGIN_HOOKS */
+    global $PLUGIN_HOOKS;
 
     $plugin = new Plugin();
 

@@ -58,11 +58,9 @@ class PluginUseditemsexportExport extends CommonDBTM
         return '';
     }
 
-   /**
-    * @see CommonGLPI::displayTabContentForItem()
-   **/
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
+        /** @var array $CFG_GLPI */
         global $CFG_GLPI;
 
         if ($item->getType() == 'User') {
@@ -75,6 +73,8 @@ class PluginUseditemsexportExport extends CommonDBTM
                 echo "<b>" . __("Access denied") . "</b></div>";
             }
         }
+
+        return true;
     }
 
    /**
@@ -94,6 +94,7 @@ class PluginUseditemsexportExport extends CommonDBTM
    **/
     public static function getAllForUser($users_id)
     {
+        /** @var DBmysql $DB */
         global $DB;
 
         $exports = [];
@@ -113,12 +114,10 @@ class PluginUseditemsexportExport extends CommonDBTM
    /**
     * @param CommonDBTM $item
     * @param array $options
-    * @return nothing
+    * @return void
     */
     public function showForUser($item, $options = [])
     {
-        global $DB, $CFG_GLPI;
-
         $users_id = $item->getField('id');
 
         $exports = self::getAllForUser($users_id);
@@ -420,6 +419,7 @@ class PluginUseditemsexportExport extends CommonDBTM
     */
     public static function getNextNum()
     {
+        /** @var DBmysql $DB */
         global $DB;
 
         $result = $DB->request([
@@ -444,6 +444,7 @@ class PluginUseditemsexportExport extends CommonDBTM
     */
     public static function getNextRefnumber()
     {
+        /** @var DBmysql $DB */
         global $DB;
 
         if ($nextNum = self::getNextNum()) {
@@ -462,6 +463,10 @@ class PluginUseditemsexportExport extends CommonDBTM
     */
     public static function getAllUsedItemsForUser($ID)
     {
+        /**
+         * @var DBmysql $DB
+         * @var array $CFG_GLPI
+         */
         global $DB, $CFG_GLPI;
 
         $items = [];
@@ -525,7 +530,7 @@ class PluginUseditemsexportExport extends CommonDBTM
    /**
     * Clean GLPi DB on export purge
     *
-    * @return nothing
+    * @return void
     */
     public function cleanDBonPurge()
     {
@@ -543,6 +548,7 @@ class PluginUseditemsexportExport extends CommonDBTM
     */
     public static function install(Migration $migration)
     {
+        /** @var DBmysql $DB */
         global $DB;
 
         $default_charset = DBConnection::getDefaultCharset();
@@ -566,6 +572,8 @@ class PluginUseditemsexportExport extends CommonDBTM
             ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
             $DB->query($query) or die($DB->error());
         }
+
+        return true;
     }
 
    /**
@@ -575,11 +583,14 @@ class PluginUseditemsexportExport extends CommonDBTM
     */
     public static function uninstall()
     {
+        /** @var DBmysql $DB */
         global $DB;
 
         $table = getTableForItemType(__CLASS__);
 
         $query = "DROP TABLE IF EXISTS  `" . $table . "`";
         $DB->query($query) or die($DB->error());
+
+        return true;
     }
 }

@@ -55,9 +55,7 @@ class PluginUseditemsexportProfile extends CommonDBTM
    **/
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
-        global $CFG_GLPI;
-
-        if ($item->getType() == 'Profile') {
+        if ($item instanceof Profile) {
             $ID = $item->getID();
             $prof = new self();
            //In case there's no right for this profile, create it
@@ -144,6 +142,8 @@ class PluginUseditemsexportProfile extends CommonDBTM
             Html::closeForm();
         }
         echo "</div>";
+
+        return true;
     }
 
    /**
@@ -160,6 +160,8 @@ class PluginUseditemsexportProfile extends CommonDBTM
                 [$right['field'] => $right['default']]
             );
         }
+
+        return true;
     }
 
    /**
@@ -169,6 +171,7 @@ class PluginUseditemsexportProfile extends CommonDBTM
     */
     public static function uninstall()
     {
+        /** @var DBmysql $DB */
         global $DB;
 
         foreach (self::getAllRights() as $right) {
@@ -178,5 +181,7 @@ class PluginUseditemsexportProfile extends CommonDBTM
                 unset($_SESSION['glpiactiveprofile'][$right['field']]);
             }
         }
+
+        return true;
     }
 }

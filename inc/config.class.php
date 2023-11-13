@@ -40,7 +40,7 @@ class PluginUseditemsexportConfig extends CommonDBTM
    /**
     * Display name of itemtype
     *
-    * @return value name of this itemtype
+    * @return string
     **/
     public static function getTypeName($nb = 0)
     {
@@ -54,7 +54,7 @@ class PluginUseditemsexportConfig extends CommonDBTM
     * @param $ID        Integer : ID of the item
     * @param $options   array
     *
-    * @return Nothing (display)
+    * @return void (display)
    **/
     public function showForm($ID, $options = [])
     {
@@ -94,7 +94,7 @@ class PluginUseditemsexportConfig extends CommonDBTM
    /**
     * Show dropdown Orientation (Landscape / Portrait)
     * @param value (current preselected value)
-    * @return nothing (display dropdown)
+    * @return void (display dropdown)
     */
     public function dropdownOrientation($value)
     {
@@ -110,7 +110,7 @@ class PluginUseditemsexportConfig extends CommonDBTM
    /**
     * Show dropdown Format (A4, A3, etc...)
     * @param value (current preselected value)
-    * @return nothing (display dropdown)
+    * @return void (display dropdown)
     */
     public function dropdownFormat($value)
     {
@@ -127,7 +127,7 @@ class PluginUseditemsexportConfig extends CommonDBTM
    /**
     * Load configuration plugin in GLPi Session
     *
-    * @return nothing
+    * @return void
     */
     public static function loadInSession()
     {
@@ -144,6 +144,7 @@ class PluginUseditemsexportConfig extends CommonDBTM
     */
     public static function install(Migration $migration)
     {
+        /** @var DBmysql $DB */
         global $DB;
 
         $default_charset = DBConnection::getDefaultCharset();
@@ -181,6 +182,8 @@ class PluginUseditemsexportConfig extends CommonDBTM
                 GLPI_PLUGIN_DOC_DIR . '/useditemsexport/logo.png'
             );
         }
+
+        return true;
     }
 
    /**
@@ -190,6 +193,7 @@ class PluginUseditemsexportConfig extends CommonDBTM
     */
     public static function uninstall()
     {
+        /** @var DBmysql $DB */
         global $DB;
 
         $table = getTableForItemType(__CLASS__);
@@ -200,5 +204,7 @@ class PluginUseditemsexportConfig extends CommonDBTM
         if (is_dir(GLPI_PLUGIN_DOC_DIR . '/useditemsexport')) {
             Toolbox::deleteDir(GLPI_PLUGIN_DOC_DIR . '/useditemsexport');
         }
+
+        return true;
     }
 }
