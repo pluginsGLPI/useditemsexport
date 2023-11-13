@@ -30,22 +30,23 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access directly to this file");
+    die("Sorry. You can't access directly to this file");
 }
 
-class PluginUseditemsexportConfig extends CommonDBTM {
-
-   static $rightname = 'config';
+class PluginUseditemsexportConfig extends CommonDBTM
+{
+    public static $rightname = 'config';
 
    /**
     * Display name of itemtype
     *
     * @return value name of this itemtype
     **/
-   static function getTypeName($nb = 0) {
+    public static function getTypeName($nb = 0)
+    {
 
-      return __('General setup of useditemsexport', 'useditemsexport');
-   }
+        return __('General setup of useditemsexport', 'useditemsexport');
+    }
 
    /**
     * Print the config form
@@ -55,95 +56,106 @@ class PluginUseditemsexportConfig extends CommonDBTM {
     *
     * @return Nothing (display)
    **/
-   function showForm($ID, $options = []) {
+    public function showForm($ID, $options = [])
+    {
 
-      $this->initForm($ID, $options);
-      $this->showFormHeader($options);
+        $this->initForm($ID, $options);
+        $this->showFormHeader($options);
 
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>".__('Active')."</td>";
-      echo "<td>";
-      Dropdown::showYesNo("is_active", $this->fields["is_active"]);
-      echo "</td></tr>";
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>" . __('Active') . "</td>";
+        echo "<td>";
+        Dropdown::showYesNo("is_active", $this->fields["is_active"]);
+        echo "</td></tr>";
 
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Footer text', 'useditemsexport') . "</td>";
-      echo "<td><input type='text' name='footer_text' size='60' value='"
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>" . __('Footer text', 'useditemsexport') . "</td>";
+        echo "<td><input type='text' name='footer_text' size='60' value='"
                   . $this->fields["footer_text"] . "'></td>";
-      echo "</tr>";
+        echo "</tr>";
 
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Orientation', 'useditemsexport') . "</td>";
-      echo "<td>";
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>" . __('Orientation', 'useditemsexport') . "</td>";
+        echo "<td>";
          self::dropdownOrientation($this->fields["orientation"]);
-      echo "</td>";
-      echo "</tr>";
+        echo "</td>";
+        echo "</tr>";
 
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Format', 'useditemsexport') . "</td>";
-      echo "<td>";
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>" . __('Format', 'useditemsexport') . "</td>";
+        echo "<td>";
          self::dropdownFormat($this->fields["format"]);
-      echo "</td>";
-      echo "</tr>";
+        echo "</td>";
+        echo "</tr>";
 
-      $this->showFormButtons($options);
-   }
+        $this->showFormButtons($options);
+    }
 
    /**
     * Show dropdown Orientation (Landscape / Portrait)
     * @param value (current preselected value)
     * @return nothing (display dropdown)
     */
-   function dropdownOrientation($value) {
-      Dropdown::showFromArray("orientation",
-                        ['L' => __('Landscape', 'useditemsexport'),
-                              'P' => __('Portrait', 'useditemsexport')],
-                        ['value'  => $value]);
-   }
+    public function dropdownOrientation($value)
+    {
+        Dropdown::showFromArray(
+            "orientation",
+            ['L' => __('Landscape', 'useditemsexport'),
+                'P' => __('Portrait', 'useditemsexport')
+            ],
+            ['value'  => $value]
+        );
+    }
 
    /**
     * Show dropdown Format (A4, A3, etc...)
     * @param value (current preselected value)
     * @return nothing (display dropdown)
     */
-   function dropdownFormat($value) {
-      Dropdown::showFromArray("format",
-                        ['A3' => __('A3'),
-                              'A4' => __('A4'),
-                              'A5' => __('A5')],
-                        ['value'  => $value]);
-   }
+    public function dropdownFormat($value)
+    {
+        Dropdown::showFromArray(
+            "format",
+            ['A3' => __('A3'),
+                'A4' => __('A4'),
+                'A5' => __('A5')
+            ],
+            ['value'  => $value]
+        );
+    }
 
    /**
     * Load configuration plugin in GLPi Session
     *
     * @return nothing
     */
-   static function loadInSession() {
-      $config = new self();
-      $config->getFromDB(1);
-      unset($config->fields['id']);
-      $_SESSION['plugins']['useditemsexport']['config'] = $config->fields;
-   }
+    public static function loadInSession()
+    {
+        $config = new self();
+        $config->getFromDB(1);
+        unset($config->fields['id']);
+        $_SESSION['plugins']['useditemsexport']['config'] = $config->fields;
+    }
 
    /**
     * Install all necessary tables for the plugin
     *
     * @return boolean True if success
     */
-   static function install(Migration $migration) {
-      global $DB;
+    public static function install(Migration $migration)
+    {
+        global $DB;
 
-      $default_charset = DBConnection::getDefaultCharset();
-      $default_collation = DBConnection::getDefaultCollation();
-      $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
+        $default_charset = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
 
-      $table = getTableForItemType(__CLASS__);
+        $table = getTableForItemType(__CLASS__);
 
-      if (!$DB->tableExists($table)) {
-         $migration->displayMessage("Installing $table");
+        if (!$DB->tableExists($table)) {
+            $migration->displayMessage("Installing $table");
 
-         $query = "CREATE TABLE IF NOT EXISTS `$table` (
+            $query = "CREATE TABLE IF NOT EXISTS `$table` (
                      `id` int {$default_key_sign} NOT NULL AUTO_INCREMENT,
                      `footer_text` VARCHAR(255) DEFAULT '',
                      `is_active` TINYINT NOT NULL DEFAULT 1,
@@ -151,40 +163,42 @@ class PluginUseditemsexportConfig extends CommonDBTM {
                      `format` VARCHAR(2) NOT NULL DEFAULT 'A4',
                PRIMARY KEY  (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
-            $DB->query($query) or die ($DB->error());
+            $DB->query($query) or die($DB->error());
 
-         $DB->insertOrDie($table, ['id' => 1]);
-      }
-      $migration->dropField($table, 'language'); // useless field removed in 2.5.1
+            $DB->insertOrDie($table, ['id' => 1]);
+        }
+        $migration->dropField($table, 'language'); // useless field removed in 2.5.1
 
-      $migration->displayMessage("Create useditemsexport dir");
-      if (!is_dir(GLPI_PLUGIN_DOC_DIR.'/useditemsexport')) {
-         mkdir(GLPI_PLUGIN_DOC_DIR.'/useditemsexport');
-      }
+        $migration->displayMessage("Create useditemsexport dir");
+        if (!is_dir(GLPI_PLUGIN_DOC_DIR . '/useditemsexport')) {
+            mkdir(GLPI_PLUGIN_DOC_DIR . '/useditemsexport');
+        }
 
-      $migration->displayMessage("Copy default logo from GLPi core");
-      if (!file_exists(GLPI_PLUGIN_DOC_DIR.'/useditemsexport/logo.png')) {
-         copy(GLPI_ROOT.'/pics/logos/logo-GLPI-250-black.png',
-               GLPI_PLUGIN_DOC_DIR.'/useditemsexport/logo.png');
-      }
-   }
+        $migration->displayMessage("Copy default logo from GLPi core");
+        if (!file_exists(GLPI_PLUGIN_DOC_DIR . '/useditemsexport/logo.png')) {
+            copy(
+                GLPI_ROOT . '/pics/logos/logo-GLPI-250-black.png',
+                GLPI_PLUGIN_DOC_DIR . '/useditemsexport/logo.png'
+            );
+        }
+    }
 
    /**
     * Uninstall previously installed tables of the plugin
     *
     * @return boolean True if success
     */
-   static function uninstall() {
-      global $DB;
+    public static function uninstall()
+    {
+        global $DB;
 
-      $table = getTableForItemType(__CLASS__);
+        $table = getTableForItemType(__CLASS__);
 
-      $query = "DROP TABLE IF EXISTS  `".$table."`";
-      $DB->query($query) or die ($DB->error());
+        $query = "DROP TABLE IF EXISTS  `" . $table . "`";
+        $DB->query($query) or die($DB->error());
 
-      if (is_dir(GLPI_PLUGIN_DOC_DIR.'/useditemsexport')) {
-         Toolbox::deleteDir(GLPI_PLUGIN_DOC_DIR .'/useditemsexport');
-      }
-   }
-
+        if (is_dir(GLPI_PLUGIN_DOC_DIR . '/useditemsexport')) {
+            Toolbox::deleteDir(GLPI_PLUGIN_DOC_DIR . '/useditemsexport');
+        }
+    }
 }

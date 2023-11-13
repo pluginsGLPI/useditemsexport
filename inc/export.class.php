@@ -30,59 +30,60 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access directly to this file");
+    die("Sorry. You can't access directly to this file");
 }
 
-class PluginUseditemsexportExport extends CommonDBTM {
+class PluginUseditemsexportExport extends CommonDBTM
+{
+    public static $rightname = 'plugin_useditemsexport_export';
 
-   public static $rightname = 'plugin_useditemsexport_export';
+    public static function getTypeName($nb = 0)
+    {
 
-   static function getTypeName($nb = 0) {
-
-      return __('Used items export', 'useditemsexport');
-   }
+        return __('Used items export', 'useditemsexport');
+    }
 
    /**
     * @see CommonGLPI::getTabNameForItem()
    **/
-   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    {
 
-      if ($item->getType()=='User') {
-         if ($_SESSION['glpishow_count_on_tabs']) {
-            return self::createTabEntry(self::getTypeName(), self::countForItem($item));
-         }
-         return self::getTypeName();
-      }
-      return '';
-   }
+        if ($item->getType() == 'User') {
+            if ($_SESSION['glpishow_count_on_tabs']) {
+                return self::createTabEntry(self::getTypeName(), self::countForItem($item));
+            }
+            return self::getTypeName();
+        }
+        return '';
+    }
 
    /**
     * @see CommonGLPI::displayTabContentForItem()
    **/
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      global $CFG_GLPI;
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
+        global $CFG_GLPI;
 
-      if ($item->getType()=='User') {
-         if (Session::haveRightsOr('plugin_useditemsexport_export', [READ, CREATE, PURGE])) {
-
-            $PluginUseditemsexportExport = new self();
-            $PluginUseditemsexportExport->showForUser($item);
-
-         } else {
-            echo "<div align='center'><br><br><img src=\"" . $CFG_GLPI["root_doc"] .
+        if ($item->getType() == 'User') {
+            if (Session::haveRightsOr('plugin_useditemsexport_export', [READ, CREATE, PURGE])) {
+                $PluginUseditemsexportExport = new self();
+                $PluginUseditemsexportExport->showForUser($item);
+            } else {
+                echo "<div align='center'><br><br><img src=\"" . $CFG_GLPI["root_doc"] .
                      "/pics/warning.png\" alt=\"warning\"><br><br>";
-            echo "<b>" . __("Access denied") . "</b></div>";
-         }
-
-      }
-   }
+                echo "<b>" . __("Access denied") . "</b></div>";
+            }
+        }
+    }
 
    /**
     * @param $item    CommonDBTM object
    **/
-   public static function countForItem(CommonDBTM $item) {
-      return countElementsInTable(getTableForItemType(__CLASS__), ['users_id' => $item->getID()]);
-   }
+    public static function countForItem(CommonDBTM $item)
+    {
+        return countElementsInTable(getTableForItemType(__CLASS__), ['users_id' => $item->getID()]);
+    }
 
    /**
     * Get all generated export for user.
@@ -91,125 +92,121 @@ class PluginUseditemsexportExport extends CommonDBTM {
     *
     * @return array of exports
    **/
-   static function getAllForUser($users_id) {
-      global $DB;
+    public static function getAllForUser($users_id)
+    {
+        global $DB;
 
-      $exports = [];
+        $exports = [];
 
-      // Get default one
-      $it = $DB->request([
-         'FROM' => getTableForItemType(__CLASS__),
-         'WHERE' => ['users_id' => $users_id]
-      ]);
-      foreach ($it as $data) {
-         $exports[$data['id']] = $data;
-      }
+       // Get default one
+        $it = $DB->request([
+            'FROM' => getTableForItemType(__CLASS__),
+            'WHERE' => ['users_id' => $users_id]
+        ]);
+        foreach ($it as $data) {
+            $exports[$data['id']] = $data;
+        }
 
-      return $exports;
-   }
+        return $exports;
+    }
 
    /**
     * @param CommonDBTM $item
     * @param array $options
     * @return nothing
     */
-   function showForUser($item, $options = []) {
-      global $DB, $CFG_GLPI;
+    public function showForUser($item, $options = [])
+    {
+        global $DB, $CFG_GLPI;
 
-      $users_id = $item->getField('id');
+        $users_id = $item->getField('id');
 
-      $exports = self::getAllForUser($users_id);
+        $exports = self::getAllForUser($users_id);
 
-      $canpurge = self::canPurge();
-      $cancreate = self::canCreate();
+        $canpurge = self::canPurge();
+        $cancreate = self::canCreate();
 
-      if ($cancreate) {
-         $rand = mt_rand();
+        if ($cancreate) {
+            $rand = mt_rand();
 
-         echo "<form method='post' name='useditemsexport_form$rand' id='useditemsexport_form$rand'
+            echo "<form method='post' name='useditemsexport_form$rand' id='useditemsexport_form$rand'
                   action=\"" . Plugin::getWebDir('useditemsexport') . "/front/export.form.php\">";
 
-         echo "<table class='tab_cadre_fixehov'>";
-            echo "<tr class='tab_bg_2'><th colspan='2'>".__('Generate new export', 'useditemsexport');
-               echo "&nbsp;&nbsp<input type='submit' name='generate' value=\"".__('Create')."\" class='submit'>";
+            echo "<table class='tab_cadre_fixehov'>";
+            echo "<tr class='tab_bg_2'><th colspan='2'>" . __('Generate new export', 'useditemsexport');
+               echo "&nbsp;&nbsp<input type='submit' name='generate' value=\"" . __('Create') . "\" class='submit'>";
                echo "<input type='hidden' name='users_id' value='$users_id'>";
             echo "</th></tr>";
-         echo "</table>";
+            echo "</table>";
 
-         Html::closeForm();
-      }
+            Html::closeForm();
+        }
 
-      if ($canpurge && count($exports) > 0) {
-         $rand = mt_rand();
-         Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
-         $massiveactionparams = ['item' => $item, 'container' => 'mass'.__CLASS__.$rand];
-         Html::showMassiveActions($massiveactionparams);
-      }
+        if ($canpurge && count($exports) > 0) {
+            $rand = mt_rand();
+            Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
+            $massiveactionparams = ['item' => $item, 'container' => 'mass' . __CLASS__ . $rand];
+            Html::showMassiveActions($massiveactionparams);
+        }
 
-      echo "<table class='tab_cadre_fixehov'>";
-      echo "<tr><th colspan='" . ($canpurge ? 5 : 4) . "'>"
+        echo "<table class='tab_cadre_fixehov'>";
+        echo "<tr><th colspan='" . ($canpurge ? 5 : 4) . "'>"
                      . __('Used items export generated', 'useditemsexport') . "</th></tr><tr>";
 
-      if (count($exports) == 0) {
-
-         echo "<tr class='tab_bg_1'>";
-            echo "<td class='center' colspan='" . ($canpurge ? 5 : 4) . "'>"
-                     .__('No item to display')."</td>";
-         echo "</tr>";
-
-      } else {
-
-         if ($canpurge) {
-            echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . "</th>";
-         }
-         echo "<th>" . __('Reference number of export', 'useditemsexport') . "</th>";
-         echo "<th>" . __('Date of export', 'useditemsexport') . "</th>";
-         echo "<th>" . __('Author of export', 'useditemsexport') . "</th>";
-         echo "<th>" . __('Export document', 'useditemsexport') . "</th>";
-         echo "</tr>";
-
-         foreach ($exports as $data) {
+        if (count($exports) == 0) {
             echo "<tr class='tab_bg_1'>";
-
-            if ($canpurge) {
-               echo "<td width='10'>";
-               Html::showMassiveActionCheckBox(__CLASS__, $data["id"]);
-               echo "</td>";
-            }
-
-               echo "<td class='center'>";
-               echo $data["refnumber"];
-               echo "</td>";
-
-               echo "<td class='center'>";
-               echo Html::convDateTime($data["date_mod"]);
-               echo "</td>";
-
-               $User = new User();
-               $User->getFromDB($data['authors_id']);
-               echo "<td class='center'>";
-               echo $User->getLink();
-               echo "</td>";
-
-               $Doc = new Document();
-               $Doc->getFromDB($data['documents_id']);
-               echo "<td class='center'>";
-               echo $Doc->getDownloadLink();
-               echo "</td>";
+            echo "<td class='center' colspan='" . ($canpurge ? 5 : 4) . "'>"
+                     . __('No item to display') . "</td>";
             echo "</tr>";
-         }
+        } else {
+            if ($canpurge) {
+                echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . "</th>";
+            }
+            echo "<th>" . __('Reference number of export', 'useditemsexport') . "</th>";
+            echo "<th>" . __('Date of export', 'useditemsexport') . "</th>";
+            echo "<th>" . __('Author of export', 'useditemsexport') . "</th>";
+            echo "<th>" . __('Export document', 'useditemsexport') . "</th>";
+            echo "</tr>";
 
-      }
+            foreach ($exports as $data) {
+                echo "<tr class='tab_bg_1'>";
 
-      echo "</table>";
-      if ($canpurge && count($exports) > 0) {
-         $massiveactionparams['ontop'] = false;
-         Html::showMassiveActions($massiveactionparams);
-         Html::closeForm();
+                if ($canpurge) {
+                    echo "<td width='10'>";
+                    Html::showMassiveActionCheckBox(__CLASS__, $data["id"]);
+                    echo "</td>";
+                }
 
-      }
+                echo "<td class='center'>";
+                echo $data["refnumber"];
+                echo "</td>";
 
-   }
+                echo "<td class='center'>";
+                echo Html::convDateTime($data["date_mod"]);
+                echo "</td>";
+
+                $User = new User();
+                $User->getFromDB($data['authors_id']);
+                echo "<td class='center'>";
+                echo $User->getLink();
+                echo "</td>";
+
+                $Doc = new Document();
+                $Doc->getFromDB($data['documents_id']);
+                echo "<td class='center'>";
+                echo $Doc->getDownloadLink();
+                echo "</td>";
+                echo "</tr>";
+            }
+        }
+
+        echo "</table>";
+        if ($canpurge && count($exports) > 0) {
+            $massiveactionparams['ontop'] = false;
+            Html::showMassiveActions($massiveactionparams);
+            Html::closeForm();
+        }
+    }
 
 
    /**
@@ -219,44 +216,45 @@ class PluginUseditemsexportExport extends CommonDBTM {
     *
     * @return array of exports
    **/
-   static function generatePDF($users_id) {
+    public static function generatePDF($users_id)
+    {
 
-      $num       = self::getNextNum();
-      $refnumber = self::getNextRefnumber();
+        $num       = self::getNextNum();
+        $refnumber = self::getNextRefnumber();
 
-      if (isset($_SESSION['plugins']['useditemsexport']['config'])) {
-         $useditemsexport_config = $_SESSION['plugins']['useditemsexport']['config'];
-      }
+        if (isset($_SESSION['plugins']['useditemsexport']['config'])) {
+            $useditemsexport_config = $_SESSION['plugins']['useditemsexport']['config'];
+        }
 
-      // Compile address from current_entity
-      $entity = new Entity();
-      $entity->getFromDB($_SESSION['glpiactive_entity']);
-      $entity_address = '<h3>' . $entity->fields["name"] . '</h3><br />';
-      $entity_address.= $entity->fields["address"] . '<br />';
-      $entity_address.= $entity->fields["postcode"] . ' - ' . $entity->fields['town'] . '<br />';
-      $entity_address.= $entity->fields["country"].'<br />';
+       // Compile address from current_entity
+        $entity = new Entity();
+        $entity->getFromDB($_SESSION['glpiactive_entity']);
+        $entity_address = '<h3>' . $entity->fields["name"] . '</h3><br />';
+        $entity_address .= $entity->fields["address"] . '<br />';
+        $entity_address .= $entity->fields["postcode"] . ' - ' . $entity->fields['town'] . '<br />';
+        $entity_address .= $entity->fields["country"] . '<br />';
 
-      if (isset($entity->fields["email"])) {
-         $entity_address.= __('Email') . ' : ' . $entity->fields["email"] . '<br />';
-      }
+        if (isset($entity->fields["email"])) {
+            $entity_address .= __('Email') . ' : ' . $entity->fields["email"] . '<br />';
+        }
 
-      if (isset($entity->fields["phonenumber"])) {
-         $entity_address.= __('Phone') . ' : ' . $entity->fields["phonenumber"] . '<br />';
-      }
+        if (isset($entity->fields["phonenumber"])) {
+            $entity_address .= __('Phone') . ' : ' . $entity->fields["phonenumber"] . '<br />';
+        }
 
-      // Get User information
-      $User = new User();
-      $User->getFromDB($users_id);
+       // Get User information
+        $User = new User();
+        $User->getFromDB($users_id);
 
-      // Get Author information
-      $Author = new User();
-      $Author->getFromDB(Session::getLoginUserID());
+       // Get Author information
+        $Author = new User();
+        $Author->getFromDB(Session::getLoginUserID());
 
-      // Logo
-      $logo = GLPI_PLUGIN_DOC_DIR.'/useditemsexport/logo.png';
+       // Logo
+        $logo = GLPI_PLUGIN_DOC_DIR . '/useditemsexport/logo.png';
 
-      ob_start();
-      ?>
+        ob_start();
+        ?>
       <style type="text/css">
          table { border: 1px solid #000000; width: 100%; font-size: 10pt; font-family: helvetica, arial, sans-serif; }
       </style>
@@ -301,35 +299,32 @@ class PluginUseditemsexportExport extends CommonDBTM {
             $allUsedItemsForUser = self::getAllUsedItemsForUser($users_id);
 
             foreach ($allUsedItemsForUser as $itemtype => $used_items) {
+                $item = getItemForItemtype($itemtype);
 
-               $item = getItemForItemtype($itemtype);
-
-               foreach ($used_items as $item_datas) {
-
-                  ?>
+                foreach ($used_items as $item_datas) {
+                    ?>
             <tr>
                <td style="width: 25%;">
-                  <?php
-                  if (isset($item_datas['serial'])) {
-                     echo $item_datas['serial'];
-                  } ?>
+                    <?php
+                    if (isset($item_datas['serial'])) {
+                        echo $item_datas['serial'];
+                    } ?>
                </td>
                <td style="width: 25%;">
-                  <?php
-                  if (isset($item_datas['otherserial'])) {
-                     echo $item_datas['otherserial'];
-                  } ?>
+                    <?php
+                    if (isset($item_datas['otherserial'])) {
+                        echo $item_datas['otherserial'];
+                    } ?>
                </td>
                <td style="width: 25%;">
-                  <?php echo $item_datas['name']; ?>
+                    <?php echo $item_datas['name']; ?>
                </td>
                <td style="width: 25%;">
-                  <?php echo $item->getTypeName(1); ?>
+                    <?php echo $item->getTypeName(1); ?>
                </td>
             </tr>
-                  <?php
-
-               }
+                    <?php
+                }
             }
 
             ?>
@@ -359,201 +354,207 @@ class PluginUseditemsexportExport extends CommonDBTM {
             </div>
          </page_footer>
       </page>
-      <?php
+        <?php
 
-      $content = ob_get_clean();
+        $content = ob_get_clean();
 
-      // Generate PDF
-      $pdf = new GLPIPDF([
-         'orientation' => $useditemsexport_config['orientation'],
-         'format'      => $useditemsexport_config['format'],
-      ]);
-      $pdf->WriteHTML($content);
-      $contentPDF = $pdf->Output('', 'S');
+       // Generate PDF
+        $pdf = new GLPIPDF([
+            'orientation' => $useditemsexport_config['orientation'],
+            'format'      => $useditemsexport_config['format'],
+        ]);
+        $pdf->WriteHTML($content);
+        $contentPDF = $pdf->Output('', 'S');
 
       // Store PDF in GLPi upload dir and create document
-      file_put_contents(GLPI_UPLOAD_DIR . '/' . $refnumber.'.pdf', $contentPDF);
-      $documents_id = self::createDocument($refnumber);
+        file_put_contents(GLPI_UPLOAD_DIR . '/' . $refnumber . '.pdf', $contentPDF);
+        $documents_id = self::createDocument($refnumber);
 
       // Add log for last generated PDF
-      $export = new self();
+        $export = new self();
 
-      $input = [];
-      $input['users_id']     = $users_id;
-      $input['date_mod']     = date("Y-m-d H:i:s");
-      $input['num']          = $num;
-      $input['refnumber']    = $refnumber;
-      $input['authors_id']   = Session::getLoginUserID();
-      $input['documents_id'] = $documents_id;
+        $input = [];
+        $input['users_id']     = $users_id;
+        $input['date_mod']     = date("Y-m-d H:i:s");
+        $input['num']          = $num;
+        $input['refnumber']    = $refnumber;
+        $input['authors_id']   = Session::getLoginUserID();
+        $input['documents_id'] = $documents_id;
 
-      if ($export->add($input)) {
-         return true;
-      }
+        if ($export->add($input)) {
+            return true;
+        }
 
-      return false;
-   }
+        return false;
+    }
 
    /**
     * Store Document into GLPi DB
     * @param refnumber
     * @return integer id of Document
     */
-   static function createDocument($refnumber) {
+    public static function createDocument($refnumber)
+    {
 
-      $doc = new Document();
+        $doc = new Document();
 
-      $input                          = [];
-      $input["entities_id"]           = $_SESSION['glpiactive_entity'];
-      $input["name"]                  = __('Used-Items-Export', 'useditemsexport').'-'.$refnumber;
-      $input["upload_file"]           = $refnumber.'.pdf';
-      $input["documentcategories_id"] = 0;
-      $input["mime"]                  = "application/pdf";
-      $input["date_mod"]              = date("Y-m-d H:i:s");
-      $input["users_id"]              = Session::getLoginUserID();
+        $input                          = [];
+        $input["entities_id"]           = $_SESSION['glpiactive_entity'];
+        $input["name"]                  = __('Used-Items-Export', 'useditemsexport') . '-' . $refnumber;
+        $input["upload_file"]           = $refnumber . '.pdf';
+        $input["documentcategories_id"] = 0;
+        $input["mime"]                  = "application/pdf";
+        $input["date_mod"]              = date("Y-m-d H:i:s");
+        $input["users_id"]              = Session::getLoginUserID();
 
-      $doc->check(-1, CREATE, $input);
-      $newdocid=$doc->add($input);
+        $doc->check(-1, CREATE, $input);
+        $newdocid = $doc->add($input);
 
-      return $newdocid;
-   }
+        return $newdocid;
+    }
 
    /**
     * Get next num
     * @param nothing
     * @return integer
     */
-   static function getNextNum() {
-      global $DB;
+    public static function getNextNum()
+    {
+        global $DB;
 
-      $result = $DB->request([
-         'SELECT' => [new QueryExpression('MAX(' . $DB::quoteName('num') . ') AS ' . $DB::quoteName('num'))],
-         'FROM'   => self::getTable(),
-      ]);
-      $nextNum = count($result) ? $result->current()['num'] : false;
-      if (!$nextNum) {
-         return 1;
-      } else {
-         $nextNum++;
-         return $nextNum;
-      }
+        $result = $DB->request([
+            'SELECT' => [new QueryExpression('MAX(' . $DB::quoteName('num') . ') AS ' . $DB::quoteName('num'))],
+            'FROM'   => self::getTable(),
+        ]);
+        $nextNum = count($result) ? $result->current()['num'] : false;
+        if (!$nextNum) {
+            return 1;
+        } else {
+            $nextNum++;
+            return $nextNum;
+        }
 
-      return false;
-   }
+        return false;
+    }
 
    /**
     * Compute next refnumber
     * @param nothing
     * @return string
     */
-   static function getNextRefnumber() {
-      global $DB;
+    public static function getNextRefnumber()
+    {
+        global $DB;
 
-      if ($nextNum = self::getNextNum()) {
-         $nextRefnumber = str_pad($nextNum, 4, "0", STR_PAD_LEFT);
-         $date = new DateTime();
-         return $nextRefnumber . '-' . $date->format('Y');
-      } else {
-         return false;
-      }
-   }
+        if ($nextNum = self::getNextNum()) {
+            $nextRefnumber = str_pad($nextNum, 4, "0", STR_PAD_LEFT);
+            $date = new DateTime();
+            return $nextRefnumber . '-' . $date->format('Y');
+        } else {
+            return false;
+        }
+    }
 
    /**
     * Get all used items for user
     * @param ID of user
     * @return array
     */
-   static function getAllUsedItemsForUser($ID) {
-      global $DB, $CFG_GLPI;
+    public static function getAllUsedItemsForUser($ID)
+    {
+        global $DB, $CFG_GLPI;
 
-      $items = [];
+        $items = [];
 
-      foreach ($CFG_GLPI['linkuser_types'] as $itemtype) {
-         if (!($item = getItemForItemtype($itemtype))) {
-            continue;
-         }
-         if ($item->canView()) {
-            $itemtable = getTableForItemType($itemtype);
-            $criteria = [
-               'FROM' => $itemtable,
-               'WHERE' => ['users_id' => $ID]
-            ];
-
-            if ($item->maybeTemplate()) {
-               $criteria['WHERE']['is_template'] = '0';
+        foreach ($CFG_GLPI['linkuser_types'] as $itemtype) {
+            if (!($item = getItemForItemtype($itemtype))) {
+                continue;
             }
-            if ($item->maybeDeleted()) {
-               $criteria['WHERE']['is_deleted'] = '0';
+            if ($item->canView()) {
+                $itemtable = getTableForItemType($itemtype);
+                $criteria = [
+                    'FROM' => $itemtable,
+                    'WHERE' => ['users_id' => $ID]
+                ];
+
+                if ($item->maybeTemplate()) {
+                    $criteria['WHERE']['is_template'] = '0';
+                }
+                if ($item->maybeDeleted()) {
+                    $criteria['WHERE']['is_deleted'] = '0';
+                }
+                $result    = $DB->request($criteria);
+
+                $type_name = $item->getTypeName();
+
+                if (count($result) > 0) {
+                    foreach ($result as $data) {
+                        $items[$itemtype][] = $data;
+                    }
+                }
             }
-            $result    = $DB->request($criteria);
+        }
 
-            $type_name = $item->getTypeName();
+       // Consumables
+        $consumables = $DB->request(
+            [
+                'SELECT' => ['name', 'otherserial'],
+                'FROM'   => ConsumableItem::getTable(),
+                'WHERE'  => [
+                    'id' => new QuerySubQuery(
+                        [
+                            'SELECT' => 'consumableitems_id',
+                            'FROM'   => Consumable::getTable(),
+                            'WHERE'  => [
+                                'itemtype' => User::class,
+                                'items_id' => $ID
+                            ],
+                        ]
+                    )
+                ],
+            ]
+        );
 
-            if (count($result) > 0) {
-               foreach ($result as $data) {
-                  $items[$itemtype][] = $data;
-               }
-            }
-         }
-      }
+        foreach ($consumables as $data) {
+            $items['ConsumableItem'][] = $data;
+        }
 
-      // Consumables
-      $consumables = $DB->request(
-         [
-            'SELECT' => ['name', 'otherserial'],
-            'FROM'   => ConsumableItem::getTable(),
-            'WHERE'  => [
-               'id' => new QuerySubQuery(
-                  [
-                     'SELECT' => 'consumableitems_id',
-                     'FROM'   => Consumable::getTable(),
-                     'WHERE'  => [
-                        'itemtype' => User::class,
-                        'items_id' => $ID
-                     ],
-                  ]
-               )
-            ],
-         ]
-      );
-
-      foreach ($consumables as $data) {
-         $items['ConsumableItem'][] = $data;
-      }
-
-      return $items;
-   }
+        return $items;
+    }
 
    /**
     * Clean GLPi DB on export purge
     *
     * @return nothing
     */
-   function cleanDBonPurge() {
+    public function cleanDBonPurge()
+    {
 
-      // Clean Document GLPi
-      $doc = new Document();
-      $doc->getFromDB($this->fields['documents_id']);
-      $doc->delete(['id' => $this->fields['documents_id']], true);
-   }
+        // Clean Document GLPi
+        $doc = new Document();
+        $doc->getFromDB($this->fields['documents_id']);
+        $doc->delete(['id' => $this->fields['documents_id']], true);
+    }
 
    /**
     * Install all necessary tables for the plugin
     *
     * @return boolean True if success
     */
-   static function install(Migration $migration) {
-      global $DB;
+    public static function install(Migration $migration)
+    {
+        global $DB;
 
-      $default_charset = DBConnection::getDefaultCharset();
-      $default_collation = DBConnection::getDefaultCollation();
-      $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
+        $default_charset = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
 
-      $table = getTableForItemType(__CLASS__);
+        $table = getTableForItemType(__CLASS__);
 
-      if (!$DB->tableExists($table)) {
-         $migration->displayMessage("Installing $table");
+        if (!$DB->tableExists($table)) {
+            $migration->displayMessage("Installing $table");
 
-         $query = "CREATE TABLE IF NOT EXISTS `$table` (
+            $query = "CREATE TABLE IF NOT EXISTS `$table` (
                   `id` INT {$default_key_sign} NOT NULL AUTO_INCREMENT,
                   `users_id` INT {$default_key_sign} NOT NULL DEFAULT '0',
                   `date_mod` TIMESTAMP NULL DEFAULT NULL,
@@ -563,22 +564,22 @@ class PluginUseditemsexportExport extends CommonDBTM {
                   `documents_id` INT {$default_key_sign} NOT NULL DEFAULT '0',
                PRIMARY KEY  (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
-            $DB->query($query) or die ($DB->error());
-      }
-   }
+            $DB->query($query) or die($DB->error());
+        }
+    }
 
    /**
     * Uninstall previously installed tables of the plugin
     *
     * @return boolean True if success
     */
-   static function uninstall() {
-      global $DB;
+    public static function uninstall()
+    {
+        global $DB;
 
-      $table = getTableForItemType(__CLASS__);
+        $table = getTableForItemType(__CLASS__);
 
-      $query = "DROP TABLE IF EXISTS  `".$table."`";
-      $DB->query($query) or die ($DB->error());
-   }
-
+        $query = "DROP TABLE IF EXISTS  `" . $table . "`";
+        $DB->query($query) or die($DB->error());
+    }
 }
