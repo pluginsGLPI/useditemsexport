@@ -121,13 +121,12 @@ class PluginUseditemsexportExport extends CommonDBTM
         $users_id = $item->getField('id');
 
         $exports = self::getAllForUser($users_id);
+        $rand = mt_rand();
 
         $canpurge = self::canPurge();
         $cancreate = self::canCreate();
 
         if ($cancreate) {
-            $rand = mt_rand();
-
             echo "<form method='post' name='useditemsexport_form$rand' id='useditemsexport_form$rand'
                   action=\"" . Plugin::getWebDir('useditemsexport') . "/front/export.form.php\">";
 
@@ -221,9 +220,10 @@ class PluginUseditemsexportExport extends CommonDBTM
         $num       = self::getNextNum();
         $refnumber = self::getNextRefnumber();
 
-        if (isset($_SESSION['plugins']['useditemsexport']['config'])) {
-            $useditemsexport_config = $_SESSION['plugins']['useditemsexport']['config'];
+        if (!isset($_SESSION['plugins']['useditemsexport']['config'])) {
+            PluginUseditemsexportConfig::loadInSession();
         }
+        $useditemsexport_config = $_SESSION['plugins']['useditemsexport']['config'];
 
        // Compile address from current_entity
         $entity = new Entity();
