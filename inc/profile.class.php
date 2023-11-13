@@ -44,7 +44,7 @@ class PluginUseditemsexportProfile extends CommonDBTM
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
 
-        if ($item->getType() == 'Profile' && $item->getField('interface') != 'helpdesk') {
+        if ($item instanceof Profile && $item->getField('interface') != 'helpdesk') {
             return PluginUseditemsexportExport::getTypeName();
         }
         return '';

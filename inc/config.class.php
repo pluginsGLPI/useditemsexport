@@ -48,14 +48,6 @@ class PluginUseditemsexportConfig extends CommonDBTM
         return __('General setup of useditemsexport', 'useditemsexport');
     }
 
-   /**
-    * Print the config form
-    *
-    * @param $ID        Integer : ID of the item
-    * @param $options   array
-    *
-    * @return void (display)
-   **/
     public function showForm($ID, $options = [])
     {
 
@@ -89,11 +81,13 @@ class PluginUseditemsexportConfig extends CommonDBTM
         echo "</tr>";
 
         $this->showFormButtons($options);
+
+        return true;
     }
 
    /**
     * Show dropdown Orientation (Landscape / Portrait)
-    * @param value (current preselected value)
+    * @param string $value (current preselected value)
     * @return void (display dropdown)
     */
     public function dropdownOrientation($value)
@@ -109,7 +103,7 @@ class PluginUseditemsexportConfig extends CommonDBTM
 
    /**
     * Show dropdown Format (A4, A3, etc...)
-    * @param value (current preselected value)
+    * @param string $value (current preselected value)
     * @return void (display dropdown)
     */
     public function dropdownFormat($value)

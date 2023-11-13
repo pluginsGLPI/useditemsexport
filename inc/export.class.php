@@ -49,7 +49,7 @@ class PluginUseditemsexportExport extends CommonDBTM
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
 
-        if ($item->getType() == 'User') {
+        if ($item instanceof User) {
             if ($_SESSION['glpishow_count_on_tabs']) {
                 return self::createTabEntry(self::getTypeName(), self::countForItem($item));
             }
@@ -63,7 +63,7 @@ class PluginUseditemsexportExport extends CommonDBTM
         /** @var array $CFG_GLPI */
         global $CFG_GLPI;
 
-        if ($item->getType() == 'User') {
+        if ($item instanceof User) {
             if (Session::haveRightsOr('plugin_useditemsexport_export', [READ, CREATE, PURGE])) {
                 $PluginUseditemsexportExport = new self();
                 $PluginUseditemsexportExport->showForUser($item);
@@ -212,7 +212,7 @@ class PluginUseditemsexportExport extends CommonDBTM
     *
     * @param $users_id user ID
     *
-    * @return array of exports
+    * @return boolean
    **/
     public static function generatePDF($users_id)
     {
@@ -389,7 +389,7 @@ class PluginUseditemsexportExport extends CommonDBTM
 
    /**
     * Store Document into GLPi DB
-    * @param refnumber
+    * @param string $refnumber
     * @return integer id of Document
     */
     public static function createDocument($refnumber)
@@ -414,7 +414,6 @@ class PluginUseditemsexportExport extends CommonDBTM
 
    /**
     * Get next num
-    * @param nothing
     * @return integer
     */
     public static function getNextNum()
@@ -433,13 +432,10 @@ class PluginUseditemsexportExport extends CommonDBTM
             $nextNum++;
             return $nextNum;
         }
-
-        return false;
     }
 
    /**
     * Compute next refnumber
-    * @param nothing
     * @return string
     */
     public static function getNextRefnumber()
@@ -448,17 +444,17 @@ class PluginUseditemsexportExport extends CommonDBTM
         global $DB;
 
         if ($nextNum = self::getNextNum()) {
-            $nextRefnumber = str_pad($nextNum, 4, "0", STR_PAD_LEFT);
+            $nextRefnumber = str_pad((string)$nextNum, 4, "0", STR_PAD_LEFT);
             $date = new DateTime();
             return $nextRefnumber . '-' . $date->format('Y');
         } else {
-            return false;
+            return '';
         }
     }
 
    /**
     * Get all used items for user
-    * @param ID of user
+    * @param integer $ID ID of user
     * @return array
     */
     public static function getAllUsedItemsForUser($ID)
