@@ -30,136 +30,158 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access directly to this file");
+    die("Sorry. You can't access directly to this file");
 }
 
-class PluginUseditemsexportProfile extends CommonDBTM {
-
+class PluginUseditemsexportProfile extends CommonDBTM
+{
    // Necessary rights to edit the rights of this plugin
-   static $rightname = "profile";
+    public static $rightname = "profile";
 
    /**
     * @see CommonGLPI::getTabNameForItem()
    **/
-   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    {
 
-      if ($item->getType()=='Profile' && $item->getField('interface')!='helpdesk') {
+        if ($item instanceof Profile && $item->getField('interface') != 'helpdesk') {
             return PluginUseditemsexportExport::getTypeName();
-      }
-      return '';
-   }
+        }
+        return '';
+    }
 
    /**
     * @see CommonGLPI::displayTabContentForItem()
    **/
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      global $CFG_GLPI;
-
-      if ($item->getType()=='Profile') {
-         $ID = $item->getID();
-         $prof = new self();
-         //In case there's no right for this profile, create it
-         foreach (self::getAllRights() as $right) {
-            self::addDefaultProfileInfos($ID, [$right['field'] => 0]);
-         }
-         $prof->showForm($ID);
-      }
-      return true;
-   }
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
+        if ($item instanceof Profile) {
+            $ID = $item->getID();
+            $prof = new self();
+           //In case there's no right for this profile, create it
+            foreach (self::getAllRights() as $right) {
+                self::addDefaultProfileInfos($ID, [$right['field'] => 0]);
+            }
+            $prof->showForm($ID);
+        }
+        return true;
+    }
 
    /**
     * Describe all possible rights for the plugin
     * @return array
    **/
-   static function getAllRights() {
+    public static function getAllRights()
+    {
 
-      $rights = [
-          ['itemtype'  => 'PluginUseditemsexportExport',
+        $rights = [
+            ['itemtype'  => 'PluginUseditemsexportExport',
                 'label'     => PluginUseditemsexportExport::getTypeName(),
                 'field'     => 'plugin_useditemsexport_export',
                 'rights'    =>  [CREATE  => __('Create'),
-                                      READ    => __('Read'),
-                                      PURGE   => ['short' => __('Purge'),
-                                      'long' => _x('button', 'Delete permanently')]],
-                'default'   => 21]];
-      return $rights;
-   }
+                    READ    => __('Read'),
+                    PURGE   => ['short' => __('Purge'),
+                        'long' => _x('button', 'Delete permanently')
+                    ]
+                ],
+                'default'   => 21
+            ]
+        ];
+        return $rights;
+    }
 
    /**
     * addDefaultProfileInfos
     * @param $profiles_id
     * @param $rights
    **/
-   static function addDefaultProfileInfos($profiles_id, $rights) {
-      $profileRight = new ProfileRight();
-      foreach ($rights as $right => $value) {
-         if (!countElementsInTable('glpi_profilerights',
-                                   ['profiles_id' => $profiles_id, 'name' => $right])) {
-            $myright['profiles_id'] = $profiles_id;
-            $myright['name']        = $right;
-            $myright['rights']      = $value;
-            $profileRight->add($myright);
-            //Add right to the current session
-            $_SESSION['glpiactiveprofile'][$right] = $value;
-         }
-      }
-   }
+    public static function addDefaultProfileInfos($profiles_id, $rights)
+    {
+        $profileRight = new ProfileRight();
+        foreach ($rights as $right => $value) {
+            if (
+                !countElementsInTable(
+                    'glpi_profilerights',
+                    ['profiles_id' => $profiles_id, 'name' => $right]
+                )
+            ) {
+                $myright['profiles_id'] = $profiles_id;
+                $myright['name']        = $right;
+                $myright['rights']      = $value;
+                $profileRight->add($myright);
+                //Add right to the current session
+                $_SESSION['glpiactiveprofile'][$right] = $value;
+            }
+        }
+    }
 
-   function showForm($ID, array $options = []) {
+    public function showForm($ID, array $options = [])
+    {
 
-      echo "<div class='firstbloc'>";
-      if ($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE])) {
-         $profile = new Profile();
-         echo "<form method='post' action='".$profile->getFormURL()."'>";
-      }
+        echo "<div class='firstbloc'>";
+        if ($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE])) {
+            $profile = new Profile();
+            echo "<form method='post' action='" . $profile->getFormURL() . "'>";
+        }
 
-      $profile = new Profile();
-      $profile->getFromDB($ID);
-      if ($profile->getField('interface') == 'central') {
-         $rights = $this->getAllRights();
-         $profile->displayRightsChoiceMatrix($rights, ['canedit'       => $canedit,
-                                                         'default_class' => 'tab_bg_2',
-                                                         'title'         => __('General')]);
-      }
+        $profile = new Profile();
+        $profile->getFromDB($ID);
+        if ($profile->getField('interface') == 'central') {
+            $rights = $this->getAllRights();
+            $profile->displayRightsChoiceMatrix($rights, ['canedit'       => $canedit,
+                'default_class' => 'tab_bg_2',
+                'title'         => __('General')
+            ]);
+        }
 
-      if ($canedit) {
-         echo "<div class='center'>";
-         echo Html::hidden('id', ['value' => $ID]);
-         echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
-         echo "</div>\n";
-         Html::closeForm();
-      }
-      echo "</div>";
-   }
+        if ($canedit) {
+            echo "<div class='center'>";
+            echo Html::hidden('id', ['value' => $ID]);
+            echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
+            echo "</div>\n";
+            Html::closeForm();
+        }
+        echo "</div>";
+
+        return true;
+    }
 
    /**
     * Install all necessary profile for the plugin
     *
     * @return boolean True if success
     */
-   static function install(Migration $migration) {
+    public static function install(Migration $migration)
+    {
 
-      foreach (self::getAllRights() as $right) {
-         self::addDefaultProfileInfos($_SESSION['glpiactiveprofile']['id'],
-                                       [$right['field'] => $right['default']]);
-      }
-   }
+        foreach (self::getAllRights() as $right) {
+            self::addDefaultProfileInfos(
+                $_SESSION['glpiactiveprofile']['id'],
+                [$right['field'] => $right['default']]
+            );
+        }
+
+        return true;
+    }
 
    /**
     * Uninstall previously installed profile of the plugin
     *
     * @return boolean True if success
     */
-   static function uninstall() {
-      global $DB;
+    public static function uninstall()
+    {
+        /** @var DBmysql $DB */
+        global $DB;
 
-      foreach (self::getAllRights() as $right) {
-         $DB->delete('glpi_profilerights', ['name' => $right['field']]);
+        foreach (self::getAllRights() as $right) {
+            $DB->delete('glpi_profilerights', ['name' => $right['field']]);
 
-         if (isset($_SESSION['glpiactiveprofile'][$right['field']])) {
-            unset($_SESSION['glpiactiveprofile'][$right['field']]);
-         }
-      }
-   }
+            if (isset($_SESSION['glpiactiveprofile'][$right['field']])) {
+                unset($_SESSION['glpiactiveprofile'][$right['field']]);
+            }
+        }
 
+        return true;
+    }
 }

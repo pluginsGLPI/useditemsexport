@@ -43,38 +43,43 @@ define("PLUGIN_USEDITEMSEXPORT_MAX_GLPI", "10.0.99");
  *
  * @return void
  */
-function plugin_init_useditemsexport() {
-   global $PLUGIN_HOOKS, $CFG_GLPI;
+function plugin_init_useditemsexport()
+{
+    /** @var array $PLUGIN_HOOKS */
+    global $PLUGIN_HOOKS;
 
-   $plugin = new Plugin();
+    $plugin = new Plugin();
 
-   $PLUGIN_HOOKS['csrf_compliant']['useditemsexport'] = true;
+    $PLUGIN_HOOKS['csrf_compliant']['useditemsexport'] = true;
 
-   if (Session::getLoginUserID() && $plugin->isActivated('useditemsexport')) {
+    if (Session::getLoginUserID() && $plugin->isActivated('useditemsexport')) {
+        PluginUseditemsexportConfig::loadInSession();
 
-      PluginUseditemsexportConfig::loadInSession();
+        if (Session::haveRight('config', UPDATE)) {
+            $PLUGIN_HOOKS['config_page']['useditemsexport'] = 'front/config.form.php';
+        }
 
-      if (Session::haveRight('config', UPDATE)) {
-         $PLUGIN_HOOKS['config_page']['useditemsexport'] = 'front/config.form.php';
-      }
+        if (Session::haveRight('profile', UPDATE)) {
+            Plugin::registerClass(
+                'PluginUseditemsexportProfile',
+                ['addtabon' => 'Profile']
+            );
+        }
 
-      if (Session::haveRight('profile', UPDATE)) {
-         Plugin::registerClass('PluginUseditemsexportProfile',
-                                 ['addtabon' => 'Profile']);
-      }
+        if (isset($_SESSION['plugins']['useditemsexport']['config'])) {
+            $useditemsexport_config = $_SESSION['plugins']['useditemsexport']['config'];
 
-      if (isset($_SESSION['plugins']['useditemsexport']['config'])) {
-
-         $useditemsexport_config = $_SESSION['plugins']['useditemsexport']['config'];
-
-         if (Session::haveRightsOr('plugin_useditemsexport_export', [READ, CREATE, PURGE])
-              && $useditemsexport_config['is_active']) {
-
-            Plugin::registerClass('PluginUseditemsexportExport',
-                                    ['addtabon' => 'User']);
-         }
-      }
-   }
+            if (
+                Session::haveRightsOr('plugin_useditemsexport_export', [READ, CREATE, PURGE])
+                && $useditemsexport_config['is_active']
+            ) {
+                Plugin::registerClass(
+                    'PluginUseditemsexportExport',
+                    ['addtabon' => 'User']
+                );
+            }
+        }
+    }
 }
 
 /**
@@ -83,20 +88,21 @@ function plugin_init_useditemsexport() {
  *
  * @return array
  */
-function plugin_version_useditemsexport() {
+function plugin_version_useditemsexport()
+{
 
-   return  [
-      'name' => __('Used items export', 'useditemsexport'),
-      'version' => PLUGIN_USEDITEMSEXPORT_VERSION,
-      'oldname' => '',
-      'license' => 'GPLv2+',
-      'author'  => "TECLIB",
-      'homepage'=>'https://github.com/pluginsGLPI/useditemsexport',
-      'requirements'   => [
-         'glpi' => [
-            'min' => PLUGIN_USEDITEMSEXPORT_MIN_GLPI,
-            'max' => PLUGIN_USEDITEMSEXPORT_MAX_GLPI,
-         ]
-      ]
-   ];
+    return  [
+        'name' => __('Used items export', 'useditemsexport'),
+        'version' => PLUGIN_USEDITEMSEXPORT_VERSION,
+        'oldname' => '',
+        'license' => 'GPLv2+',
+        'author'  => "TECLIB",
+        'homepage' => 'https://github.com/pluginsGLPI/useditemsexport',
+        'requirements'   => [
+            'glpi' => [
+                'min' => PLUGIN_USEDITEMSEXPORT_MIN_GLPI,
+                'max' => PLUGIN_USEDITEMSEXPORT_MAX_GLPI,
+            ]
+        ]
+    ];
 }

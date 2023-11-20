@@ -29,23 +29,28 @@
  * -------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
 Session::haveRight("config", UPDATE);
 
-Html::header(PluginUseditemsexportConfig::getTypeName(1),
-               $_SERVER['PHP_SELF'], "plugins", "useditemsexport", "config");
+Html::header(
+    PluginUseditemsexportConfig::getTypeName(1),
+    $_SERVER['PHP_SELF'],
+    "plugins",
+    "useditemsexport",
+    "config"
+);
 
 if (!isset($_GET["id"])) {
-   $_GET["id"] = 1;
+    $_GET["id"] = 1;
 }
 
 $PluginUseditemsexportConfig = new PluginUseditemsexportConfig();
 
 if (isset($_POST["update"])) {
-   $PluginUseditemsexportConfig->check($_POST["id"], UPDATE);
-   $PluginUseditemsexportConfig->update($_POST);
-   Html::back();
+    $PluginUseditemsexportConfig->check($_POST["id"], UPDATE);
+    $PluginUseditemsexportConfig->update($_POST);
+    Html::back();
 }
 
 $PluginUseditemsexportConfig->showForm($_GET["id"]);
