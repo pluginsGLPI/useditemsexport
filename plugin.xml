@@ -3,7 +3,7 @@
    <name>Used items export</name>
    <key>useditemsexport</key>
    <state>stable</state>
-   <logo>https://raw.githubusercontent.com/pluginsGLPI/useditemsexport/master/plugin.png</logo>
+   <logo>https://raw.githubusercontent.com/pluginsGLPI/useditemsexport/main/plugin.png</logo>
    <description>
       <short>
          <cs><![CDATA[Tento zásuvný modul umožňuje exportovat do PDF položky, evidované u daného uživatele.]]></cs>
@@ -19,7 +19,7 @@
    <homepage>https://pluginsglpi.github.io/useditemsexport/</homepage>
    <download>https://github.com/pluginsGLPI/useditemsexport/releases</download>
    <issues>https://github.com/pluginsGLPI/useditemsexport/issues</issues>
-   <readme>https://raw.githubusercontent.com/pluginsGLPI/useditemsexport/master/README.md</readme>
+   <readme>https://raw.githubusercontent.com/pluginsGLPI/useditemsexport/main/README.md</readme>
    <authors>
       <author>TECLIB'</author>
    </authors>
@@ -100,6 +100,6 @@
          </fr>
    </tags>
    <screenshots>
-      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/useditemsexport/master/screenshots/fr_useditemsexport-tab.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/useditemsexport/main/screenshots/fr_useditemsexport-tab.png</screenshot>
    </screenshots>
 </root>
