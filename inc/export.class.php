@@ -250,7 +250,7 @@ class PluginUseditemsexportExport extends CommonDBTM
         $Author->getFromDB(Session::getLoginUserID());
 
        // Logo
-        $logo = GLPI_PLUGIN_DOC_DIR . '/useditemsexport/logo.png';
+        $logo_base64 = base64_encode(file_get_contents(GLPI_PLUGIN_DOC_DIR . '/useditemsexport/logo.png'));
 
         ob_start();
         ?>
@@ -261,7 +261,7 @@ class PluginUseditemsexportExport extends CommonDBTM
          <page_header>
             <table>
                <tr>
-                  <td style="height: 60mm; width: 40%; text-align: center"><img src="<?php echo $logo; ?>" /></td>
+                  <td style="height: 60mm; width: 40%; text-align: center"><img src="data:image/png;base64,<?php echo $logo_base64; ?>" /></td>
                   <td style="width: 60%; text-align: center;">
                   <?php echo $entity_address; ?>
                   </td>
