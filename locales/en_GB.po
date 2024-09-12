@@ -1,14 +1,14 @@
 # English translations for PACKAGE package.
-# Copyright (C) 2022 THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) 2024 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Automatically generated, 2022.
+# Automatically generated, 2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-20 14:43+0000\n"
-"PO-Revision-Date: 2022-04-20 14:43+0000\n"
+"POT-Creation-Date: 2024-09-12 13:08+0000\n"
+"PO-Revision-Date: 2024-09-12 13:08+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en_GB\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: inc/export.class.php:276
+#: inc/export.class.php:273
 msgid "Asset export ref : "
 msgstr "Asset export ref : "
 
@@ -33,11 +33,11 @@ msgstr "Date of export"
 msgid "Export document"
 msgstr "Export document"
 
-#: inc/config.class.php:70
+#: inc/config.class.php:62
 msgid "Footer text"
 msgstr "Footer text"
 
-#: inc/config.class.php:83
+#: inc/config.class.php:75
 msgid "Format"
 msgstr "Format"
 
@@ -45,27 +45,23 @@ msgstr "Format"
 msgid "General setup of useditemsexport"
 msgstr "General setup of useditemsexport"
 
-#: inc/export.class.php:131
+#: inc/export.class.php:134
 msgid "Generate new export"
 msgstr "Generate new export"
 
-#: inc/config.class.php:106
+#: inc/config.class.php:95
 msgid "Landscape"
 msgstr "Landscape"
 
-#: inc/config.class.php:90
-msgid "Language"
-msgstr "Language"
-
-#: inc/config.class.php:76
+#: inc/config.class.php:68
 msgid "Orientation"
 msgstr "Orientation"
 
-#: front/export.form.php:39
+#: front/export.form.php:38
 msgid "PDF successfully generated."
 msgstr "PDF successfully generated."
 
-#: inc/config.class.php:107
+#: inc/config.class.php:96
 msgid "Portrait"
 msgstr "Portrait"
 
@@ -73,18 +69,18 @@ msgstr "Portrait"
 msgid "Reference number of export"
 msgstr "Reference number of export"
 
-#: inc/export.class.php:347 inc/export.class.php:350
+#: inc/export.class.php:341 inc/export.class.php:344
 msgid "Signature"
 msgstr "Signature"
 
-#: inc/export.class.php:44 setup.php:89
+#: inc/export.class.php:42 setup.php:94
 msgid "Used items export"
 msgstr "Used items export"
 
-#: inc/export.class.php:149
+#: inc/export.class.php:152
 msgid "Used items export generated"
 msgstr "Used items export generated"
 
-#: inc/export.class.php:407
+#: inc/export.class.php:399
 msgid "Used-Items-Export"
 msgstr "Used-Items-Export"
