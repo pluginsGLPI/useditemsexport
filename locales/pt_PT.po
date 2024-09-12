@@ -11,17 +11,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-20 14:43+0000\n"
+"POT-Creation-Date: 2024-09-12 13:08+0000\n"
 "PO-Revision-Date: 2018-02-20 13:00+0000\n"
 "Last-Translator: Rui Melo <viper5000pt@gmail.com>, 2019\n"
-"Language-Team: Portuguese (Portugal) (https://www.transifex.com/teclib/teams/28042/pt_PT/)\n"
+"Language-Team: Portuguese (Portugal) (https://app.transifex.com/teclib/teams/28042/pt_PT/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt_PT\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#: inc/export.class.php:276
+#: inc/export.class.php:273
 msgid "Asset export ref : "
 msgstr "Exportação de activos ref : "
 
@@ -37,11 +37,11 @@ msgstr "Data de exportação"
 msgid "Export document"
 msgstr "Documento exportado"
 
-#: inc/config.class.php:70
+#: inc/config.class.php:62
 msgid "Footer text"
 msgstr "Texto de rodapé"
 
-#: inc/config.class.php:83
+#: inc/config.class.php:75
 msgid "Format"
 msgstr "Formato"
 
@@ -49,27 +49,23 @@ msgstr "Formato"
 msgid "General setup of useditemsexport"
 msgstr "Configuração geral do item useditemsexport"
 
-#: inc/export.class.php:131
+#: inc/export.class.php:134
 msgid "Generate new export"
 msgstr "Gerar nova exportação"
 
-#: inc/config.class.php:106
+#: inc/config.class.php:95
 msgid "Landscape"
 msgstr "Panorama"
 
-#: inc/config.class.php:90
-msgid "Language"
-msgstr "Seleccione o idioma"
-
-#: inc/config.class.php:76
+#: inc/config.class.php:68
 msgid "Orientation"
 msgstr "Orientação"
 
-#: front/export.form.php:39
+#: front/export.form.php:38
 msgid "PDF successfully generated."
 msgstr "PDF gerado com sucesso."
 
-#: inc/config.class.php:107
+#: inc/config.class.php:96
 msgid "Portrait"
 msgstr "Retrato"
 
@@ -77,18 +73,18 @@ msgstr "Retrato"
 msgid "Reference number of export"
 msgstr "Número de referência da exportação"
 
-#: inc/export.class.php:347 inc/export.class.php:350
+#: inc/export.class.php:341 inc/export.class.php:344
 msgid "Signature"
 msgstr "Assinatura"
 
-#: inc/export.class.php:44 setup.php:89
+#: inc/export.class.php:42 setup.php:94
 msgid "Used items export"
 msgstr "Exportação de itens usados"
 
-#: inc/export.class.php:149
+#: inc/export.class.php:152
 msgid "Used items export generated"
 msgstr "Exportação de itens usados gerado"
 
-#: inc/export.class.php:407
+#: inc/export.class.php:399
 msgid "Used-Items-Export"
 msgstr "Usado-Itens-Exportação"

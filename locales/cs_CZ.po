@@ -11,17 +11,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-20 14:43+0000\n"
+"POT-Creation-Date: 2024-09-12 13:08+0000\n"
 "PO-Revision-Date: 2018-02-20 13:00+0000\n"
 "Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>, 2018\n"
-"Language-Team: Czech (Czech Republic) (https://www.transifex.com/teclib/teams/28042/cs_CZ/)\n"
+"Language-Team: Czech (Czech Republic) (https://app.transifex.com/teclib/teams/28042/cs_CZ/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: cs_CZ\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
-#: inc/export.class.php:276
+#: inc/export.class.php:273
 msgid "Asset export ref : "
 msgstr "Reference exportu majetku: "
 
@@ -37,11 +37,11 @@ msgstr "Datum exportu"
 msgid "Export document"
 msgstr "Dokument exportu"
 
-#: inc/config.class.php:70
+#: inc/config.class.php:62
 msgid "Footer text"
 msgstr "Text zápatí"
 
-#: inc/config.class.php:83
+#: inc/config.class.php:75
 msgid "Format"
 msgstr "Formát"
 
@@ -50,27 +50,23 @@ msgid "General setup of useditemsexport"
 msgstr ""
 "Obecná nastavení zásuvného modulu exportu uživatelem využívaných položek"
 
-#: inc/export.class.php:131
+#: inc/export.class.php:134
 msgid "Generate new export"
 msgstr "Vytvořit nový export"
 
-#: inc/config.class.php:106
+#: inc/config.class.php:95
 msgid "Landscape"
 msgstr "Na šířku"
 
-#: inc/config.class.php:90
-msgid "Language"
-msgstr "Jazyk"
-
-#: inc/config.class.php:76
+#: inc/config.class.php:68
 msgid "Orientation"
 msgstr "Orientace"
 
-#: front/export.form.php:39
+#: front/export.form.php:38
 msgid "PDF successfully generated."
 msgstr "PDF úspěšně vytvořeno."
 
-#: inc/config.class.php:107
+#: inc/config.class.php:96
 msgid "Portrait"
 msgstr "Na výšku"
 
@@ -78,18 +74,18 @@ msgstr "Na výšku"
 msgid "Reference number of export"
 msgstr "Referenční číslo exportu"
 
-#: inc/export.class.php:347 inc/export.class.php:350
+#: inc/export.class.php:341 inc/export.class.php:344
 msgid "Signature"
 msgstr "Podpis"
 
-#: inc/export.class.php:44 setup.php:89
+#: inc/export.class.php:42 setup.php:94
 msgid "Used items export"
 msgstr "Export uživatelem využívaných položek"
 
-#: inc/export.class.php:149
+#: inc/export.class.php:152
 msgid "Used items export generated"
 msgstr "Export využívaných položek vytvořen"
 
-#: inc/export.class.php:407
+#: inc/export.class.php:399
 msgid "Used-Items-Export"
 msgstr "Used-Items-Export"
