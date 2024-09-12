@@ -35,66 +35,67 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginUseditemsexportProfile extends CommonDBTM
 {
-   // Necessary rights to edit the rights of this plugin
-    public static $rightname = "profile";
+    // Necessary rights to edit the rights of this plugin
+    public static $rightname = 'profile';
 
-   /**
-    * @see CommonGLPI::getTabNameForItem()
-   **/
+    /**
+     * @see CommonGLPI::getTabNameForItem()
+    **/
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
-
         if ($item instanceof Profile && $item->getField('interface') != 'helpdesk') {
             return PluginUseditemsexportExport::getTypeName();
         }
+
         return '';
     }
 
-   /**
-    * @see CommonGLPI::displayTabContentForItem()
-   **/
+    /**
+     * @see CommonGLPI::displayTabContentForItem()
+    **/
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         if ($item instanceof Profile) {
-            $ID = $item->getID();
+            $ID   = $item->getID();
             $prof = new self();
-           //In case there's no right for this profile, create it
+            //In case there's no right for this profile, create it
             foreach (self::getAllRights() as $right) {
                 self::addDefaultProfileInfos($ID, [$right['field'] => 0]);
             }
             $prof->showForm($ID);
         }
+
         return true;
     }
 
-   /**
-    * Describe all possible rights for the plugin
-    * @return array
-   **/
+    /**
+     * Describe all possible rights for the plugin
+     * @return array
+    **/
     public static function getAllRights()
     {
-
         $rights = [
             ['itemtype'  => 'PluginUseditemsexportExport',
-                'label'     => PluginUseditemsexportExport::getTypeName(),
-                'field'     => 'plugin_useditemsexport_export',
-                'rights'    =>  [CREATE  => __('Create'),
-                    READ    => __('Read'),
-                    PURGE   => ['short' => __('Purge'),
-                        'long' => _x('button', 'Delete permanently')
-                    ]
+                'label'  => PluginUseditemsexportExport::getTypeName(),
+                'field'  => 'plugin_useditemsexport_export',
+                'rights' => [CREATE => __('Create'),
+                    READ            => __('Read'),
+                    PURGE           => ['short' => __('Purge'),
+                        'long'                  => _x('button', 'Delete permanently'),
+                    ],
                 ],
-                'default'   => 21
-            ]
+                'default' => 21,
+            ],
         ];
+
         return $rights;
     }
 
-   /**
-    * addDefaultProfileInfos
-    * @param $profiles_id
-    * @param $rights
-   **/
+    /**
+     * addDefaultProfileInfos
+     * @param $profiles_id
+     * @param $rights
+    **/
     public static function addDefaultProfileInfos($profiles_id, $rights)
     {
         $profileRight = new ProfileRight();
@@ -102,7 +103,7 @@ class PluginUseditemsexportProfile extends CommonDBTM
             if (
                 !countElementsInTable(
                     'glpi_profilerights',
-                    ['profiles_id' => $profiles_id, 'name' => $right]
+                    ['profiles_id' => $profiles_id, 'name' => $right],
                 )
             ) {
                 $myright['profiles_id'] = $profiles_id;
@@ -117,7 +118,6 @@ class PluginUseditemsexportProfile extends CommonDBTM
 
     public function showForm($ID, array $options = [])
     {
-
         echo "<div class='firstbloc'>";
         if ($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE])) {
             $profile = new Profile();
@@ -128,9 +128,9 @@ class PluginUseditemsexportProfile extends CommonDBTM
         $profile->getFromDB($ID);
         if ($profile->getField('interface') == 'central') {
             $rights = $this->getAllRights();
-            $profile->displayRightsChoiceMatrix($rights, ['canedit'       => $canedit,
-                'default_class' => 'tab_bg_2',
-                'title'         => __('General')
+            $profile->displayRightsChoiceMatrix($rights, ['canedit' => $canedit,
+                'default_class'                                     => 'tab_bg_2',
+                'title'                                             => __('General'),
             ]);
         }
 
@@ -141,34 +141,33 @@ class PluginUseditemsexportProfile extends CommonDBTM
             echo "</div>\n";
             Html::closeForm();
         }
-        echo "</div>";
+        echo '</div>';
 
         return true;
     }
 
-   /**
-    * Install all necessary profile for the plugin
-    *
-    * @return boolean True if success
-    */
+    /**
+     * Install all necessary profile for the plugin
+     *
+     * @return boolean True if success
+     */
     public static function install(Migration $migration)
     {
-
         foreach (self::getAllRights() as $right) {
             self::addDefaultProfileInfos(
                 $_SESSION['glpiactiveprofile']['id'],
-                [$right['field'] => $right['default']]
+                [$right['field'] => $right['default']],
             );
         }
 
         return true;
     }
 
-   /**
-    * Uninstall previously installed profile of the plugin
-    *
-    * @return boolean True if success
-    */
+    /**
+     * Uninstall previously installed profile of the plugin
+     *
+     * @return boolean True if success
+     */
     public static function uninstall()
     {
         /** @var DBmysql $DB */
