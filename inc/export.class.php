@@ -39,22 +39,22 @@ class PluginUseditemsexportExport extends CommonDBTM
 
     public static function getTypeName($nb = 0)
     {
-
         return __('Used items export', 'useditemsexport');
     }
 
-   /**
-    * @see CommonGLPI::getTabNameForItem()
-   **/
+    /**
+     * @see CommonGLPI::getTabNameForItem()
+    **/
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
-
         if ($item instanceof User) {
             if ($_SESSION['glpishow_count_on_tabs']) {
                 return self::createTabEntry(self::getTypeName(), self::countForItem($item));
             }
+
             return self::getTypeName();
         }
+
         return '';
     }
 
@@ -68,30 +68,30 @@ class PluginUseditemsexportExport extends CommonDBTM
                 $PluginUseditemsexportExport = new self();
                 $PluginUseditemsexportExport->showForUser($item);
             } else {
-                echo "<div align='center'><br><br><img src=\"" . $CFG_GLPI["root_doc"] .
-                     "/pics/warning.png\" alt=\"warning\"><br><br>";
-                echo "<b>" . __("Access denied") . "</b></div>";
+                echo "<div align='center'><br><br><img src=\"" . $CFG_GLPI['root_doc'] .
+                     '/pics/warning.png" alt="warning"><br><br>';
+                echo '<b>' . __('Access denied') . '</b></div>';
             }
         }
 
         return true;
     }
 
-   /**
-    * @param $item    CommonDBTM object
-   **/
+    /**
+     * @param $item    CommonDBTM object
+    **/
     public static function countForItem(CommonDBTM $item)
     {
         return countElementsInTable(getTableForItemType(__CLASS__), ['users_id' => $item->getID()]);
     }
 
-   /**
-    * Get all generated export for user.
-    *
-    * @param $users_id user ID
-    *
-    * @return array of exports
-   **/
+    /**
+     * Get all generated export for user.
+     *
+     * @param $users_id user ID
+     *
+     * @return array of exports
+    **/
     public static function getAllForUser($users_id)
     {
         /** @var DBmysql $DB */
@@ -99,10 +99,10 @@ class PluginUseditemsexportExport extends CommonDBTM
 
         $exports = [];
 
-       // Get default one
+        // Get default one
         $it = $DB->request([
-            'FROM' => getTableForItemType(__CLASS__),
-            'WHERE' => ['users_id' => $users_id]
+            'FROM'  => getTableForItemType(__CLASS__),
+            'WHERE' => ['users_id' => $users_id],
         ]);
         foreach ($it as $data) {
             $exports[$data['id']] = $data;
@@ -111,31 +111,31 @@ class PluginUseditemsexportExport extends CommonDBTM
         return $exports;
     }
 
-   /**
-    * @param CommonDBTM $item
-    * @param array $options
-    * @return void
-    */
+    /**
+     * @param CommonDBTM $item
+     * @param array $options
+     * @return void
+     */
     public function showForUser($item, $options = [])
     {
         $users_id = $item->getField('id');
 
         $exports = self::getAllForUser($users_id);
-        $rand = mt_rand();
+        $rand    = mt_rand();
 
-        $canpurge = self::canPurge();
+        $canpurge  = self::canPurge();
         $cancreate = self::canCreate();
 
         if ($cancreate) {
             echo "<form method='post' name='useditemsexport_form$rand' id='useditemsexport_form$rand'
-                  action=\"" . Plugin::getWebDir('useditemsexport') . "/front/export.form.php\">";
+                  action=\"" . Plugin::getWebDir('useditemsexport') . '/front/export.form.php">';
 
             echo "<table class='tab_cadre_fixehov'>";
             echo "<tr class='tab_bg_2'><th colspan='2'>" . __('Generate new export', 'useditemsexport');
-               echo "&nbsp;&nbsp<input type='submit' name='generate' value=\"" . __('Create') . "\" class='submit'>";
-               echo "<input type='hidden' name='users_id' value='$users_id'>";
-            echo "</th></tr>";
-            echo "</table>";
+            echo "&nbsp;&nbsp<input type='submit' name='generate' value=\"" . __('Create') . "\" class='submit'>";
+            echo "<input type='hidden' name='users_id' value='$users_id'>";
+            echo '</th></tr>';
+            echo '</table>';
 
             Html::closeForm();
         }
@@ -149,56 +149,56 @@ class PluginUseditemsexportExport extends CommonDBTM
 
         echo "<table class='tab_cadre_fixehov'>";
         echo "<tr><th colspan='" . ($canpurge ? 5 : 4) . "'>"
-                     . __('Used items export generated', 'useditemsexport') . "</th></tr><tr>";
+                     . __('Used items export generated', 'useditemsexport') . '</th></tr><tr>';
 
         if (count($exports) == 0) {
             echo "<tr class='tab_bg_1'>";
             echo "<td class='center' colspan='" . ($canpurge ? 5 : 4) . "'>"
-                     . __('No item to display') . "</td>";
-            echo "</tr>";
+                     . __('No item to display') . '</td>';
+            echo '</tr>';
         } else {
             if ($canpurge) {
-                echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . "</th>";
+                echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . '</th>';
             }
-            echo "<th>" . __('Reference number of export', 'useditemsexport') . "</th>";
-            echo "<th>" . __('Date of export', 'useditemsexport') . "</th>";
-            echo "<th>" . __('Author of export', 'useditemsexport') . "</th>";
-            echo "<th>" . __('Export document', 'useditemsexport') . "</th>";
-            echo "</tr>";
+            echo '<th>' . __('Reference number of export', 'useditemsexport') . '</th>';
+            echo '<th>' . __('Date of export', 'useditemsexport') . '</th>';
+            echo '<th>' . __('Author of export', 'useditemsexport') . '</th>';
+            echo '<th>' . __('Export document', 'useditemsexport') . '</th>';
+            echo '</tr>';
 
             foreach ($exports as $data) {
                 echo "<tr class='tab_bg_1'>";
 
                 if ($canpurge) {
                     echo "<td width='10'>";
-                    Html::showMassiveActionCheckBox(__CLASS__, $data["id"]);
-                    echo "</td>";
+                    Html::showMassiveActionCheckBox(__CLASS__, $data['id']);
+                    echo '</td>';
                 }
 
                 echo "<td class='center'>";
-                echo $data["refnumber"];
-                echo "</td>";
+                echo $data['refnumber'];
+                echo '</td>';
 
                 echo "<td class='center'>";
-                echo Html::convDateTime($data["date_mod"]);
-                echo "</td>";
+                echo Html::convDateTime($data['date_mod']);
+                echo '</td>';
 
                 $User = new User();
                 $User->getFromDB($data['authors_id']);
                 echo "<td class='center'>";
                 echo $User->getLink();
-                echo "</td>";
+                echo '</td>';
 
                 $Doc = new Document();
                 $Doc->getFromDB($data['documents_id']);
                 echo "<td class='center'>";
                 echo $Doc->getDownloadLink();
-                echo "</td>";
-                echo "</tr>";
+                echo '</td>';
+                echo '</tr>';
             }
         }
 
-        echo "</table>";
+        echo '</table>';
         if ($canpurge && count($exports) > 0) {
             $massiveactionparams['ontop'] = false;
             Html::showMassiveActions($massiveactionparams);
@@ -206,17 +206,15 @@ class PluginUseditemsexportExport extends CommonDBTM
         }
     }
 
-
-   /**
-    * Generate PDF for user and add entry into DB
-    *
-    * @param $users_id user ID
-    *
-    * @return boolean
-   **/
+    /**
+     * Generate PDF for user and add entry into DB
+     *
+     * @param $users_id user ID
+     *
+     * @return boolean
+    **/
     public static function generatePDF($users_id)
     {
-
         $num       = self::getNextNum();
         $refnumber = self::getNextRefnumber();
 
@@ -225,31 +223,31 @@ class PluginUseditemsexportExport extends CommonDBTM
         }
         $useditemsexport_config = $_SESSION['plugins']['useditemsexport']['config'];
 
-       // Compile address from current_entity
+        // Compile address from current_entity
         $entity = new Entity();
         $entity->getFromDB($_SESSION['glpiactive_entity']);
-        $entity_address = '<h3>' . $entity->fields["name"] . '</h3><br />';
-        $entity_address .= $entity->fields["address"] . '<br />';
-        $entity_address .= $entity->fields["postcode"] . ' - ' . $entity->fields['town'] . '<br />';
-        $entity_address .= $entity->fields["country"] . '<br />';
+        $entity_address = '<h3>' . $entity->fields['name'] . '</h3><br />';
+        $entity_address .= $entity->fields['address'] . '<br />';
+        $entity_address .= $entity->fields['postcode'] . ' - ' . $entity->fields['town'] . '<br />';
+        $entity_address .= $entity->fields['country'] . '<br />';
 
-        if (isset($entity->fields["email"])) {
-            $entity_address .= __('Email') . ' : ' . $entity->fields["email"] . '<br />';
+        if (isset($entity->fields['email'])) {
+            $entity_address .= __('Email') . ' : ' . $entity->fields['email'] . '<br />';
         }
 
-        if (isset($entity->fields["phonenumber"])) {
-            $entity_address .= __('Phone') . ' : ' . $entity->fields["phonenumber"] . '<br />';
+        if (isset($entity->fields['phonenumber'])) {
+            $entity_address .= __('Phone') . ' : ' . $entity->fields['phonenumber'] . '<br />';
         }
 
-       // Get User information
+        // Get User information
         $User = new User();
         $User->getFromDB($users_id);
 
-       // Get Author information
+        // Get Author information
         $Author = new User();
         $Author->getFromDB(Session::getLoginUserID());
 
-       // Logo
+        // Logo
         $logo_base64 = base64_encode(file_get_contents(GLPI_PLUGIN_DOC_DIR . '/useditemsexport/logo.png'));
 
         ob_start();
@@ -297,23 +295,23 @@ class PluginUseditemsexportExport extends CommonDBTM
 
             $allUsedItemsForUser = self::getAllUsedItemsForUser($users_id);
 
-            foreach ($allUsedItemsForUser as $itemtype => $used_items) {
-                $item = getItemForItemtype($itemtype);
+        foreach ($allUsedItemsForUser as $itemtype => $used_items) {
+            $item = getItemForItemtype($itemtype);
 
-                foreach ($used_items as $item_datas) {
-                    ?>
+            foreach ($used_items as $item_datas) {
+                ?>
             <tr>
                <td style="width: 25%;">
                     <?php
-                    if (isset($item_datas['serial'])) {
-                        echo $item_datas['serial'];
-                    } ?>
+                if (isset($item_datas['serial'])) {
+                    echo $item_datas['serial'];
+                } ?>
                </td>
                <td style="width: 25%;">
                     <?php
-                    if (isset($item_datas['otherserial'])) {
-                        echo $item_datas['otherserial'];
-                    } ?>
+                if (isset($item_datas['otherserial'])) {
+                    echo $item_datas['otherserial'];
+                } ?>
                </td>
                <td style="width: 25%;">
                     <?php echo $item_datas['name']; ?>
@@ -323,10 +321,10 @@ class PluginUseditemsexportExport extends CommonDBTM
                </td>
             </tr>
                     <?php
-                }
             }
+        }
 
-            ?>
+        ?>
          </table>
          <br><br><br><br><br>
          <table style="border-collapse: collapse;">
@@ -357,7 +355,7 @@ class PluginUseditemsexportExport extends CommonDBTM
 
         $content = ob_get_clean();
 
-       // Generate PDF
+        // Generate PDF
         $pdf = new GLPIPDF([
             'orientation' => $useditemsexport_config['orientation'],
             'format'      => $useditemsexport_config['format'],
@@ -365,16 +363,16 @@ class PluginUseditemsexportExport extends CommonDBTM
         $pdf->WriteHTML($content);
         $contentPDF = $pdf->Output('', 'S');
 
-      // Store PDF in GLPi upload dir and create document
+        // Store PDF in GLPi upload dir and create document
         file_put_contents(GLPI_UPLOAD_DIR . '/' . $refnumber . '.pdf', $contentPDF);
         $documents_id = self::createDocument($refnumber);
 
-      // Add log for last generated PDF
+        // Add log for last generated PDF
         $export = new self();
 
-        $input = [];
+        $input                 = [];
         $input['users_id']     = $users_id;
-        $input['date_mod']     = date("Y-m-d H:i:s");
+        $input['date_mod']     = date('Y-m-d H:i:s');
         $input['num']          = $num;
         $input['refnumber']    = $refnumber;
         $input['authors_id']   = Session::getLoginUserID();
@@ -387,24 +385,23 @@ class PluginUseditemsexportExport extends CommonDBTM
         return false;
     }
 
-   /**
-    * Store Document into GLPi DB
-    * @param string $refnumber
-    * @return integer id of Document
-    */
+    /**
+     * Store Document into GLPi DB
+     * @param string $refnumber
+     * @return integer id of Document
+     */
     public static function createDocument($refnumber)
     {
-
         $doc = new Document();
 
         $input                          = [];
-        $input["entities_id"]           = $_SESSION['glpiactive_entity'];
-        $input["name"]                  = __('Used-Items-Export', 'useditemsexport') . '-' . $refnumber;
-        $input["upload_file"]           = $refnumber . '.pdf';
-        $input["documentcategories_id"] = 0;
-        $input["mime"]                  = "application/pdf";
-        $input["date_mod"]              = date("Y-m-d H:i:s");
-        $input["users_id"]              = Session::getLoginUserID();
+        $input['entities_id']           = $_SESSION['glpiactive_entity'];
+        $input['name']                  = __('Used-Items-Export', 'useditemsexport') . '-' . $refnumber;
+        $input['upload_file']           = $refnumber . '.pdf';
+        $input['documentcategories_id'] = 0;
+        $input['mime']                  = 'application/pdf';
+        $input['date_mod']              = date('Y-m-d H:i:s');
+        $input['users_id']              = Session::getLoginUserID();
 
         $doc->check(-1, CREATE, $input);
         $newdocid = $doc->add($input);
@@ -412,10 +409,10 @@ class PluginUseditemsexportExport extends CommonDBTM
         return $newdocid;
     }
 
-   /**
-    * Get next num
-    * @return integer
-    */
+    /**
+     * Get next num
+     * @return integer
+     */
     public static function getNextNum()
     {
         /** @var DBmysql $DB */
@@ -430,33 +427,35 @@ class PluginUseditemsexportExport extends CommonDBTM
             return 1;
         } else {
             $nextNum++;
+
             return $nextNum;
         }
     }
 
-   /**
-    * Compute next refnumber
-    * @return string
-    */
+    /**
+     * Compute next refnumber
+     * @return string
+     */
     public static function getNextRefnumber()
     {
         /** @var DBmysql $DB */
         global $DB;
 
         if ($nextNum = self::getNextNum()) {
-            $nextRefnumber = str_pad((string)$nextNum, 4, "0", STR_PAD_LEFT);
-            $date = new DateTime();
+            $nextRefnumber = str_pad((string) $nextNum, 4, '0', STR_PAD_LEFT);
+            $date          = new DateTime();
+
             return $nextRefnumber . '-' . $date->format('Y');
         } else {
             return '';
         }
     }
 
-   /**
-    * Get all used items for user
-    * @param integer $ID ID of user
-    * @return array
-    */
+    /**
+     * Get all used items for user
+     * @param integer $ID ID of user
+     * @return array
+     */
     public static function getAllUsedItemsForUser($ID)
     {
         /**
@@ -473,9 +472,9 @@ class PluginUseditemsexportExport extends CommonDBTM
             }
             if ($item->canView()) {
                 $itemtable = getTableForItemType($itemtype);
-                $criteria = [
-                    'FROM' => $itemtable,
-                    'WHERE' => ['users_id' => $ID]
+                $criteria  = [
+                    'FROM'  => $itemtable,
+                    'WHERE' => ['users_id' => $ID],
                 ];
 
                 if ($item->maybeTemplate()) {
@@ -484,7 +483,7 @@ class PluginUseditemsexportExport extends CommonDBTM
                 if ($item->maybeDeleted()) {
                     $criteria['WHERE']['is_deleted'] = '0';
                 }
-                $result    = $DB->request($criteria);
+                $result = $DB->request($criteria);
 
                 $type_name = $item->getTypeName();
 
@@ -496,7 +495,7 @@ class PluginUseditemsexportExport extends CommonDBTM
             }
         }
 
-       // Consumables
+        // Consumables
         $consumables = $DB->request(
             [
                 'SELECT' => ['name', 'otherserial'],
@@ -508,12 +507,12 @@ class PluginUseditemsexportExport extends CommonDBTM
                             'FROM'   => Consumable::getTable(),
                             'WHERE'  => [
                                 'itemtype' => User::class,
-                                'items_id' => $ID
+                                'items_id' => $ID,
                             ],
-                        ]
-                    )
+                        ],
+                    ),
                 ],
-            ]
+            ],
         );
 
         foreach ($consumables as $data) {
@@ -523,33 +522,32 @@ class PluginUseditemsexportExport extends CommonDBTM
         return $items;
     }
 
-   /**
-    * Clean GLPi DB on export purge
-    *
-    * @return void
-    */
+    /**
+     * Clean GLPi DB on export purge
+     *
+     * @return void
+     */
     public function cleanDBonPurge()
     {
-
         // Clean Document GLPi
         $doc = new Document();
         $doc->getFromDB($this->fields['documents_id']);
         $doc->delete(['id' => $this->fields['documents_id']], true);
     }
 
-   /**
-    * Install all necessary tables for the plugin
-    *
-    * @return boolean True if success
-    */
+    /**
+     * Install all necessary tables for the plugin
+     *
+     * @return boolean True if success
+     */
     public static function install(Migration $migration)
     {
         /** @var DBmysql $DB */
         global $DB;
 
-        $default_charset = DBConnection::getDefaultCharset();
+        $default_charset   = DBConnection::getDefaultCharset();
         $default_collation = DBConnection::getDefaultCollation();
-        $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
 
         $table = getTableForItemType(__CLASS__);
 
@@ -572,11 +570,11 @@ class PluginUseditemsexportExport extends CommonDBTM
         return true;
     }
 
-   /**
-    * Uninstall previously installed tables of the plugin
-    *
-    * @return boolean True if success
-    */
+    /**
+     * Uninstall previously installed tables of the plugin
+     *
+     * @return boolean True if success
+     */
     public static function uninstall()
     {
         /** @var DBmysql $DB */
@@ -584,7 +582,7 @@ class PluginUseditemsexportExport extends CommonDBTM
 
         $table = getTableForItemType(__CLASS__);
 
-        $query = "DROP TABLE IF EXISTS  `" . $table . "`";
+        $query = 'DROP TABLE IF EXISTS  `' . $table . '`';
         $DB->query($query) or die($DB->error());
 
         return true;

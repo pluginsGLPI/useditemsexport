@@ -40,8 +40,8 @@ if (isset($_REQUEST['generate'])) {
     }
 }
 
-if (isset($_REQUEST["purgeitem"])) {
-    foreach ($_POST["useditemsexport"] as $key => $val) {
+if (isset($_REQUEST['purgeitem'])) {
+    foreach ($_POST['useditemsexport'] as $key => $val) {
         $input = ['id' => $key];
         if ($val == 1) {
             $PluginUseditemsexportExport->delete($input, true);

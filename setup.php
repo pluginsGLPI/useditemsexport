@@ -30,12 +30,12 @@
  */
 
 // Plugin version
-define("PLUGIN_USEDITEMSEXPORT_VERSION", "2.5.2");
+define('PLUGIN_USEDITEMSEXPORT_VERSION', '2.5.2');
 
 // Minimal GLPI version, inclusive
-define("PLUGIN_USEDITEMSEXPORT_MIN_GLPI", "10.0.1");
+define('PLUGIN_USEDITEMSEXPORT_MIN_GLPI', '10.0.1');
 // Maximum GLPI version, exclusive
-define("PLUGIN_USEDITEMSEXPORT_MAX_GLPI", "10.0.99");
+define('PLUGIN_USEDITEMSEXPORT_MAX_GLPI', '10.0.99');
 
 /**
  * Init hooks of the plugin.
@@ -62,7 +62,7 @@ function plugin_init_useditemsexport()
         if (Session::haveRight('profile', UPDATE)) {
             Plugin::registerClass(
                 'PluginUseditemsexportProfile',
-                ['addtabon' => 'Profile']
+                ['addtabon' => 'Profile'],
             );
         }
 
@@ -75,7 +75,7 @@ function plugin_init_useditemsexport()
             ) {
                 Plugin::registerClass(
                     'PluginUseditemsexportExport',
-                    ['addtabon' => 'User']
+                    ['addtabon' => 'User'],
                 );
             }
         }
@@ -90,19 +90,18 @@ function plugin_init_useditemsexport()
  */
 function plugin_version_useditemsexport()
 {
-
     return  [
-        'name' => __('Used items export', 'useditemsexport'),
-        'version' => PLUGIN_USEDITEMSEXPORT_VERSION,
-        'oldname' => '',
-        'license' => 'GPLv2+',
-        'author'  => "TECLIB",
-        'homepage' => 'https://github.com/pluginsGLPI/useditemsexport',
-        'requirements'   => [
+        'name'         => __('Used items export', 'useditemsexport'),
+        'version'      => PLUGIN_USEDITEMSEXPORT_VERSION,
+        'oldname'      => '',
+        'license'      => 'GPLv2+',
+        'author'       => 'TECLIB',
+        'homepage'     => 'https://github.com/pluginsGLPI/useditemsexport',
+        'requirements' => [
             'glpi' => [
                 'min' => PLUGIN_USEDITEMSEXPORT_MIN_GLPI,
                 'max' => PLUGIN_USEDITEMSEXPORT_MAX_GLPI,
-            ]
-        ]
+            ],
+        ],
     ];
 }
