@@ -31,6 +31,8 @@
 
 include('../../../inc/includes.php');
 
+Session::checkLoginUser();
+
 $PluginUseditemsexportExport = new PluginUseditemsexportExport();
 
 if (isset($_REQUEST['generate'])) {
