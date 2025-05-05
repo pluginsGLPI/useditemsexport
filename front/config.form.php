@@ -31,7 +31,7 @@
 
 include('../../../inc/includes.php');
 
-Session::haveRight('config', UPDATE);
+Session::checkRight('config', UPDATE);
 
 Html::header(
     PluginUseditemsexportConfig::getTypeName(1),
