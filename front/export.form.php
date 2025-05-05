@@ -36,6 +36,7 @@ Session::checkLoginUser();
 $PluginUseditemsexportExport = new PluginUseditemsexportExport();
 
 if (isset($_REQUEST['generate'])) {
+    Session::checkRight('plugin_useditemsexport_export', CREATE);
     if ($PluginUseditemsexportExport::generatePDF($_POST['users_id'])) {
         Session::addMessageAfterRedirect(__('PDF successfully generated.', 'useditemsexport'), true);
         Html::back();
@@ -43,6 +44,7 @@ if (isset($_REQUEST['generate'])) {
 }
 
 if (isset($_REQUEST['purgeitem'])) {
+    Session::checkRight('plugin_useditemsexport_export', PURGE);
     foreach ($_POST['useditemsexport'] as $key => $val) {
         $input = ['id' => $key];
         if ($val == 1) {
