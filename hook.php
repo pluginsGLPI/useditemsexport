@@ -50,7 +50,6 @@ function plugin_useditemsexport_install()
             }
         }
     }
-
     return true;
 }
 
@@ -73,6 +72,5 @@ function plugin_useditemsexport_uninstall()
             }
         }
     }
-
     return true;
 }

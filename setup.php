@@ -29,13 +29,12 @@
  * -------------------------------------------------------------------------
  */
 
-// Plugin version
-define('PLUGIN_USEDITEMSEXPORT_VERSION', '2.5.2');
+use Glpi\Plugin\Hooks;
 
-// Minimal GLPI version, inclusive
-define('PLUGIN_USEDITEMSEXPORT_MIN_GLPI', '10.0.1');
-// Maximum GLPI version, exclusive
-define('PLUGIN_USEDITEMSEXPORT_MAX_GLPI', '10.0.99');
+// Plugin version
+define('PLUGIN_USEDITEMSEXPORT_VERSION', '2.6.0-beta1');
+define('PLUGIN_USEDITEMSEXPORT_MIN_GLPI', '11.0.0');
+define('PLUGIN_USEDITEMSEXPORT_MAX_GLPI', '11.0.99');
 
 /**
  * Init hooks of the plugin.
@@ -56,14 +55,12 @@ function plugin_init_useditemsexport()
         PluginUseditemsexportConfig::loadInSession();
 
         if (Session::haveRight('config', UPDATE)) {
-            $PLUGIN_HOOKS['config_page']['useditemsexport'] = 'front/config.form.php';
+            $PLUGIN_HOOKS[Hooks::CONFIG_PAGE]['useditemsexport'] = '../../front/config.form.php?forcetab=PluginUseditemsexportConfig$1';
+            Plugin::registerClass(PluginUseditemsexportConfig::class, ['addtabon' => [Config::class]]);
         }
 
         if (Session::haveRight('profile', UPDATE)) {
-            Plugin::registerClass(
-                'PluginUseditemsexportProfile',
-                ['addtabon' => 'Profile'],
-            );
+            Plugin::registerClass(PluginUseditemsexportProfile::class, ['addtabon' => Profile::class]);
         }
 
         if (isset($_SESSION['plugins']['useditemsexport']['config'])) {
@@ -73,13 +70,20 @@ function plugin_init_useditemsexport()
                 Session::haveRightsOr('plugin_useditemsexport_export', [READ, CREATE, PURGE])
                 && $useditemsexport_config['is_active']
             ) {
-                Plugin::registerClass(
-                    'PluginUseditemsexportExport',
-                    ['addtabon' => 'User'],
-                );
+                Plugin::registerClass(PluginUseditemsexportExport::class, ['addtabon' => User::class]);
             }
         }
     }
+}
+
+
+function plugin_useditemsexport_check_prerequisites()
+{
+    if (!is_readable(__DIR__ . '/vendor/autoload.php') || !is_file(__DIR__ . '/vendor/autoload.php')) {
+        echo "Run composer install --no-dev in the plugin directory<br>";
+        return false;
+    }
+    return true;
 }
 
 /**
