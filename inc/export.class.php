@@ -29,9 +29,7 @@
  * -------------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
+use Glpi\Application\View\TemplateRenderer;
 
 class PluginUseditemsexportExport extends CommonDBTM
 {
@@ -41,18 +39,19 @@ class PluginUseditemsexportExport extends CommonDBTM
     {
         return __('Used items export', 'useditemsexport');
     }
-
     /**
      * @see CommonGLPI::getTabNameForItem()
     **/
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         if ($item instanceof User) {
+            $nb = 0;
             if ($_SESSION['glpishow_count_on_tabs']) {
-                return self::createTabEntry(self::getTypeName(), self::countForItem($item));
+                $nb = self::countForItem($item);
             }
-
-            return self::getTypeName();
+            if (Session::haveRightsOr('plugin_useditemsexport_export', [READ, CREATE, PURGE])) {
+                return self::createTabEntry(self::getTypeName(), $nb, $item::getType(), PluginUseditemsexportConfig::getIcon());
+            }
         }
 
         return '';
@@ -60,17 +59,10 @@ class PluginUseditemsexportExport extends CommonDBTM
 
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
-        /** @var array $CFG_GLPI */
-        global $CFG_GLPI;
-
         if ($item instanceof User) {
             if (Session::haveRightsOr('plugin_useditemsexport_export', [READ, CREATE, PURGE])) {
                 $PluginUseditemsexportExport = new self();
                 $PluginUseditemsexportExport->showForUser($item);
-            } else {
-                echo "<div align='center'><br><br><img src=\"" . $CFG_GLPI['root_doc'] .
-                     '/pics/warning.png" alt="warning"><br><br>';
-                echo '<b>' . __('Access denied') . '</b></div>';
             }
         }
 
@@ -118,6 +110,11 @@ class PluginUseditemsexportExport extends CommonDBTM
      */
     public function showForUser($item, $options = [])
     {
+        /**
+         * @var array $CFG_GLPI
+         */
+        global $CFG_GLPI;
+
         $users_id = $item->getField('id');
 
         $exports = self::getAllForUser($users_id);
@@ -127,83 +124,58 @@ class PluginUseditemsexportExport extends CommonDBTM
         $cancreate = self::canCreate();
 
         if ($cancreate) {
-            echo "<form method='post' name='useditemsexport_form$rand' id='useditemsexport_form$rand'
-                  action=\"" . Plugin::getWebDir('useditemsexport') . '/front/export.form.php">';
-
-            echo "<table class='tab_cadre_fixehov'>";
-            echo "<tr class='tab_bg_2'><th colspan='2'>" . __('Generate new export', 'useditemsexport');
-            echo "&nbsp;&nbsp<input type='submit' name='generate' value=\"" . __('Create') . "\" class='submit'>";
-            echo "<input type='hidden' name='users_id' value='$users_id'>";
-            echo '</th></tr>';
-            echo '</table>';
-
-            Html::closeForm();
+            TemplateRenderer::getInstance()->display(
+                '@useditemsexport/export.html.twig',
+                [
+                    'action'  => $CFG_GLPI['root_doc'] . '/plugins/useditemsexport/front/export.form.php',
+                    'users_id'    => $users_id,
+                ],
+            );
         }
 
-        if ($canpurge && count($exports) > 0) {
-            $rand = mt_rand();
-            Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
-            $massiveactionparams = ['item' => $item, 'container' => 'mass' . __CLASS__ . $rand];
-            Html::showMassiveActions($massiveactionparams);
+        $entries = [];
+        foreach ($exports as $row) {
+
+            $user = new User();
+            $user->getFromDB($row['authors_id']);
+
+            $doc = new Document();
+            $doc->getFromDB($row['documents_id']);
+
+            $entries[] = [
+                'itemtype' => self::class,
+                'id' => $row['id'],
+                'ref' => $row['refnumber'],
+                'date_mod' => Html::convDateTime($row['date_mod']),
+                'users_id' => $user->getLink(),
+                'doc' =>  $doc->getDownloadLink(),
+            ];
         }
 
-        echo "<table class='tab_cadre_fixehov'>";
-        echo "<tr><th colspan='" . ($canpurge ? 5 : 4) . "'>"
-                     . __('Used items export generated', 'useditemsexport') . '</th></tr><tr>';
-
-        if (count($exports) == 0) {
-            echo "<tr class='tab_bg_1'>";
-            echo "<td class='center' colspan='" . ($canpurge ? 5 : 4) . "'>"
-                     . __('No item to display') . '</td>';
-            echo '</tr>';
-        } else {
-            if ($canpurge) {
-                echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . '</th>';
-            }
-            echo '<th>' . __('Reference number of export', 'useditemsexport') . '</th>';
-            echo '<th>' . __('Date of export', 'useditemsexport') . '</th>';
-            echo '<th>' . __('Author of export', 'useditemsexport') . '</th>';
-            echo '<th>' . __('Export document', 'useditemsexport') . '</th>';
-            echo '</tr>';
-
-            foreach ($exports as $data) {
-                echo "<tr class='tab_bg_1'>";
-
-                if ($canpurge) {
-                    echo "<td width='10'>";
-                    Html::showMassiveActionCheckBox(__CLASS__, $data['id']);
-                    echo '</td>';
-                }
-
-                echo "<td class='center'>";
-                echo $data['refnumber'];
-                echo '</td>';
-
-                echo "<td class='center'>";
-                echo Html::convDateTime($data['date_mod']);
-                echo '</td>';
-
-                $User = new User();
-                $User->getFromDB($data['authors_id']);
-                echo "<td class='center'>";
-                echo $User->getLink();
-                echo '</td>';
-
-                $Doc = new Document();
-                $Doc->getFromDB($data['documents_id']);
-                echo "<td class='center'>";
-                echo $Doc->getDownloadLink();
-                echo '</td>';
-                echo '</tr>';
-            }
-        }
-
-        echo '</table>';
-        if ($canpurge && count($exports) > 0) {
-            $massiveactionparams['ontop'] = false;
-            Html::showMassiveActions($massiveactionparams);
-            Html::closeForm();
-        }
+        TemplateRenderer::getInstance()->display('components/datatable.html.twig', [
+            'is_tab' => true,
+            'nofilter' => true,
+            'columns' => [
+                'ref' => __('Reference number of export', 'useditemsexport'),
+                'date_mod' => __('Date of export', 'useditemsexport'),
+                'users_id' => __('Author of export', 'useditemsexport'),
+                'doc' => __('Export document', 'useditemsexport'),
+            ],
+            'formatters' => [
+                'ref' => 'raw_html',
+                'date_mod' => 'raw_html',
+                'users_id' => 'raw_html',
+                'doc' => 'raw_html',
+            ],
+            'entries' => $entries,
+            'total_number' => count($entries),
+            'filtered_number' => count($entries),
+            'showmassiveactions' => $cancreate || $canpurge,
+            'massiveactionparams' => [
+                'num_displayed' => min($_SESSION['glpilist_limit'], count($entries)),
+                'container'     => 'mass' . static::class . $rand,
+            ],
+        ]);
     }
 
     /**
@@ -419,7 +391,7 @@ class PluginUseditemsexportExport extends CommonDBTM
         global $DB;
 
         $result = $DB->request([
-            'SELECT' => [new QueryExpression('MAX(' . $DB::quoteName('num') . ') AS ' . $DB::quoteName('num'))],
+            'SELECT' => [new \Glpi\DBAL\QueryExpression('MAX(' . $DB::quoteName('num') . ') AS ' . $DB::quoteName('num'))],
             'FROM'   => self::getTable(),
         ]);
         $nextNum = count($result) ? $result->current()['num'] : false;
@@ -501,7 +473,7 @@ class PluginUseditemsexportExport extends CommonDBTM
                 'SELECT' => ['name', 'otherserial'],
                 'FROM'   => ConsumableItem::getTable(),
                 'WHERE'  => [
-                    'id' => new QuerySubQuery(
+                    'id' => new \Glpi\DBAL\QuerySubQuery(
                         [
                             'SELECT' => 'consumableitems_id',
                             'FROM'   => Consumable::getTable(),
@@ -564,7 +536,7 @@ class PluginUseditemsexportExport extends CommonDBTM
                   `documents_id` INT {$default_key_sign} NOT NULL DEFAULT '0',
                PRIMARY KEY  (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
-            $DB->query($query) or die($DB->error());
+            $DB->doQuery($query);
         }
 
         return true;
@@ -583,7 +555,7 @@ class PluginUseditemsexportExport extends CommonDBTM
         $table = getTableForItemType(__CLASS__);
 
         $query = 'DROP TABLE IF EXISTS  `' . $table . '`';
-        $DB->query($query) or die($DB->error());
+        $DB->doQuery($query);
 
         return true;
     }
