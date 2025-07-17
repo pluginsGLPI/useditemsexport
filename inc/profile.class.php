@@ -29,10 +29,6 @@
  * -------------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 class PluginUseditemsexportProfile extends CommonDBTM
 {
     // Necessary rights to edit the rights of this plugin
@@ -44,7 +40,7 @@ class PluginUseditemsexportProfile extends CommonDBTM
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         if ($item instanceof Profile && $item->getField('interface') != 'helpdesk') {
-            return PluginUseditemsexportExport::getTypeName();
+            return self::createTabEntry(PluginUseditemsexportConfig::getTypeName(), 0, $item::getType(), PluginUseditemsexportConfig::getIcon());
         }
 
         return '';
@@ -142,7 +138,6 @@ class PluginUseditemsexportProfile extends CommonDBTM
             Html::closeForm();
         }
         echo '</div>';
-
         return true;
     }
 
