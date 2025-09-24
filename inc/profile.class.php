@@ -74,9 +74,9 @@ class PluginUseditemsexportProfile extends CommonDBTM
             ['itemtype'  => 'PluginUseditemsexportExport',
                 'label'  => PluginUseditemsexportExport::getTypeName(),
                 'field'  => 'plugin_useditemsexport_export',
-                'rights' => [CREATE => __('Create'),
-                    READ            => __('Read'),
-                    PURGE           => ['short' => __('Purge'),
+                'rights' => [CREATE => __s('Create'),
+                    READ            => __s('Read'),
+                    PURGE           => ['short' => __s('Purge'),
                         'long'                  => _x('button', 'Delete permanently'),
                     ],
                 ],
@@ -126,7 +126,7 @@ class PluginUseditemsexportProfile extends CommonDBTM
             $rights = $this->getAllRights();
             $profile->displayRightsChoiceMatrix($rights, ['canedit' => $canedit,
                 'default_class'                                     => 'tab_bg_2',
-                'title'                                             => __('General'),
+                'title'                                             => __s('General'),
             ]);
         }
 

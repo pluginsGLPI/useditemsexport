@@ -97,7 +97,7 @@ function plugin_useditemsexport_check_prerequisites()
 function plugin_version_useditemsexport()
 {
     return  [
-        'name'         => __('Used items export', 'useditemsexport'),
+        'name'         => __s('Used items export', 'useditemsexport'),
         'version'      => PLUGIN_USEDITEMSEXPORT_VERSION,
         'oldname'      => '',
         'license'      => 'GPLv2+',

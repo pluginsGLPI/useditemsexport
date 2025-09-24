@@ -43,7 +43,7 @@ class PluginUseditemsexportExport extends CommonDBTM
 
     public static function getTypeName($nb = 0)
     {
-        return __('Used items export', 'useditemsexport');
+        return __s('Used items export', 'useditemsexport');
     }
     /**
      * @see CommonGLPI::getTabNameForItem()
@@ -162,10 +162,10 @@ class PluginUseditemsexportExport extends CommonDBTM
             'is_tab' => true,
             'nofilter' => true,
             'columns' => [
-                'ref' => __('Reference number of export', 'useditemsexport'),
-                'date_mod' => __('Date of export', 'useditemsexport'),
-                'users_id' => __('Author of export', 'useditemsexport'),
-                'doc' => __('Export document', 'useditemsexport'),
+                'ref' => __s('Reference number of export', 'useditemsexport'),
+                'date_mod' => __s('Date of export', 'useditemsexport'),
+                'users_id' => __s('Author of export', 'useditemsexport'),
+                'doc' => __s('Export document', 'useditemsexport'),
             ],
             'formatters' => [
                 'ref' => 'raw_html',
@@ -210,11 +210,11 @@ class PluginUseditemsexportExport extends CommonDBTM
         $entity_address .= $entity->fields['country'] . '<br />';
 
         if (isset($entity->fields['email'])) {
-            $entity_address .= __('Email') . ' : ' . $entity->fields['email'] . '<br />';
+            $entity_address .= __s('Email') . ' : ' . $entity->fields['email'] . '<br />';
         }
 
         if (isset($entity->fields['phonenumber'])) {
-            $entity_address .= __('Phone') . ' : ' . $entity->fields['phonenumber'] . '<br />';
+            $entity_address .= __s('Phone') . ' : ' . $entity->fields['phonenumber'] . '<br />';
         }
 
         // Get User information
@@ -248,7 +248,7 @@ class PluginUseditemsexportExport extends CommonDBTM
          <table>
             <tr>
                <td style="border: 1px solid #000000; text-align: center; width: 100%; font-size: 15pt; height: 8mm;">
-                  <?php echo __('Asset export ref : ', 'useditemsexport') . $refnumber; ?>
+                  <?php echo __s('Asset export ref : ', 'useditemsexport') . $refnumber; ?>
                </td>
             </tr>
          </table>
@@ -257,16 +257,16 @@ class PluginUseditemsexportExport extends CommonDBTM
          <table>
             <tr>
               <th style="width: 25%;">
-                  <?php echo __('Serial number'); ?>
+                  <?php echo __s('Serial number'); ?>
                </th>
                <th style="width: 25%;">
-                  <?php echo __('Inventory number'); ?>
+                  <?php echo __s('Inventory number'); ?>
                </th>
                <th style="width: 25%;">
-                  <?php echo __('Name'); ?>
+                  <?php echo __s('Name'); ?>
                </th>
                <th style="width: 25%;">
-                  <?php echo __('Type'); ?>
+                  <?php echo __s('Type'); ?>
                </th>
             </tr>
             <?php
@@ -316,10 +316,10 @@ class PluginUseditemsexportExport extends CommonDBTM
             </tr>
             <tr>
                <td style="border: 1px solid #000000; width: 50%; vertical-align: top">
-                  <?php echo __('Signature', 'useditemsexport'); ?> : <br><br><br><br><br>
+                  <?php echo __s('Signature', 'useditemsexport'); ?> : <br><br><br><br><br>
                </td>
                <td style="border: 1px solid #000000; width: 50%; vertical-align: top;">
-                  <?php echo __('Signature', 'useditemsexport'); ?> : <br><br><br><br><br>
+                  <?php echo __s('Signature', 'useditemsexport'); ?> : <br><br><br><br><br>
                </td>
             </tr>
          </table>
@@ -374,7 +374,7 @@ class PluginUseditemsexportExport extends CommonDBTM
 
         $input                          = [];
         $input['entities_id']           = $_SESSION['glpiactive_entity'];
-        $input['name']                  = __('Used-Items-Export', 'useditemsexport') . '-' . $refnumber;
+        $input['name']                  = __s('Used-Items-Export', 'useditemsexport') . '-' . $refnumber;
         $input['upload_file']           = $refnumber . '.pdf';
         $input['documentcategories_id'] = 0;
         $input['mime']                  = 'application/pdf';

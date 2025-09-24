@@ -45,7 +45,7 @@ class PluginUseditemsexportConfig extends CommonDBTM
      **/
     public static function getTypeName($nb = 0)
     {
-        return __('Used items export', 'useditemsexport');
+        return __s('Used items export', 'useditemsexport');
     }
 
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
@@ -93,8 +93,8 @@ class PluginUseditemsexportConfig extends CommonDBTM
     {
         Dropdown::showFromArray(
             'orientation',
-            ['L'    => __('Landscape', 'useditemsexport'),
-                'P' => __('Portrait', 'useditemsexport'),
+            ['L'    => __s('Landscape', 'useditemsexport'),
+                'P' => __s('Portrait', 'useditemsexport'),
             ],
             ['value' => $value],
         );
@@ -109,9 +109,9 @@ class PluginUseditemsexportConfig extends CommonDBTM
     {
         Dropdown::showFromArray(
             'format',
-            ['A3'    => __('A3'),
-                'A4' => __('A4'),
-                'A5' => __('A5'),
+            ['A3'    => __s('A3'),
+                'A4' => __s('A4'),
+                'A5' => __s('A5'),
             ],
             ['value' => $value],
         );
