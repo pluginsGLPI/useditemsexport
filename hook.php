@@ -29,6 +29,9 @@
  * -------------------------------------------------------------------------
  */
 
+use function Safe\glob;
+use function Safe\preg_match;
+
 /**
  * Install all necessary elements for the plugin
  *
@@ -39,9 +42,9 @@ function plugin_useditemsexport_install()
     $migration = new Migration(PLUGIN_USEDITEMSEXPORT_VERSION);
 
     // Parse inc directory
-    foreach (glob(dirname(__FILE__) . '/inc/*') as $filepath) {
+    foreach (glob(__DIR__ . '/inc/*') as $filepath) {
         // Load *.class.php files and get the class name
-        if (preg_match("/inc.(.+)\.class.php/", $filepath, $matches)) {
+        if (preg_match("/inc.(.+)\.class.php/", $filepath, $matches) !== 0) {
             $classname = 'PluginUseditemsexport' . ucfirst($matches[1]);
             include_once($filepath);
             // If the install method exists, load it
@@ -50,7 +53,6 @@ function plugin_useditemsexport_install()
             }
         }
     }
-
     return true;
 }
 
@@ -62,9 +64,9 @@ function plugin_useditemsexport_install()
 function plugin_useditemsexport_uninstall()
 {
     // Parse inc directory
-    foreach (glob(dirname(__FILE__) . '/inc/*') as $filepath) {
+    foreach (glob(__DIR__ . '/inc/*') as $filepath) {
         // Load *.class.php files and get the class name
-        if (preg_match("/inc.(.+)\.class.php/", $filepath, $matches)) {
+        if (preg_match("/inc.(.+)\.class.php/", $filepath, $matches) !== 0) {
             $classname = 'PluginUseditemsexport' . ucfirst($matches[1]);
             include_once($filepath);
             // If the install method exists, load it
@@ -73,6 +75,5 @@ function plugin_useditemsexport_uninstall()
             }
         }
     }
-
     return true;
 }

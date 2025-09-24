@@ -29,7 +29,7 @@
  * -------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+include(__DIR__ . '/../../../inc/includes.php');
 
 Session::checkLoginUser();
 
@@ -38,7 +38,7 @@ $PluginUseditemsexportExport = new PluginUseditemsexportExport();
 if (isset($_REQUEST['generate'])) {
     Session::checkRight('plugin_useditemsexport_export', CREATE);
     if ($PluginUseditemsexportExport::generatePDF($_POST['users_id'])) {
-        Session::addMessageAfterRedirect(__('PDF successfully generated.', 'useditemsexport'), true);
+        Session::addMessageAfterRedirect(__s('PDF successfully generated.', 'useditemsexport'), true);
         Html::back();
     }
 }

@@ -29,10 +29,6 @@
  * -------------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 class PluginUseditemsexportProfile extends CommonDBTM
 {
     // Necessary rights to edit the rights of this plugin
@@ -44,7 +40,7 @@ class PluginUseditemsexportProfile extends CommonDBTM
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         if ($item instanceof Profile && $item->getField('interface') != 'helpdesk') {
-            return PluginUseditemsexportExport::getTypeName();
+            return self::createTabEntry(PluginUseditemsexportConfig::getTypeName(), 0, $item::getType(), PluginUseditemsexportConfig::getIcon());
         }
 
         return '';
@@ -78,9 +74,9 @@ class PluginUseditemsexportProfile extends CommonDBTM
             ['itemtype'  => 'PluginUseditemsexportExport',
                 'label'  => PluginUseditemsexportExport::getTypeName(),
                 'field'  => 'plugin_useditemsexport_export',
-                'rights' => [CREATE => __('Create'),
-                    READ            => __('Read'),
-                    PURGE           => ['short' => __('Purge'),
+                'rights' => [CREATE => __s('Create'),
+                    READ            => __s('Read'),
+                    PURGE           => ['short' => __s('Purge'),
                         'long'                  => _x('button', 'Delete permanently'),
                     ],
                 ],
@@ -127,10 +123,10 @@ class PluginUseditemsexportProfile extends CommonDBTM
         $profile = new Profile();
         $profile->getFromDB($ID);
         if ($profile->getField('interface') == 'central') {
-            $rights = $this->getAllRights();
+            $rights = static::getAllRights();
             $profile->displayRightsChoiceMatrix($rights, ['canedit' => $canedit,
                 'default_class'                                     => 'tab_bg_2',
-                'title'                                             => __('General'),
+                'title'                                             => __s('General'),
             ]);
         }
 
@@ -142,7 +138,6 @@ class PluginUseditemsexportProfile extends CommonDBTM
             Html::closeForm();
         }
         echo '</div>';
-
         return true;
     }
 

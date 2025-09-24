@@ -29,9 +29,10 @@
  * -------------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
+use Glpi\Application\View\TemplateRenderer;
+
+use function Safe\copy;
+use function Safe\mkdir;
 
 class PluginUseditemsexportConfig extends CommonDBTM
 {
@@ -44,41 +45,41 @@ class PluginUseditemsexportConfig extends CommonDBTM
      **/
     public static function getTypeName($nb = 0)
     {
-        return __('General setup of useditemsexport', 'useditemsexport');
+        return __s('Used items export', 'useditemsexport');
     }
 
-    public function showForm($ID, $options = [])
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
-        $this->initForm($ID, $options);
-        $this->showFormHeader($options);
+        switch ($item->getType()) {
+            case "Config":
+                return self::createTabEntry(self::getTypeName(), 0, $item::getType(), self::getIcon());
+        }
+        return '';
+    }
 
-        echo "<tr class='tab_bg_1'>";
-        echo '<td>' . __('Active') . '</td>';
-        echo '<td>';
-        Dropdown::showYesNo('is_active', $this->fields['is_active']);
-        echo '</td></tr>';
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
+        $config = new self();
+        switch ($item->getType()) {
+            case "Config":
+                $config->showConfigForm();
+        }
 
-        echo "<tr class='tab_bg_1'>";
-        echo '<td>' . __('Footer text', 'useditemsexport') . '</td>';
-        echo "<td><input type='text' name='footer_text' size='60' value='"
-                  . $this->fields['footer_text'] . "'></td>";
-        echo '</tr>';
+        return true;
+    }
 
-        echo "<tr class='tab_bg_1'>";
-        echo '<td>' . __('Orientation', 'useditemsexport') . '</td>';
-        echo '<td>';
-        self::dropdownOrientation($this->fields['orientation']);
-        echo '</td>';
-        echo '</tr>';
 
-        echo "<tr class='tab_bg_1'>";
-        echo '<td>' . __('Format', 'useditemsexport') . '</td>';
-        echo '<td>';
-        self::dropdownFormat($this->fields['format']);
-        echo '</td>';
-        echo '</tr>';
+    public function showConfigForm()
+    {
+        $this->getFromDB(1);
 
-        $this->showFormButtons($options);
+        TemplateRenderer::getInstance()->display(
+            '@useditemsexport/config.html.twig',
+            [
+                'action'  => Toolbox::getItemTypeFormURL(self::class),
+                'item'    => $this,
+            ],
+        );
 
         return true;
     }
@@ -92,8 +93,8 @@ class PluginUseditemsexportConfig extends CommonDBTM
     {
         Dropdown::showFromArray(
             'orientation',
-            ['L'    => __('Landscape', 'useditemsexport'),
-                'P' => __('Portrait', 'useditemsexport'),
+            ['L'    => __s('Landscape', 'useditemsexport'),
+                'P' => __s('Portrait', 'useditemsexport'),
             ],
             ['value' => $value],
         );
@@ -108,9 +109,9 @@ class PluginUseditemsexportConfig extends CommonDBTM
     {
         Dropdown::showFromArray(
             'format',
-            ['A3'    => __('A3'),
-                'A4' => __('A4'),
-                'A5' => __('A5'),
+            ['A3'    => __s('A3'),
+                'A4' => __s('A4'),
+                'A5' => __s('A5'),
             ],
             ['value' => $value],
         );
@@ -143,7 +144,7 @@ class PluginUseditemsexportConfig extends CommonDBTM
         $default_collation = DBConnection::getDefaultCollation();
         $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
 
-        $table = getTableForItemType(__CLASS__);
+        $table = getTableForItemType(self::class);
 
         if (!$DB->tableExists($table)) {
             $migration->displayMessage("Installing $table");
@@ -156,9 +157,9 @@ class PluginUseditemsexportConfig extends CommonDBTM
                      `format` VARCHAR(2) NOT NULL DEFAULT 'A4',
                PRIMARY KEY  (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
-            $DB->query($query) or die($DB->error());
+            $DB->doQuery($query);
 
-            $DB->insertOrDie($table, ['id' => 1]);
+            $DB->insert($table, ['id' => 1]);
         }
         $migration->dropField($table, 'language'); // useless field removed in 2.5.1
 
@@ -170,7 +171,7 @@ class PluginUseditemsexportConfig extends CommonDBTM
         $migration->displayMessage('Copy default logo from GLPi core');
         if (!file_exists(GLPI_PLUGIN_DOC_DIR . '/useditemsexport/logo.png')) {
             copy(
-                GLPI_ROOT . '/pics/logos/logo-GLPI-250-black.png',
+                GLPI_ROOT . '/public/pics/logos/logo-GLPI-250-black.png',
                 GLPI_PLUGIN_DOC_DIR . '/useditemsexport/logo.png',
             );
         }
@@ -188,10 +189,10 @@ class PluginUseditemsexportConfig extends CommonDBTM
         /** @var DBmysql $DB */
         global $DB;
 
-        $table = getTableForItemType(__CLASS__);
+        $table = getTableForItemType(self::class);
 
         $query = 'DROP TABLE IF EXISTS  `' . $table . '`';
-        $DB->query($query) or die($DB->error());
+        $DB->doQuery($query);
 
         if (is_dir(GLPI_PLUGIN_DOC_DIR . '/useditemsexport')) {
             Toolbox::deleteDir(GLPI_PLUGIN_DOC_DIR . '/useditemsexport');
@@ -199,4 +200,12 @@ class PluginUseditemsexportConfig extends CommonDBTM
 
         return true;
     }
+
+
+    public static function getIcon()
+    {
+        // Generic icon that is not visible, but still takes up space to allow proper alignment in lists
+        return "ti ti-clipboard-list";
+    }
+
 }
