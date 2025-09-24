@@ -29,6 +29,9 @@
  * -------------------------------------------------------------------------
  */
 
+use function Safe\glob;
+use function Safe\preg_match;
+
 /**
  * Install all necessary elements for the plugin
  *

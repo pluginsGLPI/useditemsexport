@@ -31,6 +31,9 @@
 
 use Glpi\Application\View\TemplateRenderer;
 
+use function Safe\copy;
+use function Safe\mkdir;
+
 class PluginUseditemsexportConfig extends CommonDBTM
 {
     public static $rightname = 'config';

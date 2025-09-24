@@ -30,6 +30,12 @@
  */
 
 use Glpi\Application\View\TemplateRenderer;
+use Safe\DateTime;
+
+use function Safe\file_get_contents;
+use function Safe\file_put_contents;
+use function Safe\ob_get_clean;
+use function Safe\ob_start;
 
 class PluginUseditemsexportExport extends CommonDBTM
 {
