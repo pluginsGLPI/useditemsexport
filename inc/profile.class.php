@@ -123,7 +123,7 @@ class PluginUseditemsexportProfile extends CommonDBTM
         $profile = new Profile();
         $profile->getFromDB($ID);
         if ($profile->getField('interface') == 'central') {
-            $rights = $this->getAllRights();
+            $rights = static::getAllRights();
             $profile->displayRightsChoiceMatrix($rights, ['canedit' => $canedit,
                 'default_class'                                     => 'tab_bg_2',
                 'title'                                             => __s('General'),

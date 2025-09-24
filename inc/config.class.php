@@ -76,7 +76,7 @@ class PluginUseditemsexportConfig extends CommonDBTM
         TemplateRenderer::getInstance()->display(
             '@useditemsexport/config.html.twig',
             [
-                'action'  => Toolbox::getItemTypeFormURL(__CLASS__),
+                'action'  => Toolbox::getItemTypeFormURL(self::class),
                 'item'    => $this,
             ],
         );
@@ -144,7 +144,7 @@ class PluginUseditemsexportConfig extends CommonDBTM
         $default_collation = DBConnection::getDefaultCollation();
         $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
 
-        $table = getTableForItemType(__CLASS__);
+        $table = getTableForItemType(self::class);
 
         if (!$DB->tableExists($table)) {
             $migration->displayMessage("Installing $table");
@@ -189,7 +189,7 @@ class PluginUseditemsexportConfig extends CommonDBTM
         /** @var DBmysql $DB */
         global $DB;
 
-        $table = getTableForItemType(__CLASS__);
+        $table = getTableForItemType(self::class);
 
         $query = 'DROP TABLE IF EXISTS  `' . $table . '`';
         $DB->doQuery($query);

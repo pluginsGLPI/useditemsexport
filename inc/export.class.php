@@ -65,11 +65,9 @@ class PluginUseditemsexportExport extends CommonDBTM
 
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
-        if ($item instanceof User) {
-            if (Session::haveRightsOr('plugin_useditemsexport_export', [READ, CREATE, PURGE])) {
-                $PluginUseditemsexportExport = new self();
-                $PluginUseditemsexportExport->showForUser($item);
-            }
+        if ($item instanceof User && Session::haveRightsOr('plugin_useditemsexport_export', [READ, CREATE, PURGE])) {
+            $PluginUseditemsexportExport = new self();
+            $PluginUseditemsexportExport->showForUser($item);
         }
 
         return true;
@@ -80,7 +78,7 @@ class PluginUseditemsexportExport extends CommonDBTM
     **/
     public static function countForItem(CommonDBTM $item)
     {
-        return countElementsInTable(getTableForItemType(__CLASS__), ['users_id' => $item->getID()]);
+        return countElementsInTable(getTableForItemType(self::class), ['users_id' => $item->getID()]);
     }
 
     /**
@@ -99,7 +97,7 @@ class PluginUseditemsexportExport extends CommonDBTM
 
         // Get default one
         $it = $DB->request([
-            'FROM'  => getTableForItemType(__CLASS__),
+            'FROM'  => getTableForItemType(self::class),
             'WHERE' => ['users_id' => $users_id],
         ]);
         foreach ($it as $data) {
@@ -355,12 +353,7 @@ class PluginUseditemsexportExport extends CommonDBTM
         $input['refnumber']    = $refnumber;
         $input['authors_id']   = Session::getLoginUserID();
         $input['documents_id'] = $documents_id;
-
-        if ($export->add($input)) {
-            return true;
-        }
-
-        return false;
+        return (bool) $export->add($input);
     }
 
     /**
@@ -400,7 +393,7 @@ class PluginUseditemsexportExport extends CommonDBTM
             'SELECT' => [new \Glpi\DBAL\QueryExpression('MAX(' . $DB::quoteName('num') . ') AS ' . $DB::quoteName('num'))],
             'FROM'   => self::getTable(),
         ]);
-        $nextNum = count($result) ? $result->current()['num'] : false;
+        $nextNum = count($result) > 0 ? $result->current()['num'] : false;
         if (!$nextNum) {
             return 1;
         } else {
@@ -527,7 +520,7 @@ class PluginUseditemsexportExport extends CommonDBTM
         $default_collation = DBConnection::getDefaultCollation();
         $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
 
-        $table = getTableForItemType(__CLASS__);
+        $table = getTableForItemType(self::class);
 
         if (!$DB->tableExists($table)) {
             $migration->displayMessage("Installing $table");
@@ -558,7 +551,7 @@ class PluginUseditemsexportExport extends CommonDBTM
         /** @var DBmysql $DB */
         global $DB;
 
-        $table = getTableForItemType(__CLASS__);
+        $table = getTableForItemType(self::class);
 
         $query = 'DROP TABLE IF EXISTS  `' . $table . '`';
         $DB->doQuery($query);
