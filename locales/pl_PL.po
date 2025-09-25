@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-12 13:08+0000\n"
+"POT-Creation-Date: 2025-09-25 01:02+0000\n"
 "PO-Revision-Date: 2018-02-20 13:00+0000\n"
 "Last-Translator: Łukasz Milata <drupter@gmail.com>, 2022\n"
 "Language-Team: Polish (Poland) (https://app.transifex.com/teclib/teams/28042/pl_PL/)\n"
@@ -21,70 +21,66 @@ msgstr ""
 "Language: pl_PL\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
-#: inc/export.class.php:273
-msgid "Asset export ref : "
-msgstr "Nr ref. eksportu aktywów"
-
-#: inc/export.class.php:165
-msgid "Author of export"
-msgstr "Autor eksportu"
-
-#: inc/export.class.php:164
-msgid "Date of export"
-msgstr "Data eksportu"
-
-#: inc/export.class.php:166
-msgid "Export document"
-msgstr "Eksportuj dokument"
-
-#: inc/config.class.php:62
-msgid "Footer text"
-msgstr "Tekst stopki"
-
-#: inc/config.class.php:75
-msgid "Format"
-msgstr "Format"
-
-#: inc/config.class.php:47
-msgid "General setup of useditemsexport"
-msgstr "Ogólna konfiguracja useditemsexport"
-
-#: inc/export.class.php:134
+#: templates/export.html.twig
 msgid "Generate new export"
 msgstr "Wygeneruj nowy eksport"
 
-#: inc/config.class.php:95
+#: templates/config.html.twig
+msgid "Configuration"
+msgstr ""
+
+#: templates/config.html.twig
+msgid "Footer text"
+msgstr "Tekst stopki"
+
+#: templates/config.html.twig inc/config.class.php:96
 msgid "Landscape"
 msgstr "Poziomo"
 
-#: inc/config.class.php:68
+#: templates/config.html.twig inc/config.class.php:97
+msgid "Portrait"
+msgstr "Pionowo"
+
+#: templates/config.html.twig
 msgid "Orientation"
 msgstr "Orientacja"
 
-#: front/export.form.php:38
-msgid "PDF successfully generated."
-msgstr "Plik PDF został wygenerowany pomyślnie."
+#: templates/config.html.twig
+msgid "Format"
+msgstr "Format"
 
-#: inc/config.class.php:96
-msgid "Portrait"
-msgstr "Pionowo"
+#: setup.php:100 inc/config.class.php:48 inc/export.class.php:46
+msgid "Used items export"
+msgstr "Eksport używanych rzeczy"
 
 #: inc/export.class.php:163
 msgid "Reference number of export"
 msgstr "Numer referencyjny eksportu"
 
-#: inc/export.class.php:341 inc/export.class.php:344
+#: inc/export.class.php:164
+msgid "Date of export"
+msgstr "Data eksportu"
+
+#: inc/export.class.php:165
+msgid "Author of export"
+msgstr "Autor eksportu"
+
+#: inc/export.class.php:166
+msgid "Export document"
+msgstr "Eksportuj dokument"
+
+#: inc/export.class.php:249
+msgid "Asset export ref : "
+msgstr "Nr ref. eksportu aktywów"
+
+#: inc/export.class.php:317 inc/export.class.php:320
 msgid "Signature"
 msgstr "Podpis"
 
-#: inc/export.class.php:42 setup.php:94
-msgid "Used items export"
-msgstr "Eksport używanych rzeczy"
-
-#: inc/export.class.php:152
-msgid "Used items export generated"
-msgstr "Generowany eksport używanych rzeczy"
-
-#: inc/export.class.php:399
+#: inc/export.class.php:370
 msgid "Used-Items-Export"
 msgstr "Used-Items-Export"
+
+#: front/export.form.php:41
+msgid "PDF successfully generated."
+msgstr "Plik PDF został wygenerowany pomyślnie."

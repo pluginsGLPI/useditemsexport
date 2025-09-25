@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-12 13:08+0000\n"
+"POT-Creation-Date: 2025-09-25 01:02+0000\n"
 "PO-Revision-Date: 2018-02-20 13:00+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>, 2022\n"
 "Language-Team: Croatian (Croatia) (https://app.transifex.com/teclib/teams/28042/hr_HR/)\n"
@@ -21,70 +21,66 @@ msgstr ""
 "Language: hr_HR\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
-#: inc/export.class.php:273
-msgid "Asset export ref : "
-msgstr "Referenca izvoza inventara: "
-
-#: inc/export.class.php:165
-msgid "Author of export"
-msgstr "Autor izvoza"
-
-#: inc/export.class.php:164
-msgid "Date of export"
-msgstr "Datum izvoza"
-
-#: inc/export.class.php:166
-msgid "Export document"
-msgstr "Izvezi dokument"
-
-#: inc/config.class.php:62
-msgid "Footer text"
-msgstr "Tekst u podnožju"
-
-#: inc/config.class.php:75
-msgid "Format"
-msgstr "Format"
-
-#: inc/config.class.php:47
-msgid "General setup of useditemsexport"
-msgstr "Opće postavke za „Izvoz korištenih predmeta”"
-
-#: inc/export.class.php:134
+#: templates/export.html.twig
 msgid "Generate new export"
 msgstr "Izradi novi izvoz"
 
-#: inc/config.class.php:95
+#: templates/config.html.twig
+msgid "Configuration"
+msgstr ""
+
+#: templates/config.html.twig
+msgid "Footer text"
+msgstr "Tekst u podnožju"
+
+#: templates/config.html.twig inc/config.class.php:96
 msgid "Landscape"
 msgstr "Ležeći"
 
-#: inc/config.class.php:68
+#: templates/config.html.twig inc/config.class.php:97
+msgid "Portrait"
+msgstr "Uspravni"
+
+#: templates/config.html.twig
 msgid "Orientation"
 msgstr "Položaj"
 
-#: front/export.form.php:38
-msgid "PDF successfully generated."
-msgstr "PDF je uspješno izrađen."
+#: templates/config.html.twig
+msgid "Format"
+msgstr "Format"
 
-#: inc/config.class.php:96
-msgid "Portrait"
-msgstr "Uspravni"
+#: setup.php:100 inc/config.class.php:48 inc/export.class.php:46
+msgid "Used items export"
+msgstr "Izvoz korištenih predmeta"
 
 #: inc/export.class.php:163
 msgid "Reference number of export"
 msgstr "Broj reference izvoza"
 
-#: inc/export.class.php:341 inc/export.class.php:344
+#: inc/export.class.php:164
+msgid "Date of export"
+msgstr "Datum izvoza"
+
+#: inc/export.class.php:165
+msgid "Author of export"
+msgstr "Autor izvoza"
+
+#: inc/export.class.php:166
+msgid "Export document"
+msgstr "Izvezi dokument"
+
+#: inc/export.class.php:249
+msgid "Asset export ref : "
+msgstr "Referenca izvoza inventara: "
+
+#: inc/export.class.php:317 inc/export.class.php:320
 msgid "Signature"
 msgstr "Potpis"
 
-#: inc/export.class.php:42 setup.php:94
-msgid "Used items export"
-msgstr "Izvoz korištenih predmeta"
-
-#: inc/export.class.php:152
-msgid "Used items export generated"
-msgstr "Izvoz korištenih predmeta izrađen"
-
-#: inc/export.class.php:399
+#: inc/export.class.php:370
 msgid "Used-Items-Export"
 msgstr "Izvoz korištenih predmeta"
+
+#: front/export.form.php:41
+msgid "PDF successfully generated."
+msgstr "PDF je uspješno izrađen."
