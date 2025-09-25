@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-12 13:08+0000\n"
+"POT-Creation-Date: 2025-09-25 01:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,70 +17,66 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: inc/export.class.php:273
-msgid "Asset export ref : "
-msgstr ""
-
-#: inc/export.class.php:165
-msgid "Author of export"
-msgstr ""
-
-#: inc/export.class.php:164
-msgid "Date of export"
-msgstr ""
-
-#: inc/export.class.php:166
-msgid "Export document"
-msgstr ""
-
-#: inc/config.class.php:62
-msgid "Footer text"
-msgstr ""
-
-#: inc/config.class.php:75
-msgid "Format"
-msgstr ""
-
-#: inc/config.class.php:47
-msgid "General setup of useditemsexport"
-msgstr ""
-
-#: inc/export.class.php:134
+#: templates/export.html.twig
 msgid "Generate new export"
 msgstr ""
 
-#: inc/config.class.php:95
+#: templates/config.html.twig
+msgid "Configuration"
+msgstr ""
+
+#: templates/config.html.twig
+msgid "Footer text"
+msgstr ""
+
+#: templates/config.html.twig inc/config.class.php:96
 msgid "Landscape"
 msgstr ""
 
-#: inc/config.class.php:68
+#: templates/config.html.twig inc/config.class.php:97
+msgid "Portrait"
+msgstr ""
+
+#: templates/config.html.twig
 msgid "Orientation"
 msgstr ""
 
-#: front/export.form.php:38
-msgid "PDF successfully generated."
+#: templates/config.html.twig
+msgid "Format"
 msgstr ""
 
-#: inc/config.class.php:96
-msgid "Portrait"
+#: setup.php:100 inc/config.class.php:48 inc/export.class.php:46
+msgid "Used items export"
 msgstr ""
 
 #: inc/export.class.php:163
 msgid "Reference number of export"
 msgstr ""
 
-#: inc/export.class.php:341 inc/export.class.php:344
+#: inc/export.class.php:164
+msgid "Date of export"
+msgstr ""
+
+#: inc/export.class.php:165
+msgid "Author of export"
+msgstr ""
+
+#: inc/export.class.php:166
+msgid "Export document"
+msgstr ""
+
+#: inc/export.class.php:249
+msgid "Asset export ref : "
+msgstr ""
+
+#: inc/export.class.php:317 inc/export.class.php:320
 msgid "Signature"
 msgstr ""
 
-#: inc/export.class.php:42 setup.php:94
-msgid "Used items export"
-msgstr ""
-
-#: inc/export.class.php:152
-msgid "Used items export generated"
-msgstr ""
-
-#: inc/export.class.php:399
+#: inc/export.class.php:370
 msgid "Used-Items-Export"
+msgstr ""
+
+#: front/export.form.php:41
+msgid "PDF successfully generated."
 msgstr ""

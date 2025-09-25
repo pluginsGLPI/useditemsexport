@@ -1,14 +1,14 @@
 # English translations for PACKAGE package.
-# Copyright (C) 2024 THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) 2025 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Automatically generated, 2024.
+# Automatically generated, 2025.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-12 13:08+0000\n"
-"PO-Revision-Date: 2024-09-12 13:08+0000\n"
+"POT-Creation-Date: 2025-09-25 01:02+0000\n"
+"PO-Revision-Date: 2025-09-25 01:02+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en_GB\n"
@@ -17,70 +17,66 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: inc/export.class.php:273
-msgid "Asset export ref : "
-msgstr "Asset export ref : "
-
-#: inc/export.class.php:165
-msgid "Author of export"
-msgstr "Author of export"
-
-#: inc/export.class.php:164
-msgid "Date of export"
-msgstr "Date of export"
-
-#: inc/export.class.php:166
-msgid "Export document"
-msgstr "Export document"
-
-#: inc/config.class.php:62
-msgid "Footer text"
-msgstr "Footer text"
-
-#: inc/config.class.php:75
-msgid "Format"
-msgstr "Format"
-
-#: inc/config.class.php:47
-msgid "General setup of useditemsexport"
-msgstr "General setup of useditemsexport"
-
-#: inc/export.class.php:134
+#: templates/export.html.twig
 msgid "Generate new export"
 msgstr "Generate new export"
 
-#: inc/config.class.php:95
+#: templates/config.html.twig
+msgid "Configuration"
+msgstr "Configuration"
+
+#: templates/config.html.twig
+msgid "Footer text"
+msgstr "Footer text"
+
+#: templates/config.html.twig inc/config.class.php:96
 msgid "Landscape"
 msgstr "Landscape"
 
-#: inc/config.class.php:68
+#: templates/config.html.twig inc/config.class.php:97
+msgid "Portrait"
+msgstr "Portrait"
+
+#: templates/config.html.twig
 msgid "Orientation"
 msgstr "Orientation"
 
-#: front/export.form.php:38
-msgid "PDF successfully generated."
-msgstr "PDF successfully generated."
+#: templates/config.html.twig
+msgid "Format"
+msgstr "Format"
 
-#: inc/config.class.php:96
-msgid "Portrait"
-msgstr "Portrait"
+#: setup.php:100 inc/config.class.php:48 inc/export.class.php:46
+msgid "Used items export"
+msgstr "Used items export"
 
 #: inc/export.class.php:163
 msgid "Reference number of export"
 msgstr "Reference number of export"
 
-#: inc/export.class.php:341 inc/export.class.php:344
+#: inc/export.class.php:164
+msgid "Date of export"
+msgstr "Date of export"
+
+#: inc/export.class.php:165
+msgid "Author of export"
+msgstr "Author of export"
+
+#: inc/export.class.php:166
+msgid "Export document"
+msgstr "Export document"
+
+#: inc/export.class.php:249
+msgid "Asset export ref : "
+msgstr "Asset export ref : "
+
+#: inc/export.class.php:317 inc/export.class.php:320
 msgid "Signature"
 msgstr "Signature"
 
-#: inc/export.class.php:42 setup.php:94
-msgid "Used items export"
-msgstr "Used items export"
-
-#: inc/export.class.php:152
-msgid "Used items export generated"
-msgstr "Used items export generated"
-
-#: inc/export.class.php:399
+#: inc/export.class.php:370
 msgid "Used-Items-Export"
 msgstr "Used-Items-Export"
+
+#: front/export.form.php:41
+msgid "PDF successfully generated."
+msgstr "PDF successfully generated."

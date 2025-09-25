@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-12 13:08+0000\n"
+"POT-Creation-Date: 2025-09-25 01:02+0000\n"
 "PO-Revision-Date: 2018-02-20 13:00+0000\n"
 "Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>, 2018\n"
 "Language-Team: Czech (Czech Republic) (https://app.transifex.com/teclib/teams/28042/cs_CZ/)\n"
@@ -21,71 +21,66 @@ msgstr ""
 "Language: cs_CZ\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
-#: inc/export.class.php:273
-msgid "Asset export ref : "
-msgstr "Reference exportu majetku: "
-
-#: inc/export.class.php:165
-msgid "Author of export"
-msgstr "Autor exportu"
-
-#: inc/export.class.php:164
-msgid "Date of export"
-msgstr "Datum exportu"
-
-#: inc/export.class.php:166
-msgid "Export document"
-msgstr "Dokument exportu"
-
-#: inc/config.class.php:62
-msgid "Footer text"
-msgstr "Text zápatí"
-
-#: inc/config.class.php:75
-msgid "Format"
-msgstr "Formát"
-
-#: inc/config.class.php:47
-msgid "General setup of useditemsexport"
-msgstr ""
-"Obecná nastavení zásuvného modulu exportu uživatelem využívaných položek"
-
-#: inc/export.class.php:134
+#: templates/export.html.twig
 msgid "Generate new export"
 msgstr "Vytvořit nový export"
 
-#: inc/config.class.php:95
+#: templates/config.html.twig
+msgid "Configuration"
+msgstr ""
+
+#: templates/config.html.twig
+msgid "Footer text"
+msgstr "Text zápatí"
+
+#: templates/config.html.twig inc/config.class.php:96
 msgid "Landscape"
 msgstr "Na šířku"
 
-#: inc/config.class.php:68
+#: templates/config.html.twig inc/config.class.php:97
+msgid "Portrait"
+msgstr "Na výšku"
+
+#: templates/config.html.twig
 msgid "Orientation"
 msgstr "Orientace"
 
-#: front/export.form.php:38
-msgid "PDF successfully generated."
-msgstr "PDF úspěšně vytvořeno."
+#: templates/config.html.twig
+msgid "Format"
+msgstr "Formát"
 
-#: inc/config.class.php:96
-msgid "Portrait"
-msgstr "Na výšku"
+#: setup.php:100 inc/config.class.php:48 inc/export.class.php:46
+msgid "Used items export"
+msgstr "Export uživatelem využívaných položek"
 
 #: inc/export.class.php:163
 msgid "Reference number of export"
 msgstr "Referenční číslo exportu"
 
-#: inc/export.class.php:341 inc/export.class.php:344
+#: inc/export.class.php:164
+msgid "Date of export"
+msgstr "Datum exportu"
+
+#: inc/export.class.php:165
+msgid "Author of export"
+msgstr "Autor exportu"
+
+#: inc/export.class.php:166
+msgid "Export document"
+msgstr "Dokument exportu"
+
+#: inc/export.class.php:249
+msgid "Asset export ref : "
+msgstr "Reference exportu majetku: "
+
+#: inc/export.class.php:317 inc/export.class.php:320
 msgid "Signature"
 msgstr "Podpis"
 
-#: inc/export.class.php:42 setup.php:94
-msgid "Used items export"
-msgstr "Export uživatelem využívaných položek"
-
-#: inc/export.class.php:152
-msgid "Used items export generated"
-msgstr "Export využívaných položek vytvořen"
-
-#: inc/export.class.php:399
+#: inc/export.class.php:370
 msgid "Used-Items-Export"
 msgstr "Used-Items-Export"
+
+#: front/export.form.php:41
+msgid "PDF successfully generated."
+msgstr "PDF úspěšně vytvořeno."
