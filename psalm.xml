@@ -5,6 +5,8 @@
     <projectFiles>
         <directory name="front" />
         <directory name="inc" />
+        <file name="hook.php" />
+        <file name="setup.php" />
     </projectFiles>
 
     <issueHandlers>
