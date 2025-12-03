@@ -30,6 +30,7 @@
  */
 
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Asset\AssetDefinitionManager;
 use Safe\DateTime;
 
 use function Safe\file_get_contents;
@@ -189,175 +190,196 @@ class PluginUseditemsexportExport extends CommonDBTM
      *
      * @return boolean
     **/
-public static function generatePDF($users_id)
-{
-    $num        = self::getNextNum();
-    $refnumber  = self::getNextRefnumber();
+    public static function generatePDF($users_id)
+    {
+        $num       = self::getNextNum();
+        $refnumber = self::getNextRefnumber();
 
-    if (!isset($_SESSION['plugins']['useditemsexport']['config'])) {
-        PluginUseditemsexportConfig::loadInSession();
-    }
-
-    $useditemsexport_config = $_SESSION['plugins']['useditemsexport']['config'];
-
-    // Entity address
-    $entity = new Entity();
-    $entity->getFromDB($_SESSION['glpiactive_entity']);
-    $entity_address = '<h3>' . $entity->fields['name'] . '</h3><br />' .
-                      $entity->fields['address'] . '<br />' .
-                      $entity->fields['postcode'] . ' - ' . $entity->fields['town'] . '<br />' .
-                      $entity->fields['country'] . '<br />';
-    if (!empty($entity->fields['email'])) {
-        $entity_address .= __('Email') . ' : ' . $entity->fields['email'] . '<br />';
-    }
-    if (!empty($entity->fields['phonenumber'])) {
-        $entity_address .= __('Phone') . ' : ' . $entity->fields['phonenumber'] . '<br />';
-    }
-
-    // User and Author
-    $User   = new User();
-    $User->getFromDB($users_id);
-    $Author = new User();
-    $Author->getFromDB(Session::getLoginUserID());
-
-    // Logo
-    $logo_base64 = base64_encode(file_get_contents(GLPI_PLUGIN_DOC_DIR . '/useditemsexport/logo.png'));
-
-    // HTML content
-    ob_start();
-    ?>
-    <style type="text/css">
-        table {
-            border: 1px solid #000000;
-            width: 100%;
-            font-size: 10pt;
-            font-family: helvetica, arial, sans-serif;
+        if (!isset($_SESSION['plugins']['useditemsexport']['config'])) {
+            PluginUseditemsexportConfig::loadInSession();
         }
-    </style>
-    <page backtop="70mm" backleft="10mm" backright="10mm" backbottom="30mm">
-    <page_header>
-        <table>
+        $useditemsexport_config = $_SESSION['plugins']['useditemsexport']['config'];
+
+        // Compile address from current_entity
+        $entity = new Entity();
+        $entity->getFromDB($_SESSION['glpiactive_entity']);
+        $entity_address = '<h3>' . $entity->fields['name'] . '</h3><br />';
+        $entity_address .= $entity->fields['address'] . '<br />';
+        $entity_address .= $entity->fields['postcode'] . ' - ' . $entity->fields['town'] . '<br />';
+        $entity_address .= $entity->fields['country'] . '<br />';
+
+        if (isset($entity->fields['email'])) {
+            $entity_address .= __s('Email') . ' : ' . $entity->fields['email'] . '<br />';
+        }
+
+        if (isset($entity->fields['phonenumber'])) {
+            $entity_address .= __s('Phone') . ' : ' . $entity->fields['phonenumber'] . '<br />';
+        }
+
+        // Get User information
+        $User = new User();
+        $User->getFromDB($users_id);
+
+        // Get Author information
+        $Author = new User();
+        $Author->getFromDB(Session::getLoginUserID());
+
+        // Logo
+        $logo_base64 = base64_encode(file_get_contents(GLPI_PLUGIN_DOC_DIR . '/useditemsexport/logo.png'));
+
+        ob_start();
+        ?>
+      <style type="text/css">
+         table { border: 1px solid #000000; width: 100%; font-size: 10pt; font-family: helvetica, arial, sans-serif; }
+      </style>
+      <page backtop="70mm" backleft="10mm" backright="10mm" backbottom="30mm">
+         <page_header>
+            <table>
+               <tr>
+                  <td style="height: 60mm; width: 40%; text-align: center"><img src="data:image/png;base64,<?php echo $logo_base64; ?>" /></td>
+                  <td style="width: 60%; text-align: center;">
+                  <?php echo $entity_address; ?>
+                  </td>
+               </tr>
+            </table>
+         </page_header>
+
+         <table>
             <tr>
-                <td style="height: 60mm; width: 40%; text-align: center">
-                    <img src="data:image/png;base64,<?php echo $logo_base64; ?>" />
-                </td>
-                <td style="width: 60%; text-align: center;">
-                    <?php echo $entity_address; ?>
-                </td>
+               <td style="border: 1px solid #000000; text-align: center; width: 100%; font-size: 15pt; height: 8mm;">
+                  <?php echo __s('Asset export ref : ', 'useditemsexport') . $refnumber; ?>
+               </td>
             </tr>
-        </table>
-    </page_header>
+         </table>
 
-    <table>
-        <tr>
-            <td style="border: 1px solid #000000; text-align: center; width: 100%; font-size: 15pt; height: 8mm;">
-                <?php echo __s('Asset export ref : ', 'useditemsexport') . $refnumber; ?>
-            </td>
-        </tr>
-    </table>
-    <br><br><br><br><br>
+         <br><br><br><br><br>
+         <table>
+            <tr>
+              <th style="width: 25%;">
+                  <?php echo __s('Serial number'); ?>
+               </th>
+               <th style="width: 25%;">
+                  <?php echo __s('Inventory number'); ?>
+               </th>
+               <th style="width: 25%;">
+                  <?php echo __s('Name'); ?>
+               </th>
+               <th style="width: 25%;">
+                  <?php echo __s('Type'); ?>
+               </th>
+            </tr>
+            <?php
 
-    <table>
-        <tr>
-            <th style="width: 20%;"><?php echo __('Serial number'); ?></th>
-            <th style="width: 20%;"><?php echo __('Inventory number'); ?></th>
-            <th style="width: 30%;"><?php echo __('Name'); ?></th>
-            <th style="width: 30%;"><?php echo __('Type'); ?></th>
-        </tr>
-        <?php
-        $allUsedItemsForUser = self::getAllUsedItemsForUser($users_id);
+            $allUsedItemsForUser = self::getAllUsedItemsForUser($users_id);
 
         foreach ($allUsedItemsForUser as $itemtype => $used_items) {
             $item = getItemForItemtype($itemtype);
-            $typeName = is_object($item) && method_exists($item, 'getTypeName')
-                ? $item->getTypeName(1)
-                : $itemtype;
 
             foreach ($used_items as $item_datas) {
-                echo '<tr>';
-                echo '<td>' . ($item_datas['serial'] ?? '') . '</td>';
-                echo '<td>' . ($item_datas['otherserial'] ?? '') . '</td>';
-                echo '<td>' . ($item_datas['name'] ?? '') . '</td>';
-                echo '<td>' . $typeName . '</td>';
-                echo '</tr>';
+                ?>
+            <tr>
+               <td style="width: 25%;">
+                    <?php
+                if (isset($item_datas['serial'])) {
+                    echo $item_datas['serial'];
+                } ?>
+               </td>
+               <td style="width: 25%;">
+                    <?php
+                if (isset($item_datas['otherserial'])) {
+                    echo $item_datas['otherserial'];
+                } ?>
+               </td>
+               <td style="width: 25%;">
+                    <?php echo $item_datas['name']; ?>
+               </td>
+               <td style="width: 25%;">
+                    <?php echo $item->getTypeName(1); ?>
+               </td>
+            </tr>
+                    <?php
             }
         }
+
         ?>
-    </table>
+         </table>
+         <br><br><br><br><br>
+         <table style="border-collapse: collapse;">
+            <tr>
+               <td style="width: 50%; border-bottom: 1px solid #000000;">
+                  <strong><?php echo $Author->getFriendlyName(); ?> :</strong>
+               </td>
+               <td style="width: 50%; border-bottom: 1px solid #000000">
+                  <strong><?php echo $User->getFriendlyName(); ?> :</strong>
+               </td>
+            </tr>
+            <tr>
+               <td style="border: 1px solid #000000; width: 50%; vertical-align: top">
+                  <?php echo __s('Signature', 'useditemsexport'); ?> : <br><br><br><br><br>
+               </td>
+               <td style="border: 1px solid #000000; width: 50%; vertical-align: top;">
+                  <?php echo __s('Signature', 'useditemsexport'); ?> : <br><br><br><br><br>
+               </td>
+            </tr>
+         </table>
+         <page_footer>
+            <div style="width: 100%; text-align: center; font-size: 8pt">
+               - <?php echo $useditemsexport_config['footer_text']; ?> -
+            </div>
+         </page_footer>
+      </page>
+        <?php
 
-    <br><br><br><br><br>
-    <table style="border-collapse: collapse;">
-        <tr>
-            <td style="width: 50%; border-bottom: 1px solid #000000;">
-                <strong><?php echo $Author->getFriendlyName(); ?> :</strong>
-            </td>
-            <td style="width: 50%; border-bottom: 1px solid #000000">
-                <strong><?php echo $User->getFriendlyName(); ?> :</strong>
-            </td>
-        </tr>
-        <tr>
-            <td style="border: 1px solid #000000; width: 50%; vertical-align: top">
-                <?php echo __s('Signature', 'useditemsexport'); ?> : <br><br><br><br><br>
-            </td>
-            <td style="border: 1px solid #000000; width: 50%; vertical-align: top;">
-                <?php echo __s('Signature', 'useditemsexport'); ?> : <br><br><br><br><br>
-            </td>
-        </tr>
-    </table>
+        $content = ob_get_clean();
 
-    <page_footer>
-        <div style="width: 100%; text-align: center; font-size: 8pt">
-            - <?php echo $useditemsexport_config['footer_text']; ?> -
-        </div>
-    </page_footer>
-    </page>
-    <?php
-    $content = ob_get_clean();
+        // Generate PDF
+        $pdf = new GLPIPDF([
+            'orientation' => $useditemsexport_config['orientation'],
+            'format'      => $useditemsexport_config['format'],
+        ]);
+        $pdf->WriteHTML($content);
+        $contentPDF = $pdf->Output('', 'S');
 
-    // PDF erzeugen
-    $pdf = new GLPIPDF([
-        'orientation' => $useditemsexport_config['orientation'],
-        'format'      => $useditemsexport_config['format'],
-    ]);
-    $pdf->WriteHTML($content);
-    $contentPDF = $pdf->Output('', 'S');
+        // Store PDF in GLPi upload dir and create document
+        file_put_contents(GLPI_UPLOAD_DIR . '/' . $refnumber . '.pdf', $contentPDF);
+        $documents_id = self::createDocument($refnumber);
 
-    // Temporäre Datei speichern
-    $tmpfile = GLPI_TMP_DIR . '/' . $refnumber . '.pdf';
-    file_put_contents($tmpfile, $contentPDF);
+        // Add log for last generated PDF
+        $export = new self();
 
-    // Dokument in GLPI anlegen
-    $doc = new Document();
-    $input = [
-        'name'                   => $refnumber . '.pdf',
-        'entities_id'            => $_SESSION['glpiactive_entity'],
-        'is_recursive'           => 0,
-        'documentcategories_id'  => 0,
-        '_filename'              => [
-            'name'     => $refnumber . '.pdf',
-            'tmp_name' => $tmpfile,
-            'type'     => 'application/pdf',
-            'error'    => 0,
-            'size'     => filesize($tmpfile),
-        ],
-    ];
-    $documents_id = $doc->add($input);
+        $input                 = [];
+        $input['users_id']     = $users_id;
+        $input['date_mod']     = date('Y-m-d H:i:s');
+        $input['num']          = $num;
+        $input['refnumber']    = $refnumber;
+        $input['authors_id']   = Session::getLoginUserID();
+        $input['documents_id'] = $documents_id;
+        return (bool) $export->add($input);
+    }
 
-    // Export-Log speichern
-    $export = new self();
-    $input = [
-        'users_id'      => $users_id,
-        'date_mod'      => date('Y-m-d H:i:s'),
-        'num'           => $num,
-        'refnumber'     => $refnumber,
-        'authors_id'    => Session::getLoginUserID(),
-        'documents_id'  => $documents_id,
-    ];
+    /**
+     * Store Document into GLPi DB
+     * @param string $refnumber
+     * @return integer id of Document
+     */
+    public static function createDocument($refnumber)
+    {
+        $doc = new Document();
 
-    return (bool) $export->add($input);
-}
+        $input                          = [];
+        $input['entities_id']           = $_SESSION['glpiactive_entity'];
+        $input['name']                  = __s('Used-Items-Export', 'useditemsexport') . '-' . $refnumber;
+        $input['upload_file']           = $refnumber . '.pdf';
+        $input['documentcategories_id'] = 0;
+        $input['mime']                  = 'application/pdf';
+        $input['date_mod']              = date('Y-m-d H:i:s');
+        $input['users_id']              = Session::getLoginUserID();
 
+        $doc->check(-1, CREATE, $input);
+        $newdocid = $doc->add($input);
 
+        return $newdocid;
+    }
 
     /**
      * Get next num
@@ -406,108 +428,91 @@ public static function generatePDF($users_id)
      * @param integer $ID ID of user
      * @return array
      */
+    public static function getAllUsedItemsForUser($ID)
+    {
+        /**
+         * @var DBmysql $DB
+         * @var array $CFG_GLPI
+         */
+        global $DB, $CFG_GLPI;
 
-public static function getAllUsedItemsForUser($ID)
-{
-    global $DB, $CFG_GLPI;
+        $items = [];
 
-    $items = [];
-
-    // 1. Standard-Assettypen aus GLPI-Konfiguration
-    $types = isset($CFG_GLPI['linkuser_types']) ? $CFG_GLPI['linkuser_types'] : [];
-    $types = array_unique($types);
-
-    foreach ($types as $itemtype) {
-        $item = getItemForItemtype($itemtype);
-        if (!$item || !method_exists($item, 'canView')) {
-            Toolbox::logDebug("Skipped unrecognized itemtype: $itemtype");
-            continue;
-        }
-
-        $itemtable = getTableForItemType($itemtype);
-
-        if (!$DB->fieldExists($itemtable, 'users_id')) {
-            Toolbox::logDebug("Skipped itemtype without users_id field: $itemtype");
-            continue;
-        }
-
-        if ($item->canView()) {
-            $criteria = [
-                'FROM'  => $itemtable,
-                'WHERE' => ['users_id' => $ID],
-            ];
-
-            if ($item->maybeTemplate()) {
-                $criteria['WHERE']['is_template'] = '0';
+        foreach ($CFG_GLPI['linkuser_types'] as $itemtype) {
+            if (!($item = getItemForItemtype($itemtype))) {
+                continue;
             }
-            if ($item->maybeDeleted()) {
-                $criteria['WHERE']['is_deleted'] = '0';
-            }
-
-            $result = $DB->request($criteria);
-
-            foreach ($result as $data) {
-                $items[$itemtype][] = [
-                    'name'         => $data['name']         ?? '',
-                    'serial'       => $data['serial']       ?? '',
-                    'otherserial'  => $data['otherserial']  ?? '',
+            if ($item->canView()) {
+                $itemtable = getTableForItemType($itemtype);
+                $criteria  = [
+                    'FROM'  => $itemtable,
+                    'WHERE' => ['users_id' => $ID],
                 ];
+
+                if ($item->maybeTemplate()) {
+                    $criteria['WHERE']['is_template'] = '0';
+                }
+                if ($item->maybeDeleted()) {
+                    $criteria['WHERE']['is_deleted'] = '0';
+                }
+                $result = $DB->request($criteria);
+
+                $type_name = $item->getTypeName();
+
+                if (count($result) > 0) {
+                    foreach ($result as $data) {
+                        $items[$itemtype][] = $data;
+                    }
+                }
             }
         }
-    }
 
-    // 2. Verbrauchsmaterialien (Consumables)
-    $consumables = $DB->request([
-        'SELECT' => ['name', 'otherserial'],
-        'FROM'   => ConsumableItem::getTable(),
-        'WHERE'  => [
-            'id' => new \Glpi\DBAL\QuerySubQuery([
-                'SELECT' => 'consumableitems_id',
-                'FROM'   => Consumable::getTable(),
+        // Consumables
+        $consumables = $DB->request(
+            [
+                'SELECT' => ['name', 'otherserial'],
+                'FROM'   => ConsumableItem::getTable(),
                 'WHERE'  => [
-                    'itemtype' => User::class,
-                    'items_id' => $ID,
+                    'id' => new \Glpi\DBAL\QuerySubQuery(
+                        [
+                            'SELECT' => 'consumableitems_id',
+                            'FROM'   => Consumable::getTable(),
+                            'WHERE'  => [
+                                'itemtype' => User::class,
+                                'items_id' => $ID,
+                            ],
+                        ],
+                    ),
                 ],
-            ]),
-        ],
-    ]);
-
-    foreach ($consumables as $data) {
-        $items['ConsumableItem'][] = [
-            'name'         => $data['name']         ?? '',
-            'serial'       => '',
-            'otherserial'  => $data['otherserial']  ?? '',
-        ];
-    }
-
-    // 3. Custom Assets aus GLPI 11 Asset Definitions
-    $definitions = $DB->request([
-        'SELECT' => ['id', 'system_name'],
-        'FROM'   => 'glpi_assets_assetdefinitions',
-    ]);
-
-    foreach ($definitions as $def) {
-        $assets = $DB->request([
-            'SELECT' => ['name', 'serial', 'otherserial'],
-            'FROM'   => 'glpi_assets_assets',
-            'WHERE'  => [
-                'assets_assetdefinitions_id' => $def['id'],
-                'users_id'                   => $ID,
             ],
-        ]);
+        );
 
-        foreach ($assets as $data) {
-            $items[$def['system_name']][] = [
-                'name'         => $data['system_name']         ?? '',
-                'serial'       => $data['serial']       ?? '',
-                'otherserial'  => $data['otherserial']  ?? '',
-            ];
+        foreach ($consumables as $data) {
+            $items['ConsumableItem'][] = $data;
         }
+
+        // Custom Assets
+        $definitions = AssetDefinitionManager::getInstance()->getDefinitions();
+        foreach ($definitions as $definition) {
+            $itemtype = $definition->getAssetClassName();
+            $item = getItemForItemtype($itemtype);
+            if ($item && $item->canView()) {
+                $criteria  = [
+                    'FROM'  => 'glpi_assets_assets',
+                    'WHERE' => ['users_id' => $ID, 'assets_assetdefinitions_id' => $definition->getID()],
+                ];
+                $result = $DB->request($criteria);
+
+                if (count($result) > 0) {
+                    foreach ($result as $data) {
+                        $items[$itemtype][] = $data;
+                    }
+                }
+            }
+        }
+
+        return $items;
     }
-
-    return $items;
-}
-
 
     /**
      * Clean GLPi DB on export purge
