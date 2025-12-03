@@ -503,10 +503,8 @@ class PluginUseditemsexportExport extends CommonDBTM
                 ];
                 $result = $DB->request($criteria);
 
-                if (count($result) > 0) {
-                    foreach ($result as $data) {
-                        $items[$itemtype][] = $data;
-                    }
+                foreach ($result as $data) {
+                    $items[$itemtype][] = $data;
                 }
             }
         }
