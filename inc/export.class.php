@@ -30,6 +30,7 @@
  */
 
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Asset\AssetDefinitionManager;
 use Safe\DateTime;
 
 use function Safe\file_get_contents;
@@ -488,6 +489,24 @@ class PluginUseditemsexportExport extends CommonDBTM
 
         foreach ($consumables as $data) {
             $items['ConsumableItem'][] = $data;
+        }
+
+        // Custom Assets
+        $definitions = AssetDefinitionManager::getInstance()->getDefinitions();
+        foreach ($definitions as $definition) {
+            $itemtype = $definition->getAssetClassName();
+            $item = getItemForItemtype($itemtype);
+            if ($item && $item->canView()) {
+                $criteria  = [
+                    'FROM'  => 'glpi_assets_assets',
+                    'WHERE' => ['users_id' => $ID, 'assets_assetdefinitions_id' => $definition->getID()],
+                ];
+                $result = $DB->request($criteria);
+
+                foreach ($result as $data) {
+                    $items[$itemtype][] = $data;
+                }
+            }
         }
 
         return $items;
