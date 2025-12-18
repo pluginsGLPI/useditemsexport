@@ -271,7 +271,7 @@ class PluginUseditemsexportExport extends CommonDBTM
             <?php
 
             $allUsedItemsForUser = self::getAllUsedItemsForUser($users_id);
-            $total_count = 0;
+        $total_count = 0;
         foreach ($allUsedItemsForUser as $itemtype => $used_items) {
             $item = getItemForItemtype($itemtype);
 
