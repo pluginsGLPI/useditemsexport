@@ -271,11 +271,12 @@ class PluginUseditemsexportExport extends CommonDBTM
             <?php
 
             $allUsedItemsForUser = self::getAllUsedItemsForUser($users_id);
-
+            $total_count = 0;
         foreach ($allUsedItemsForUser as $itemtype => $used_items) {
             $item = getItemForItemtype($itemtype);
 
             foreach ($used_items as $item_datas) {
+                $total_count++;
                 ?>
             <tr>
                <td style="width: 25%;">
@@ -338,6 +339,7 @@ class PluginUseditemsexportExport extends CommonDBTM
             'format'      => $useditemsexport_config['format'],
         ]);
         $pdf->WriteHTML($content);
+        $pdf->setTotalCount($total_count);
         $contentPDF = $pdf->Output('', 'S');
 
         // Store PDF in GLPi upload dir and create document
