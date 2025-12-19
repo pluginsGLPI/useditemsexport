@@ -200,9 +200,9 @@ class PluginUseditemsexportExport extends CommonDBTM
         }
         $useditemsexport_config = $_SESSION['plugins']['useditemsexport']['config'];
 
-        // Compile address from current_entity
         $entity = new Entity();
         $entity->getFromDB($_SESSION['glpiactive_entity']);
+
         $entity_address = '<h3>' . $entity->fields['name'] . '</h3><br />';
         $entity_address .= $entity->fields['address'] . '<br />';
         $entity_address .= $entity->fields['postcode'] . ' - ' . $entity->fields['town'] . '<br />';
@@ -211,151 +211,123 @@ class PluginUseditemsexportExport extends CommonDBTM
         if (isset($entity->fields['email'])) {
             $entity_address .= __s('Email') . ' : ' . $entity->fields['email'] . '<br />';
         }
-
         if (isset($entity->fields['phonenumber'])) {
             $entity_address .= __s('Phone') . ' : ' . $entity->fields['phonenumber'] . '<br />';
         }
 
-        // Get User information
-        $User = new User();
-        $User->getFromDB($users_id);
-
-        // Get Author information
+        $user = new User();
+        $user->getFromDB($users_id);
         $Author = new User();
         $Author->getFromDB(Session::getLoginUserID());
 
         // Logo
-        $logo_base64 = base64_encode(file_get_contents(GLPI_PLUGIN_DOC_DIR . '/useditemsexport/logo.png'));
+        $logo_path = GLPI_PLUGIN_DOC_DIR . '/useditemsexport/logo.png';
+        $logo_base64 = base64_encode(file_get_contents($logo_path));
 
-        ob_start();
-        ?>
-      <style type="text/css">
-         table { border: 1px solid #000000; width: 100%; font-size: 10pt; font-family: helvetica, arial, sans-serif; }
-      </style>
-      <page backtop="70mm" backleft="10mm" backright="10mm" backbottom="30mm">
-         <page_header>
-            <table>
-               <tr>
-                  <td style="height: 60mm; width: 40%; text-align: center"><img src="data:image/png;base64,<?php echo $logo_base64; ?>" /></td>
-                  <td style="width: 60%; text-align: center;">
-                  <?php echo $entity_address; ?>
-                  </td>
-               </tr>
-            </table>
-         </page_header>
+        $html = '<style type="text/css">
+                    table { border: 1px solid #000000; width: 100%; font-size: 10pt; font-family: helvetica, arial, sans-serif; }
+                </style>';
 
-         <table>
-            <tr>
-               <td style="border: 1px solid #000000; text-align: center; width: 100%; font-size: 15pt; height: 8mm;">
-                  <?php echo __s('Asset export ref : ', 'useditemsexport') . $refnumber; ?>
-               </td>
-            </tr>
-         </table>
+        $html .= '<page backtop="70mm" backleft="10mm" backright="10mm" backbottom="30mm">
+                    <page_header>
+                        <table>
+                            <tr>
+                                <td style="height: 60mm; width: 40%; text-align: center">
+                                    <img src="data:image/png;base64,' . $logo_base64 . '" />
+                                </td>
+                                <td style="width: 60%; text-align: center;">' . $entity_address . '</td>
+                            </tr>
+                        </table>
+                    </page_header>';
 
-         <br><br><br><br><br>
-         <table>
-            <tr>
-              <th style="width: 25%;">
-                  <?php echo __s('Serial number'); ?>
-               </th>
-               <th style="width: 25%;">
-                  <?php echo __s('Inventory number'); ?>
-               </th>
-               <th style="width: 25%;">
-                  <?php echo __s('Name'); ?>
-               </th>
-               <th style="width: 25%;">
-                  <?php echo __s('Type'); ?>
-               </th>
-            </tr>
-            <?php
+        $html .= '<table>
+                    <tr>
+                        <td style="border: 1px solid #000000; text-align: center; width: 100%; font-size: 15pt; height: 8mm;">'
+                            . __s('Asset export ref : ', 'useditemsexport') . $refnumber .
+                        '</td>
+                    </tr>
+                </table>';
 
-            $allUsedItemsForUser = self::getAllUsedItemsForUser($users_id);
+        $html .= '<br><br><br><br><br>
+                <table>
+                    <tr>
+                        <th style="width: 25%;">' . __s('Serial number') . '</th>
+                        <th style="width: 25%;">' . __s('Inventory number') . '</th>
+                        <th style="width: 25%;">' . __s('Name') . '</th>
+                        <th style="width: 25%;">' . __s('Type') . '</th>
+                    </tr>';
+
+        $allUsedItemsForUser = self::getAllUsedItemsForUser($users_id);
         $total_count = 0;
+
         foreach ($allUsedItemsForUser as $itemtype => $used_items) {
             $item = getItemForItemtype($itemtype);
-
             foreach ($used_items as $item_datas) {
                 $total_count++;
-                ?>
-            <tr>
-               <td style="width: 25%;">
-                    <?php
-                if (isset($item_datas['serial'])) {
-                    echo $item_datas['serial'];
-                } ?>
-               </td>
-               <td style="width: 25%;">
-                    <?php
-                if (isset($item_datas['otherserial'])) {
-                    echo $item_datas['otherserial'];
-                } ?>
-               </td>
-               <td style="width: 25%;">
-                    <?php echo $item_datas['name']; ?>
-               </td>
-               <td style="width: 25%;">
-                    <?php echo $item->getTypeName(1); ?>
-               </td>
-            </tr>
-                    <?php
+                $serial = $item_datas['serial'] ?? '';
+                $otherserial = $item_datas['otherserial'] ?? '';
+                $html .= '<tr>
+                            <td style="width: 25%;">' . $serial . '</td>
+                            <td style="width: 25%;">' . $otherserial . '</td>
+                            <td style="width: 25%;">' . $item_datas['name'] . '</td>
+                            <td style="width: 25%;">' . $item->getTypeName(1) . '</td>
+                        </tr>';
             }
         }
 
-        ?>
-         </table>
-         <br><br><br><br><br>
-         <table style="border-collapse: collapse;">
-            <tr>
-               <td style="width: 50%; border-bottom: 1px solid #000000;">
-                  <strong><?php echo $Author->getFriendlyName(); ?> :</strong>
-               </td>
-               <td style="width: 50%; border-bottom: 1px solid #000000">
-                  <strong><?php echo $User->getFriendlyName(); ?> :</strong>
-               </td>
-            </tr>
-            <tr>
-               <td style="border: 1px solid #000000; width: 50%; vertical-align: top">
-                  <?php echo __s('Signature', 'useditemsexport'); ?> : <br><br><br><br><br>
-               </td>
-               <td style="border: 1px solid #000000; width: 50%; vertical-align: top;">
-                  <?php echo __s('Signature', 'useditemsexport'); ?> : <br><br><br><br><br>
-               </td>
-            </tr>
-         </table>
-         <page_footer>
-            <div style="width: 100%; text-align: center; font-size: 8pt">
-               - <?php echo $useditemsexport_config['footer_text']; ?> -
-            </div>
-         </page_footer>
-      </page>
-        <?php
+        $html .= '</table>';
 
-        $content = ob_get_clean();
+        $html .= '<br><br><br><br><br>
+                <table style="border-collapse: collapse;">
+                    <tr>
+                        <td style="width: 50%; border-bottom: 1px solid #000000;">
+                            <strong>' . $Author->getFriendlyName() . ' :</strong>
+                        </td>
+                        <td style="width: 50%; border-bottom: 1px solid #000000">
+                            <strong>' . $user->getFriendlyName() . ' :</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #000000; width: 50%; vertical-align: top">
+                            ' . __s('Signature', 'useditemsexport') . ' : <br><br><br><br><br>
+                        </td>
+                        <td style="border: 1px solid #000000; width: 50%; vertical-align: top;">
+                            ' . __s('Signature', 'useditemsexport') . ' : <br><br><br><br><br>
+                        </td>
+                    </tr>
+                </table>';
 
-        // Generate PDF
+        $html .= '<page_footer>
+                    <div style="width: 100%; text-align: center; font-size: 8pt">
+                        - ' . $useditemsexport_config['footer_text'] . ' -
+                    </div>
+                </page_footer>
+                </page>';
+
+        // Génération du PDF
         $pdf = new GLPIPDF([
             'orientation' => $useditemsexport_config['orientation'],
             'format'      => $useditemsexport_config['format'],
         ]);
-        $pdf->WriteHTML($content);
+
+        $pdf->WriteHTML($html);
         $pdf->setTotalCount($total_count);
         $contentPDF = $pdf->Output('', 'S');
 
-        // Store PDF in GLPi upload dir and create document
+        // Sauvegarde et Log
         file_put_contents(GLPI_UPLOAD_DIR . '/' . $refnumber . '.pdf', $contentPDF);
         $documents_id = self::createDocument($refnumber);
 
-        // Add log for last generated PDF
         $export = new self();
+        $input = [
+            'users_id'     => $users_id,
+            'date_mod'     => date('Y-m-d H:i:s'),
+            'num'          => $num,
+            'refnumber'    => $refnumber,
+            'authors_id'   => Session::getLoginUserID(),
+            'documents_id' => $documents_id
+        ];
 
-        $input                 = [];
-        $input['users_id']     = $users_id;
-        $input['date_mod']     = date('Y-m-d H:i:s');
-        $input['num']          = $num;
-        $input['refnumber']    = $refnumber;
-        $input['authors_id']   = Session::getLoginUserID();
-        $input['documents_id'] = $documents_id;
         return (bool) $export->add($input);
     }
 
