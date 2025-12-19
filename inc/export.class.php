@@ -28,15 +28,14 @@
  * @link      https://github.com/pluginsGLPI/useditemsexport
  * -------------------------------------------------------------------------
  */
-
+use Glpi\DBAL\QueryExpression;
+use Glpi\DBAL\QuerySubQuery;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\Asset\AssetDefinitionManager;
 use Safe\DateTime;
 
 use function Safe\file_get_contents;
 use function Safe\file_put_contents;
-use function Safe\ob_get_clean;
-use function Safe\ob_start;
 
 class PluginUseditemsexportExport extends CommonDBTM
 {
@@ -206,8 +205,12 @@ class PluginUseditemsexportExport extends CommonDBTM
         $entity_address .= $entity->fields['address'] . '<br />';
         $entity_address .= $entity->fields['postcode'] . ' - ' . $entity->fields['town'] . '<br />';
         $entity_address .= $entity->fields['country'] . '<br />';
-        if (isset($entity->fields['email'])) $entity_address .= __s('Email') . ' : ' . $entity->fields['email'] . '<br />';
-        if (isset($entity->fields['phonenumber'])) $entity_address .= __s('Phone') . ' : ' . $entity->fields['phonenumber'] . '<br />';
+        if (isset($entity->fields['email'])) {
+            $entity_address .= __s('Email') . ' : ' . $entity->fields['email'] . '<br />';
+        }
+        if (isset($entity->fields['phonenumber'])) {
+            $entity_address .= __s('Phone') . ' : ' . $entity->fields['phonenumber'] . '<br />';
+        }
 
         $User = new User();
         $User->getFromDB($users_id);
@@ -226,7 +229,7 @@ class PluginUseditemsexportExport extends CommonDBTM
                     'serial'      => $item_datas['serial'] ?? '',
                     'otherserial' => $item_datas['otherserial'] ?? '',
                     'name'        => $item_datas['name'],
-                    'type'        => $item_obj->getTypeName(1)
+                    'type'        => $item_obj->getTypeName(1),
                 ];
             }
         }
@@ -240,8 +243,8 @@ class PluginUseditemsexportExport extends CommonDBTM
                 'items'          => $items_for_twig,
                 'author_name'    => $Author->getFriendlyName(),
                 'user_name'      => $User->getFriendlyName(),
-                'config'         => $useditemsexport_config
-            ]
+                'config'         => $useditemsexport_config,
+            ],
         );
 
         // 5. Génération du PDF
@@ -304,7 +307,7 @@ class PluginUseditemsexportExport extends CommonDBTM
         global $DB;
 
         $result = $DB->request([
-            'SELECT' => [new \Glpi\DBAL\QueryExpression('MAX(' . $DB::quoteName('num') . ') AS ' . $DB::quoteName('num'))],
+            'SELECT' => [new QueryExpression('MAX(' . $DB::quoteName('num') . ') AS ' . $DB::quoteName('num'))],
             'FROM'   => self::getTable(),
         ]);
         $nextNum = count($result) > 0 ? $result->current()['num'] : false;
@@ -386,7 +389,7 @@ class PluginUseditemsexportExport extends CommonDBTM
                 'SELECT' => ['name', 'otherserial'],
                 'FROM'   => ConsumableItem::getTable(),
                 'WHERE'  => [
-                    'id' => new \Glpi\DBAL\QuerySubQuery(
+                    'id' => new QuerySubQuery(
                         [
                             'SELECT' => 'consumableitems_id',
                             'FROM'   => Consumable::getTable(),
