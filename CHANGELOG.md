@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - Custom Asset compatibility
+- Fix PDF export error with missing `total_count`
 
 ## [2.6.0] - 2025-09-24
 
