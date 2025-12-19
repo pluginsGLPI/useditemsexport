@@ -247,7 +247,6 @@ class PluginUseditemsexportExport extends CommonDBTM
             ],
         );
 
-        // 5. Génération du PDF
         $pdf = new GLPIPDF([
             'orientation' => $useditemsexport_config['orientation'],
             'format'      => $useditemsexport_config['format'],
@@ -256,7 +255,6 @@ class PluginUseditemsexportExport extends CommonDBTM
         $pdf->setTotalCount($total_count);
         $contentPDF = $pdf->Output('', 'S');
 
-        // 6. Enregistrement (Identique à votre code)
         file_put_contents(GLPI_UPLOAD_DIR . '/' . $refnumber . '.pdf', $contentPDF);
         $documents_id = self::createDocument($refnumber);
 
