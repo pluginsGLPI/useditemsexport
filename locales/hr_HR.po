@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-25 01:02+0000\n"
+"POT-Creation-Date: 2026-01-12 01:15+0000\n"
 "PO-Revision-Date: 2018-02-20 13:00+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>, 2022\n"
 "Language-Team: Croatian (Croatia) (https://app.transifex.com/teclib/teams/28042/hr_HR/)\n"
@@ -24,6 +24,14 @@ msgstr ""
 #: templates/export.html.twig
 msgid "Generate new export"
 msgstr "Izradi novi izvoz"
+
+#: templates/export_template.html.twig
+msgid "Asset export ref : "
+msgstr "Referenca izvoza inventara: "
+
+#: templates/export_template.html.twig
+msgid "Signature"
+msgstr "Potpis"
 
 #: templates/config.html.twig
 msgid "Configuration"
@@ -69,15 +77,7 @@ msgstr "Autor izvoza"
 msgid "Export document"
 msgstr "Izvezi dokument"
 
-#: inc/export.class.php:249
-msgid "Asset export ref : "
-msgstr "Referenca izvoza inventara: "
-
-#: inc/export.class.php:317 inc/export.class.php:320
-msgid "Signature"
-msgstr "Potpis"
-
-#: inc/export.class.php:370
+#: inc/export.class.php:285
 msgid "Used-Items-Export"
 msgstr "Izvoz korištenih predmeta"
 

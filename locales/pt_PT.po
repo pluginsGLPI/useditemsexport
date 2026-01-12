@@ -5,15 +5,16 @@
 # 
 # Translators:
 # Rui Melo <viper5000pt@gmail.com>, 2019
+# Ana Cordeiro, 2026
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-25 01:02+0000\n"
+"POT-Creation-Date: 2026-01-12 01:15+0000\n"
 "PO-Revision-Date: 2018-02-20 13:00+0000\n"
-"Last-Translator: Rui Melo <viper5000pt@gmail.com>, 2019\n"
+"Last-Translator: Ana Cordeiro, 2026\n"
 "Language-Team: Portuguese (Portugal) (https://app.transifex.com/teclib/teams/28042/pt_PT/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,9 +26,17 @@ msgstr ""
 msgid "Generate new export"
 msgstr "Gerar nova exportação"
 
+#: templates/export_template.html.twig
+msgid "Asset export ref : "
+msgstr "Exportação de activos ref : "
+
+#: templates/export_template.html.twig
+msgid "Signature"
+msgstr "Assinatura"
+
 #: templates/config.html.twig
 msgid "Configuration"
-msgstr ""
+msgstr "Configuração"
 
 #: templates/config.html.twig
 msgid "Footer text"
@@ -69,15 +78,7 @@ msgstr "Autor da exportação"
 msgid "Export document"
 msgstr "Documento exportado"
 
-#: inc/export.class.php:249
-msgid "Asset export ref : "
-msgstr "Exportação de activos ref : "
-
-#: inc/export.class.php:317 inc/export.class.php:320
-msgid "Signature"
-msgstr "Assinatura"
-
-#: inc/export.class.php:370
+#: inc/export.class.php:285
 msgid "Used-Items-Export"
 msgstr "Usado-Itens-Exportação"
 

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-25 01:02+0000\n"
+"POT-Creation-Date: 2026-01-12 01:15+0000\n"
 "PO-Revision-Date: 2018-02-20 13:00+0000\n"
 "Last-Translator: Игорь Луканов, 2021\n"
 "Language-Team: Russian (Russia) (https://app.transifex.com/teclib/teams/28042/ru_RU/)\n"
@@ -24,6 +24,14 @@ msgstr ""
 #: templates/export.html.twig
 msgid "Generate new export"
 msgstr "Создать новый экспорт"
+
+#: templates/export_template.html.twig
+msgid "Asset export ref : "
+msgstr ""
+
+#: templates/export_template.html.twig
+msgid "Signature"
+msgstr "Подпись"
 
 #: templates/config.html.twig
 msgid "Configuration"
@@ -69,15 +77,7 @@ msgstr "Автор экспорта"
 msgid "Export document"
 msgstr "Документ экспорта"
 
-#: inc/export.class.php:249
-msgid "Asset export ref : "
-msgstr ""
-
-#: inc/export.class.php:317 inc/export.class.php:320
-msgid "Signature"
-msgstr "Подпись"
-
-#: inc/export.class.php:370
+#: inc/export.class.php:285
 msgid "Used-Items-Export"
 msgstr "Экспорт используемого"
 

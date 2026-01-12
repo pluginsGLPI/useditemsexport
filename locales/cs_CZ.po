@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-30 01:03+0000\n"
+"POT-Creation-Date: 2026-01-12 01:15+0000\n"
 "PO-Revision-Date: 2018-02-20 13:00+0000\n"
 "Last-Translator: David Stepan <stepand@tiscali.cz>, 2025\n"
 "Language-Team: Czech (Czech Republic) (https://app.transifex.com/teclib/teams/28042/cs_CZ/)\n"
@@ -25,6 +25,14 @@ msgstr ""
 #: templates/export.html.twig
 msgid "Generate new export"
 msgstr "Vytvořit nový export"
+
+#: templates/export_template.html.twig
+msgid "Asset export ref : "
+msgstr "Reference exportu majetku: "
+
+#: templates/export_template.html.twig
+msgid "Signature"
+msgstr "Podpis"
 
 #: templates/config.html.twig
 msgid "Configuration"
@@ -70,15 +78,7 @@ msgstr "Autor exportu"
 msgid "Export document"
 msgstr "Dokument exportu"
 
-#: inc/export.class.php:249
-msgid "Asset export ref : "
-msgstr "Reference exportu majetku: "
-
-#: inc/export.class.php:317 inc/export.class.php:320
-msgid "Signature"
-msgstr "Podpis"
-
-#: inc/export.class.php:370
+#: inc/export.class.php:285
 msgid "Used-Items-Export"
 msgstr "Used-Items-Export"
 
