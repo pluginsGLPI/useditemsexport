@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-07 01:01+0000\n"
+"POT-Creation-Date: 2026-01-12 01:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,14 @@ msgstr ""
 
 #: templates/export.html.twig
 msgid "Generate new export"
+msgstr ""
+
+#: templates/export_template.html.twig
+msgid "Asset export ref : "
+msgstr ""
+
+#: templates/export_template.html.twig
+msgid "Signature"
 msgstr ""
 
 #: templates/config.html.twig
@@ -65,15 +73,7 @@ msgstr ""
 msgid "Export document"
 msgstr ""
 
-#: inc/export.class.php:249
-msgid "Asset export ref : "
-msgstr ""
-
-#: inc/export.class.php:317 inc/export.class.php:320
-msgid "Signature"
-msgstr ""
-
-#: inc/export.class.php:370
+#: inc/export.class.php:285
 msgid "Used-Items-Export"
 msgstr ""
 
