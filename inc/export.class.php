@@ -228,7 +228,7 @@ class PluginUseditemsexportExport extends CommonDBTM
                 $items_for_twig[] = [
                     'serial'      => $item_datas['serial'] ?? '',
                     'otherserial' => $item_datas['otherserial'] ?? '',
-                    'name'        => $item_datas['name'],
+                    'name'        => $item_datas['name'] ?? '',
                     'type'        => $item_obj->getTypeName(1),
                 ];
             }
@@ -251,8 +251,8 @@ class PluginUseditemsexportExport extends CommonDBTM
             'orientation' => $useditemsexport_config['orientation'],
             'format'      => $useditemsexport_config['format'],
         ]);
-        $pdf->WriteHTML($content);
         $pdf->setTotalCount($total_count);
+        $pdf->WriteHTML($content);
         $contentPDF = $pdf->Output('', 'S');
 
         file_put_contents(GLPI_UPLOAD_DIR . '/' . $refnumber . '.pdf', $contentPDF);
