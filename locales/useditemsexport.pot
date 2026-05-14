@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-02 01:27+0000\n"
+"POT-Creation-Date: 2026-05-14 02:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,16 +17,16 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: templates/export.html.twig
-msgid "Generate new export"
-msgstr ""
-
 #: templates/export_template.html.twig
 msgid "Asset export ref : "
 msgstr ""
 
 #: templates/export_template.html.twig
 msgid "Signature"
+msgstr ""
+
+#: templates/export.html.twig
+msgid "Generate new export"
 msgstr ""
 
 #: templates/config.html.twig
@@ -53,8 +53,12 @@ msgstr ""
 msgid "Format"
 msgstr ""
 
-#: setup.php:100 inc/config.class.php:48 inc/export.class.php:46
+#: setup.php:100 inc/export.class.php:46 inc/config.class.php:48
 msgid "Used items export"
+msgstr ""
+
+#: front/export.form.php:41
+msgid "PDF successfully generated."
 msgstr ""
 
 #: inc/export.class.php:163
@@ -75,8 +79,4 @@ msgstr ""
 
 #: inc/export.class.php:285
 msgid "Used-Items-Export"
-msgstr ""
-
-#: front/export.form.php:41
-msgid "PDF successfully generated."
 msgstr ""

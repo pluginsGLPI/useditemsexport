@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-02 01:27+0000\n"
+"POT-Creation-Date: 2026-05-14 02:33+0000\n"
 "PO-Revision-Date: 2018-02-20 13:00+0000\n"
 "Last-Translator: feonsu <feonsu@gmail.com>, 2023\n"
 "Language-Team: Slovak (Slovakia) (https://app.transifex.com/teclib/teams/28042/sk_SK/)\n"
@@ -21,10 +21,6 @@ msgstr ""
 "Language: sk_SK\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
-#: templates/export.html.twig
-msgid "Generate new export"
-msgstr "Generovať nový report"
-
 #: templates/export_template.html.twig
 msgid "Asset export ref : "
 msgstr "Referencia exportu majetku:"
@@ -32,6 +28,10 @@ msgstr "Referencia exportu majetku:"
 #: templates/export_template.html.twig
 msgid "Signature"
 msgstr "Podpis"
+
+#: templates/export.html.twig
+msgid "Generate new export"
+msgstr "Generovať nový report"
 
 #: templates/config.html.twig
 msgid "Configuration"
@@ -57,9 +57,13 @@ msgstr "Orientácia"
 msgid "Format"
 msgstr "Formát"
 
-#: setup.php:100 inc/config.class.php:48 inc/export.class.php:46
+#: setup.php:100 inc/export.class.php:46 inc/config.class.php:48
 msgid "Used items export"
 msgstr "Export používaných položiek"
+
+#: front/export.form.php:41
+msgid "PDF successfully generated."
+msgstr "PDF bolo úspešne vygenerované."
 
 #: inc/export.class.php:163
 msgid "Reference number of export"
@@ -80,7 +84,3 @@ msgstr "Dokument exportu"
 #: inc/export.class.php:285
 msgid "Used-Items-Export"
 msgstr "Export-používaných-položiek"
-
-#: front/export.form.php:41
-msgid "PDF successfully generated."
-msgstr "PDF bolo úspešne vygenerované."
