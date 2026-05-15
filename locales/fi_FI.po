@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-02 01:27+0000\n"
+"POT-Creation-Date: 2026-05-14 02:33+0000\n"
 "PO-Revision-Date: 2018-02-20 13:00+0000\n"
 "Last-Translator: Markku Vepsä, 2018\n"
 "Language-Team: Finnish (Finland) (https://app.transifex.com/teclib/teams/28042/fi_FI/)\n"
@@ -21,10 +21,6 @@ msgstr ""
 "Language: fi_FI\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: templates/export.html.twig
-msgid "Generate new export"
-msgstr "Luo uusi vienti"
-
 #: templates/export_template.html.twig
 msgid "Asset export ref : "
 msgstr "Omaisuuden vienti viite :"
@@ -32,6 +28,10 @@ msgstr "Omaisuuden vienti viite :"
 #: templates/export_template.html.twig
 msgid "Signature"
 msgstr "Allekirjoitus"
+
+#: templates/export.html.twig
+msgid "Generate new export"
+msgstr "Luo uusi vienti"
 
 #: templates/config.html.twig
 msgid "Configuration"
@@ -57,9 +57,13 @@ msgstr "Suunta"
 msgid "Format"
 msgstr "Muoto"
 
-#: setup.php:100 inc/config.class.php:48 inc/export.class.php:46
+#: setup.php:100 inc/export.class.php:46 inc/config.class.php:48
 msgid "Used items export"
 msgstr "Käytettyjen kohteiden vienti"
+
+#: front/export.form.php:41
+msgid "PDF successfully generated."
+msgstr "PDF luotu onnistuneesti."
 
 #: inc/export.class.php:163
 msgid "Reference number of export"
@@ -80,7 +84,3 @@ msgstr "Vie asiakirja"
 #: inc/export.class.php:285
 msgid "Used-Items-Export"
 msgstr "Käytettyjen-kohteiden-vienti"
-
-#: front/export.form.php:41
-msgid "PDF successfully generated."
-msgstr "PDF luotu onnistuneesti."
