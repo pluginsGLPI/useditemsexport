@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-02 01:27+0000\n"
+"POT-Creation-Date: 2026-05-14 02:33+0000\n"
 "PO-Revision-Date: 2018-02-20 13:00+0000\n"
 "Last-Translator: Cédric Anne, 2018\n"
 "Language-Team: French (France) (https://app.transifex.com/teclib/teams/28042/fr_FR/)\n"
@@ -21,10 +21,6 @@ msgstr ""
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#: templates/export.html.twig
-msgid "Generate new export"
-msgstr "Générer un nouvel export"
-
 #: templates/export_template.html.twig
 msgid "Asset export ref : "
 msgstr "Export numéro : "
@@ -32,6 +28,10 @@ msgstr "Export numéro : "
 #: templates/export_template.html.twig
 msgid "Signature"
 msgstr "Signature"
+
+#: templates/export.html.twig
+msgid "Generate new export"
+msgstr "Générer un nouvel export"
 
 #: templates/config.html.twig
 msgid "Configuration"
@@ -57,9 +57,13 @@ msgstr "Orientation"
 msgid "Format"
 msgstr "Format"
 
-#: setup.php:100 inc/config.class.php:48 inc/export.class.php:46
+#: setup.php:100 inc/export.class.php:46 inc/config.class.php:48
 msgid "Used items export"
 msgstr "Export des éléments utilisés"
+
+#: front/export.form.php:41
+msgid "PDF successfully generated."
+msgstr "PDF généré avec succès"
 
 #: inc/export.class.php:163
 msgid "Reference number of export"
@@ -80,7 +84,3 @@ msgstr "Document exporté"
 #: inc/export.class.php:285
 msgid "Used-Items-Export"
 msgstr "Used-Items-Export"
-
-#: front/export.form.php:41
-msgid "PDF successfully generated."
-msgstr "PDF généré avec succès"
