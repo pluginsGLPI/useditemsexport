@@ -73,11 +73,18 @@ class PluginUseditemsexportConfig extends CommonDBTM
     {
         $this->getFromDB(1);
 
+        // Build current logo URL for preview
+        $logo_filename = $this->fields['logo_filename'] ?? 'logo.png';
+        $logo_path = GLPI_PLUGIN_DOC_DIR . '/useditemsexport/' . $logo_filename;
+        $logo_exists = file_exists($logo_path);
+
         TemplateRenderer::getInstance()->display(
             '@useditemsexport/config.html.twig',
             [
-                'action'  => Toolbox::getItemTypeFormURL(self::class),
-                'item'    => $this,
+                'action'       => Toolbox::getItemTypeFormURL(self::class),
+                'item'         => $this,
+                'logo_exists'  => $logo_exists,
+                'logo_filename' => $logo_filename,
             ],
         );
 
@@ -85,36 +92,101 @@ class PluginUseditemsexportConfig extends CommonDBTM
     }
 
     /**
-     * Show dropdown Orientation (Landscape / Portrait)
-     * @param string $value (current preselected value)
-     * @return void (display dropdown)
+     * Handle logo file upload.
+     * Call this from the front controller after $_FILES is available.
+     *
+     * @return void
      */
-    public function dropdownOrientation($value)
+    public static function handleLogoUpload()
     {
-        Dropdown::showFromArray(
-            'orientation',
-            ['L'    => __s('Landscape', 'useditemsexport'),
-                'P' => __s('Portrait', 'useditemsexport'),
-            ],
-            ['value' => $value],
-        );
+        if (
+            !isset($_FILES['logo_file'])
+            || $_FILES['logo_file']['error'] !== UPLOAD_ERR_OK
+            || $_FILES['logo_file']['size'] === 0
+        ) {
+            return;
+        }
+
+        $allowed_types = ['image/png', 'image/jpeg', 'image/gif', 'image/svg+xml'];
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime  = finfo_file($finfo, $_FILES['logo_file']['tmp_name']);
+        finfo_close($finfo);
+
+        if (!in_array($mime, $allowed_types, true)) {
+            Session::addMessageAfterRedirect(
+                __s('Invalid logo file type. Allowed: PNG, JPG, GIF, SVG.', 'useditemsexport'),
+                false,
+                ERROR,
+            );
+            return;
+        }
+
+        // Determine extension from mime
+        $ext_map = [
+            'image/png'     => 'png',
+            'image/jpeg'    => 'jpg',
+            'image/gif'     => 'gif',
+            'image/svg+xml' => 'svg',
+        ];
+        $ext = $ext_map[$mime] ?? 'png';
+        $target_filename = 'logo.' . $ext;
+        $target_path = GLPI_PLUGIN_DOC_DIR . '/useditemsexport/' . $target_filename;
+
+        // Remove old logo files
+        foreach (glob(GLPI_PLUGIN_DOC_DIR . '/useditemsexport/logo.*') as $old) {
+            @unlink($old);
+        }
+
+        if (move_uploaded_file($_FILES['logo_file']['tmp_name'], $target_path)) {
+            // Update config with new filename
+            $config = new self();
+            $config->update([
+                'id'            => 1,
+                'logo_filename' => $target_filename,
+            ]);
+            Session::addMessageAfterRedirect(
+                __s('Logo uploaded successfully.', 'useditemsexport'),
+                true,
+            );
+        } else {
+            Session::addMessageAfterRedirect(
+                __s('Failed to save logo file.', 'useditemsexport'),
+                false,
+                ERROR,
+            );
+        }
     }
 
     /**
-     * Show dropdown Format (A4, A3, etc...)
-     * @param string $value (current preselected value)
-     * @return void (display dropdown)
+     * Parse custom_columns field from stored text format.
+     * Each line: field_name|Column Label
+     *
+     * @param string $raw Raw text from DB
+     * @return array Array of ['field' => string, 'label' => string]
      */
-    public function dropdownFormat($value)
+    public static function parseCustomColumns($raw)
     {
-        Dropdown::showFromArray(
-            'format',
-            ['A3'    => __s('A3'),
-                'A4' => __s('A4'),
-                'A5' => __s('A5'),
-            ],
-            ['value' => $value],
-        );
+        $columns = [];
+        if (empty($raw)) {
+            return $columns;
+        }
+
+        $lines = explode("\n", trim($raw));
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if (empty($line)) {
+                continue;
+            }
+            $parts = explode('|', $line, 2);
+            if (count($parts) === 2) {
+                $columns[] = [
+                    'field' => trim($parts[0]),
+                    'label' => trim($parts[1]),
+                ];
+            }
+        }
+
+        return $columns;
     }
 
     /**
@@ -155,6 +227,25 @@ class PluginUseditemsexportConfig extends CommonDBTM
                      `is_active` TINYINT NOT NULL DEFAULT 1,
                      `orientation` VARCHAR(1) NOT NULL DEFAULT 'P',
                      `format` VARCHAR(2) NOT NULL DEFAULT 'A4',
+                     `logo_filename` VARCHAR(255) NOT NULL DEFAULT 'logo.png',
+                     `logo_width` INT NOT NULL DEFAULT 0,
+                     `show_logo` TINYINT NOT NULL DEFAULT 1,
+                     `show_entity_address` TINYINT NOT NULL DEFAULT 1,
+                     `show_signature` TINYINT NOT NULL DEFAULT 1,
+                     `show_serial` TINYINT NOT NULL DEFAULT 1,
+                     `show_otherserial` TINYINT NOT NULL DEFAULT 1,
+                     `show_name` TINYINT NOT NULL DEFAULT 1,
+                     `show_type` TINYINT NOT NULL DEFAULT 1,
+                     `document_title` VARCHAR(255) NOT NULL DEFAULT 'Asset export ref',
+                     `label_serial` VARCHAR(255) NOT NULL DEFAULT '',
+                     `label_otherserial` VARCHAR(255) NOT NULL DEFAULT '',
+                     `label_name` VARCHAR(255) NOT NULL DEFAULT '',
+                     `label_type` VARCHAR(255) NOT NULL DEFAULT '',
+                     `label_signature` VARCHAR(255) NOT NULL DEFAULT '',
+                     `header_text` TEXT DEFAULT NULL,
+                     `disclaimer_text` TEXT DEFAULT NULL,
+                     `custom_columns` TEXT DEFAULT NULL,
+                     `font_family` VARCHAR(100) NOT NULL DEFAULT 'dejavusans',
                PRIMARY KEY  (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
             $DB->doQuery($query);
@@ -162,6 +253,28 @@ class PluginUseditemsexportConfig extends CommonDBTM
             $DB->insert($table, ['id' => 1]);
         }
         $migration->dropField($table, 'language'); // useless field removed in 2.5.1
+
+        // --- Migration: add new configurable report fields ---
+        $migration->addField($table, 'logo_filename', 'string', ['value' => 'logo.png']);
+        $migration->addField($table, 'logo_width', 'integer', ['value' => 0]);
+        $migration->addField($table, 'show_logo', 'bool', ['value' => 1]);
+        $migration->addField($table, 'show_entity_address', 'bool', ['value' => 1]);
+        $migration->addField($table, 'show_signature', 'bool', ['value' => 1]);
+        $migration->addField($table, 'show_serial', 'bool', ['value' => 1]);
+        $migration->addField($table, 'show_otherserial', 'bool', ['value' => 1]);
+        $migration->addField($table, 'show_name', 'bool', ['value' => 1]);
+        $migration->addField($table, 'show_type', 'bool', ['value' => 1]);
+        $migration->addField($table, 'document_title', 'string', ['value' => 'Asset export ref']);
+        $migration->addField($table, 'label_serial', 'string', ['value' => '']);
+        $migration->addField($table, 'label_otherserial', 'string', ['value' => '']);
+        $migration->addField($table, 'label_name', 'string', ['value' => '']);
+        $migration->addField($table, 'label_type', 'string', ['value' => '']);
+        $migration->addField($table, 'label_signature', 'string', ['value' => '']);
+        $migration->addField($table, 'header_text', 'text', ['value' => null]);
+        $migration->addField($table, 'disclaimer_text', 'text', ['value' => null]);
+        $migration->addField($table, 'custom_columns', 'text', ['value' => null]);
+        $migration->addField($table, 'font_family', 'string', ['value' => 'dejavusans']);
+        $migration->migrationOneTable($table);
 
         $migration->displayMessage('Create useditemsexport dir');
         if (!is_dir(GLPI_PLUGIN_DOC_DIR . '/useditemsexport')) {
@@ -204,8 +317,6 @@ class PluginUseditemsexportConfig extends CommonDBTM
 
     public static function getIcon()
     {
-        // Generic icon that is not visible, but still takes up space to allow proper alignment in lists
         return "ti ti-clipboard-list";
     }
-
 }

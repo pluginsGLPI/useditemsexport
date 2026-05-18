@@ -45,6 +45,7 @@ class PluginUseditemsexportExport extends CommonDBTM
     {
         return __s('Used items export', 'useditemsexport');
     }
+
     /**
      * @see CommonGLPI::getTabNameForItem()
     **/
@@ -95,7 +96,6 @@ class PluginUseditemsexportExport extends CommonDBTM
 
         $exports = [];
 
-        // Get default one
         $it = $DB->request([
             'FROM'  => getTableForItemType(self::class),
             'WHERE' => ['users_id' => $users_id],
@@ -183,6 +183,69 @@ class PluginUseditemsexportExport extends CommonDBTM
     }
 
     /**
+     * Resolve a foreign key field value to a display name.
+     *
+     * @param string $field    The field name (e.g. 'locations_id')
+     * @param mixed  $value    The raw value from the DB
+     * @return string  The resolved display name, or the raw value as string
+     */
+    private static function resolveFieldValue($field, $value)
+    {
+        if ($value === null || $value === '') {
+            return '';
+        }
+
+        // Map of common FK fields to their GLPI itemtypes
+        $fk_map = [
+            'locations_id'       => 'Location',
+            'states_id'          => 'State',
+            'manufacturers_id'   => 'Manufacturer',
+            'users_id_tech'      => 'User',
+            'groups_id'          => 'Group',
+            'groups_id_tech'     => 'Group',
+        ];
+
+        // Model fields (computermodels_id, monitormodels_id, etc.)
+        if (preg_match('/^(\w+)models_id$/', $field)) {
+            $model_class = str_replace('models_id', '', $field);
+            $model_class = ucfirst($model_class) . 'Model';
+            if (class_exists($model_class)) {
+                $item = new $model_class();
+                if ($item->getFromDB((int)$value)) {
+                    return $item->fields['name'] ?? (string)$value;
+                }
+            }
+            return (string)$value;
+        }
+
+        // Type fields (computertypes_id, monitortypes_id, etc.)
+        if (preg_match('/^(\w+)types_id$/', $field)) {
+            $type_class = str_replace('types_id', '', $field);
+            $type_class = ucfirst($type_class) . 'Type';
+            if (class_exists($type_class)) {
+                $item = new $type_class();
+                if ($item->getFromDB((int)$value)) {
+                    return $item->fields['name'] ?? (string)$value;
+                }
+            }
+            return (string)$value;
+        }
+
+        if (isset($fk_map[$field])) {
+            $classname = $fk_map[$field];
+            if (class_exists($classname)) {
+                $item = new $classname();
+                if ($item->getFromDB((int)$value)) {
+                    return $item->fields['name'] ?? $item->getFriendlyName();
+                }
+            }
+            return (string)$value;
+        }
+
+        return (string)$value;
+    }
+
+    /**
      * Generate PDF for user and add entry into DB
      *
      * @param $users_id user ID
@@ -199,24 +262,34 @@ class PluginUseditemsexportExport extends CommonDBTM
         }
         $useditemsexport_config = $_SESSION['plugins']['useditemsexport']['config'];
 
+        // ── Get entity address from the USER's entity (not active entity) ──
+        $User = new User();
+        $User->getFromDB($users_id);
+
+        $user_entity_id = $User->fields['entities_id'] ?? $_SESSION['glpiactive_entity'];
+
         $entity = new Entity();
-        $entity->getFromDB($_SESSION['glpiactive_entity']);
-        $entity_address = '<h3>' . $entity->fields['name'] . '</h3><br />';
-        $entity_address .= $entity->fields['address'] . '<br />';
-        $entity_address .= $entity->fields['postcode'] . ' - ' . $entity->fields['town'] . '<br />';
-        $entity_address .= $entity->fields['country'] . '<br />';
-        if (isset($entity->fields['email'])) {
+        $entity->getFromDB($user_entity_id);
+        $entity_address = '<h3>' . ($entity->fields['name'] ?? '') . '</h3><br />';
+        $entity_address .= ($entity->fields['address'] ?? '') . '<br />';
+        $entity_address .= ($entity->fields['postcode'] ?? '') . ' - ' . ($entity->fields['town'] ?? '') . '<br />';
+        $entity_address .= ($entity->fields['country'] ?? '') . '<br />';
+        if (!empty($entity->fields['email'])) {
             $entity_address .= __s('Email') . ' : ' . $entity->fields['email'] . '<br />';
         }
-        if (isset($entity->fields['phonenumber'])) {
+        if (!empty($entity->fields['phonenumber'])) {
             $entity_address .= __s('Phone') . ' : ' . $entity->fields['phonenumber'] . '<br />';
         }
 
-        $User = new User();
-        $User->getFromDB($users_id);
         $Author = new User();
         $Author->getFromDB(Session::getLoginUserID());
 
+        // ── Parse custom columns ──
+        $custom_columns = PluginUseditemsexportConfig::parseCustomColumns(
+            $useditemsexport_config['custom_columns'] ?? ''
+        );
+
+        // ── Build items array ──
         $items_for_twig = [];
         $allUsedItemsForUser = self::getAllUsedItemsForUser($users_id);
         $total_count = 0;
@@ -225,25 +298,105 @@ class PluginUseditemsexportExport extends CommonDBTM
             $item_obj = getItemForItemtype($itemtype);
             foreach ($used_items as $item_datas) {
                 $total_count++;
-                $items_for_twig[] = [
+                $twig_item = [
                     'serial'      => $item_datas['serial'] ?? '',
                     'otherserial' => $item_datas['otherserial'] ?? '',
                     'name'        => $item_datas['name'] ?? '',
                     'type'        => $item_obj->getTypeName(1),
                 ];
+
+                // Add custom column values with FK resolution
+                foreach ($custom_columns as $col) {
+                    $field = $col['field'];
+                    $raw_value = $item_datas[$field] ?? '';
+                    $twig_item['custom_' . $field] = self::resolveFieldValue($field, $raw_value);
+                }
+
+                $items_for_twig[] = $twig_item;
             }
         }
+
+        // ── Count active columns for width calculation ──
+        $active_cols = 0;
+        if ($useditemsexport_config['show_serial'] ?? 1) {
+            $active_cols++;
+        }
+        if ($useditemsexport_config['show_otherserial'] ?? 1) {
+            $active_cols++;
+        }
+        if ($useditemsexport_config['show_name'] ?? 1) {
+            $active_cols++;
+        }
+        if ($useditemsexport_config['show_type'] ?? 1) {
+            $active_cols++;
+        }
+        $active_cols += count($custom_columns);
+        $col_width = $active_cols > 0 ? floor(100 / $active_cols) : 25;
+
+        // ── Resolve label overrides (empty = use GLPI default) ──
+        $labels = [
+            'serial'      => !empty($useditemsexport_config['label_serial'])
+                                ? $useditemsexport_config['label_serial']
+                                : __s('Serial number'),
+            'otherserial' => !empty($useditemsexport_config['label_otherserial'])
+                                ? $useditemsexport_config['label_otherserial']
+                                : __s('Inventory number'),
+            'name'        => !empty($useditemsexport_config['label_name'])
+                                ? $useditemsexport_config['label_name']
+                                : __s('Name'),
+            'type'        => !empty($useditemsexport_config['label_type'])
+                                ? $useditemsexport_config['label_type']
+                                : __s('Type'),
+            'signature'   => !empty($useditemsexport_config['label_signature'])
+                                ? $useditemsexport_config['label_signature']
+                                : __s('Signature', 'useditemsexport'),
+        ];
+
+        // ── Document title (e.g. "Asset export ref") ──
+        $document_title = !empty($useditemsexport_config['document_title'])
+                            ? $useditemsexport_config['document_title']
+                            : __s('Asset export ref', 'useditemsexport');
+
+        // ── Logo ──
+        $logo_filename = $useditemsexport_config['logo_filename'] ?? 'logo.png';
+        $logo_path = GLPI_PLUGIN_DOC_DIR . '/useditemsexport/' . $logo_filename;
+        if (!file_exists($logo_path)) {
+            // Fallback to default
+            $logo_path = GLPI_PLUGIN_DOC_DIR . '/useditemsexport/logo.png';
+        }
+        $logo_base64 = base64_encode(file_get_contents($logo_path));
+
+        // Determine logo mime type for data URI
+        $logo_ext = strtolower(pathinfo($logo_path, PATHINFO_EXTENSION));
+        $mime_map = [
+            'png'  => 'image/png',
+            'jpg'  => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'gif'  => 'image/gif',
+            'svg'  => 'image/svg+xml',
+        ];
+        $logo_mime = $mime_map[$logo_ext] ?? 'image/png';
+
+        // ── Font family ──
+        $font_family = $useditemsexport_config['font_family'] ?? 'dejavusans';
 
         $content = TemplateRenderer::getInstance()->render(
             '@useditemsexport/export_template.html.twig',
             [
-                'logo_base64'    => base64_encode(file_get_contents(GLPI_PLUGIN_DOC_DIR . '/useditemsexport/logo.png')),
-                'entity_address' => $entity_address,
-                'refnumber'      => $refnumber,
-                'items'          => $items_for_twig,
-                'author_name'    => $Author->getFriendlyName(),
-                'user_name'      => $User->getFriendlyName(),
-                'config'         => $useditemsexport_config,
+                'logo_base64'        => $logo_base64,
+                'logo_mime'          => $logo_mime,
+                'logo_width'         => (int)($useditemsexport_config['logo_width'] ?? 0),
+                'entity_address'     => $entity_address,
+                'refnumber'          => $refnumber,
+                'document_title'     => $document_title,
+                'items'              => $items_for_twig,
+                'author_name'        => $Author->getFriendlyName(),
+                'user_name'          => $User->getFriendlyName(),
+                'config'             => $useditemsexport_config,
+                'labels'             => $labels,
+                'custom_columns'     => $custom_columns,
+                'col_width'          => $col_width,
+                'font_family'        => $font_family,
             ],
         );
 
@@ -433,7 +586,6 @@ class PluginUseditemsexportExport extends CommonDBTM
      */
     public function cleanDBonPurge()
     {
-        // Clean Document GLPi
         $doc = new Document();
         $doc->getFromDB($this->fields['documents_id']);
         $doc->delete(['id' => $this->fields['documents_id']], true);
