@@ -34,7 +34,7 @@
     <span>{{ __("Configuration", 'useditemsexport') }}</span>
 </div>
 
-<form name='form' action='{{ action }}' method='post' class='left'>
+<form name='form' action='{{ action }}' method='post' enctype='multipart/form-data' class='left'>
     <input type="hidden" name="id" value="1">
     <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
 
@@ -44,11 +44,12 @@
         __('Is active')
     ) }}
 
-        {{ fields.textField(
-        'footer_text',
-        item.fields['footer_text'],
-        __('Footer text', 'useditemsexport')
-    ) }}
+    {# ══════════════════════════════════════════════════════════ #}
+    {# PAGE SETTINGS                                              #}
+    {# ══════════════════════════════════════════════════════════ #}
+    <div class="hr-text">
+        <span>{{ __("Page settings", 'useditemsexport') }}</span>
+    </div>
 
     {{ fields.dropdownArrayField(
         'orientation',
@@ -71,6 +72,253 @@
         __('Format', 'useditemsexport')
     ) }}
 
+    {{ fields.dropdownArrayField(
+        'font_family',
+        item.fields['font_family'],
+        {
+            'dejavusans': 'DejaVu Sans (UTF-8, Lithuanian, Cyrillic)',
+            'dejavusanscondensed': 'DejaVu Sans Condensed (UTF-8)',
+            'dejavuserif': 'DejaVu Serif (UTF-8)',
+            'dejavuserifcondensed': 'DejaVu Serif Condensed (UTF-8)',
+            'dejavusansmono': 'DejaVu Sans Mono (UTF-8)',
+            'freesans': 'FreeSans (UTF-8)',
+            'freeserif': 'FreeSerif (UTF-8)',
+            'freemono': 'FreeMono (UTF-8)',
+            'helvetica': 'Helvetica (Latin only)',
+            'times': 'Times (Latin only)',
+            'courier': 'Courier (Latin only)',
+        },
+        __('PDF font', 'useditemsexport'),
+        {
+            'helper': __('Choose a DejaVu font for Lithuanian / Baltic / Cyrillic character support.', 'useditemsexport'),
+        }
+    ) }}
+
+    {# ══════════════════════════════════════════════════════════ #}
+    {# LOGO SETTINGS                                              #}
+    {# ══════════════════════════════════════════════════════════ #}
+    <div class="hr-text">
+        <span>{{ __("Logo settings", 'useditemsexport') }}</span>
+    </div>
+
+    {{ fields.checkboxField(
+        'show_logo',
+        item.fields['show_logo'],
+        __('Show logo', 'useditemsexport')
+    ) }}
+
+    {# Current logo preview #}
+    {% if logo_exists %}
+    <div class="form-field row col-12 col-sm-6 mb-2">
+        <label class="col-form-label col-xxl-5 text-xxl-end">
+            {{ __('Current logo', 'useditemsexport') }}
+        </label>
+        <div class="col-xxl-7 field-container">
+            <img src="{{ config('plugin_doc_dir') }}/useditemsexport/{{ logo_filename }}"
+                 style="max-height: 80px; max-width: 200px; border: 1px solid #ccc; padding: 4px;"
+                 alt="Current logo" />
+            <div class="form-text text-muted">{{ logo_filename }}</div>
+        </div>
+    </div>
+    {% endif %}
+
+    {# Logo file upload #}
+    <div class="form-field row col-12 col-sm-6 mb-2">
+        <label class="col-form-label col-xxl-5 text-xxl-end" for="logo_file">
+            {{ __('Upload new logo', 'useditemsexport') }}
+        </label>
+        <div class="col-xxl-7 field-container">
+            <input type="file" class="form-control" name="logo_file" id="logo_file"
+                   accept="image/png,image/jpeg,image/gif,image/svg+xml" />
+            <div class="form-text text-muted">
+                {{ __('PNG, JPG, GIF or SVG. Leave empty to keep current logo.', 'useditemsexport') }}
+            </div>
+        </div>
+    </div>
+
+    {{ fields.numberField(
+        'logo_width',
+        item.fields['logo_width'],
+        __('Logo width (mm)', 'useditemsexport'),
+        {
+            'helper': __('Width in millimeters. Set 0 for automatic sizing.', 'useditemsexport'),
+            'min': 0,
+            'max': 300,
+            'step': 1,
+        }
+    ) }}
+
+    {# ══════════════════════════════════════════════════════════ #}
+    {# HEADER SETTINGS                                            #}
+    {# ══════════════════════════════════════════════════════════ #}
+    <div class="hr-text">
+        <span>{{ __("Header / address settings", 'useditemsexport') }}</span>
+    </div>
+
+    {{ fields.checkboxField(
+        'show_entity_address',
+        item.fields['show_entity_address'],
+        __('Show entity address', 'useditemsexport')
+    ) }}
+
+    <div class="form-field row col-12 col-sm-6 mb-2">
+        <label class="col-form-label col-xxl-5 text-xxl-end"></label>
+        <div class="col-xxl-7 field-container">
+            <div class="alert alert-info mb-0 p-2" style="font-size: 0.85em;">
+                <i class="ti ti-info-circle"></i>
+                {{ __('The address is taken from the entity the user belongs to. Edit it under Administration → Entities.', 'useditemsexport') }}
+            </div>
+        </div>
+    </div>
+
+    {# ══════════════════════════════════════════════════════════ #}
+    {# DOCUMENT TITLE                                             #}
+    {# ══════════════════════════════════════════════════════════ #}
+    <div class="hr-text">
+        <span>{{ __("Document title", 'useditemsexport') }}</span>
+    </div>
+
+    {{ fields.textField(
+        'document_title',
+        item.fields['document_title'],
+        __('Document title', 'useditemsexport'),
+        {
+            'helper': __('Appears before the reference number, e.g. "Asset export ref". Supports Lithuanian characters.', 'useditemsexport'),
+        }
+    ) }}
+
+    {# ══════════════════════════════════════════════════════════ #}
+    {# TABLE COLUMN LABELS (translatable)                         #}
+    {# ══════════════════════════════════════════════════════════ #}
+    <div class="hr-text">
+        <span>{{ __("Table columns & labels", 'useditemsexport') }}</span>
+    </div>
+
+    <div class="form-field row col-12 col-sm-6 mb-2">
+        <label class="col-form-label col-xxl-5 text-xxl-end"></label>
+        <div class="col-xxl-7 field-container">
+            <div class="alert alert-info mb-0 p-2" style="font-size: 0.85em;">
+                <i class="ti ti-info-circle"></i>
+                {{ __('Leave label fields empty to use the default GLPI translation. Fill in to override with your own text (e.g. Lithuanian).', 'useditemsexport') }}
+            </div>
+        </div>
+    </div>
+
+    {{ fields.checkboxField(
+        'show_serial',
+        item.fields['show_serial'],
+        __('Show "Serial Number" column', 'useditemsexport')
+    ) }}
+
+    {{ fields.textField(
+        'label_serial',
+        item.fields['label_serial'],
+        __('Custom label for Serial Number', 'useditemsexport')
+    ) }}
+
+    {{ fields.checkboxField(
+        'show_otherserial',
+        item.fields['show_otherserial'],
+        __('Show "Inventory Number" column', 'useditemsexport')
+    ) }}
+
+    {{ fields.textField(
+        'label_otherserial',
+        item.fields['label_otherserial'],
+        __('Custom label for Inventory Number', 'useditemsexport')
+    ) }}
+
+    {{ fields.checkboxField(
+        'show_name',
+        item.fields['show_name'],
+        __('Show "Name" column', 'useditemsexport')
+    ) }}
+
+    {{ fields.textField(
+        'label_name',
+        item.fields['label_name'],
+        __('Custom label for Name', 'useditemsexport')
+    ) }}
+
+    {{ fields.checkboxField(
+        'show_type',
+        item.fields['show_type'],
+        __('Show "Type" column', 'useditemsexport')
+    ) }}
+
+    {{ fields.textField(
+        'label_type',
+        item.fields['label_type'],
+        __('Custom label for Type', 'useditemsexport')
+    ) }}
+
+    {# ── Custom Columns ── #}
+    <div class="hr-text">
+        <span>{{ __("Extra custom columns", 'useditemsexport') }}</span>
+    </div>
+
+    {{ fields.textareaField(
+        'custom_columns',
+        item.fields['custom_columns'],
+        __('Custom columns', 'useditemsexport'),
+        {
+            'helper': __('One per line: field_name|Column Label. Example: contact|Naudotojas', 'useditemsexport'),
+        }
+    ) }}
+
+    {# ══════════════════════════════════════════════════════════ #}
+    {# SIGNATURE & FREE-TEXT SECTIONS                             #}
+    {# ══════════════════════════════════════════════════════════ #}
+    <div class="hr-text">
+        <span>{{ __("Sections", 'useditemsexport') }}</span>
+    </div>
+
+    {{ fields.textareaField(
+        'header_text',
+        item.fields['header_text'],
+        __('Text above items table', 'useditemsexport'),
+        {
+            'helper': __('Free text between the document title and the items table. HTML allowed.', 'useditemsexport'),
+        }
+    ) }}
+
+    {{ fields.textareaField(
+        'disclaimer_text',
+        item.fields['disclaimer_text'],
+        __('Text below items table', 'useditemsexport'),
+        {
+            'helper': __('Free text between the items table and the signature block. HTML allowed.', 'useditemsexport'),
+        }
+    ) }}
+
+    {{ fields.checkboxField(
+        'show_signature',
+        item.fields['show_signature'],
+        __('Show signature section', 'useditemsexport')
+    ) }}
+
+    {{ fields.textField(
+        'label_signature',
+        item.fields['label_signature'],
+        __('Custom label for "Signature"', 'useditemsexport'),
+        {
+            'helper': __('Leave empty to use the default GLPI translation.', 'useditemsexport'),
+        }
+    ) }}
+
+    {# ══════════════════════════════════════════════════════════ #}
+    {# FOOTER                                                     #}
+    {# ══════════════════════════════════════════════════════════ #}
+    <div class="hr-text">
+        <span>{{ __("Footer settings", 'useditemsexport') }}</span>
+    </div>
+
+    {{ fields.textField(
+        'footer_text',
+        item.fields['footer_text'],
+        __('Footer text', 'useditemsexport')
+    ) }}
+
 
     <div class="hr"></div>
 
@@ -83,5 +331,3 @@
         </div>
     </div>
 </form>
-
-

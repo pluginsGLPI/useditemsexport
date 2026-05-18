@@ -27,75 +27,159 @@
  # -------------------------------------------------------------------------
  #}
 
+{# ── Font family: use DejaVu Sans by default for Lithuanian/Baltic/Cyrillic support ── #}
+{% set ff = font_family|default('dejavusans') %}
+
 <style type="text/css">
-    table { border: 1px solid #000000; width: 100%; font-size: 10pt; font-family: helvetica, arial, sans-serif; }
+    body { font-family: {{ ff }}, sans-serif; }
+    table { border: 1px solid #000000; width: 100%; font-size: 10pt; font-family: {{ ff }}, sans-serif; }
+    th { font-family: {{ ff }}, sans-serif; }
+    td { font-family: {{ ff }}, sans-serif; }
     .signature-table { border-collapse: collapse; }
     .signature-box { border: 1px solid #000000; width: 50%; vertical-align: top; }
 </style>
 
-<page backtop="70mm" backleft="10mm" backright="10mm" backbottom="30mm">
+{% set show_logo = config.show_logo is defined ? config.show_logo : 1 %}
+{% set show_entity_address = config.show_entity_address is defined ? config.show_entity_address : 1 %}
+{% set show_serial = config.show_serial is defined ? config.show_serial : 1 %}
+{% set show_otherserial = config.show_otherserial is defined ? config.show_otherserial : 1 %}
+{% set show_name = config.show_name is defined ? config.show_name : 1 %}
+{% set show_type = config.show_type is defined ? config.show_type : 1 %}
+{% set show_signature = config.show_signature is defined ? config.show_signature : 1 %}
+{% set header_text = config.header_text is defined ? config.header_text : '' %}
+{% set disclaimer_text = config.disclaimer_text is defined ? config.disclaimer_text : '' %}
+{% set cw = col_width|default(25) ~ '%' %}
+{% set lw = logo_width|default(0) %}
+{% set lmime = logo_mime|default('image/png') %}
+
+<page backtop="{% if show_logo or show_entity_address %}70mm{% else %}15mm{% endif %}" backleft="10mm" backright="10mm" backbottom="30mm">
+
+    {# ══════════════════════════════════════════════════════════ #}
+    {# PAGE HEADER: Logo + Entity Address                         #}
+    {# ══════════════════════════════════════════════════════════ #}
+    {% if show_logo or show_entity_address %}
     <page_header>
         <table>
             <tr>
-                <td style="height: 60mm; width: 40%; text-align: center">
-                    <img src="data:image/png;base64,{{ logo_base64 }}" />
+                {% if show_logo %}
+                <td style="height: 60mm; width: {% if show_entity_address %}40%{% else %}100%{% endif %}; text-align: center;">
+                    <img src="data:{{ lmime }};base64,{{ logo_base64 }}"
+                         {% if lw > 0 %}style="width: {{ lw }}mm;"{% endif %} />
                 </td>
-                <td style="width: 60%; text-align: center;">
+                {% endif %}
+                {% if show_entity_address %}
+                <td style="width: {% if show_logo %}60%{% else %}100%{% endif %}; text-align: center; font-family: {{ ff }}, sans-serif;">
                     {{ entity_address|raw }}
                 </td>
+                {% endif %}
             </tr>
         </table>
     </page_header>
+    {% endif %}
 
+    {# ══════════════════════════════════════════════════════════ #}
+    {# DOCUMENT TITLE + REFERENCE NUMBER                          #}
+    {# ══════════════════════════════════════════════════════════ #}
     <table>
         <tr>
-            <td style="border: 1px solid #000000; text-align: center; width: 100%; font-size: 15pt; height: 8mm;">
-                {{ __('Asset export ref : ', 'useditemsexport') ~ refnumber }}
+            <td style="border: 1px solid #000000; text-align: center; width: 100%; font-size: 15pt; height: 8mm; font-family: {{ ff }}, sans-serif;">
+                {{ document_title }} : {{ refnumber }}
             </td>
         </tr>
     </table>
 
+    {# ── Optional header text (instructions, intro paragraph) ── #}
+    {% if header_text is not empty %}
+    <br><br>
+    <div style="font-size: 10pt; font-family: {{ ff }}, sans-serif;">
+        {{ header_text|raw }}
+    </div>
+    {% endif %}
+
+    {# ══════════════════════════════════════════════════════════ #}
+    {# ITEMS TABLE                                                #}
+    {# ══════════════════════════════════════════════════════════ #}
     <br><br><br><br><br>
     <table>
         <tr>
-            <th style="width: 25%;">{{ __('Serial number') }}</th>
-            <th style="width: 25%;">{{ __('Inventory number') }}</th>
-            <th style="width: 25%;">{{ __('Name') }}</th>
-            <th style="width: 25%;">{{ __('Type') }}</th>
+            {% if show_serial %}
+                <th style="width: {{ cw }};">{{ labels.serial }}</th>
+            {% endif %}
+            {% if show_otherserial %}
+                <th style="width: {{ cw }};">{{ labels.otherserial }}</th>
+            {% endif %}
+            {% if show_name %}
+                <th style="width: {{ cw }};">{{ labels.name }}</th>
+            {% endif %}
+            {% if show_type %}
+                <th style="width: {{ cw }};">{{ labels.type }}</th>
+            {% endif %}
+            {% for col in custom_columns %}
+                <th style="width: {{ cw }};">{{ col.label }}</th>
+            {% endfor %}
         </tr>
         {% for item in items %}
             <tr>
-                <td style="width: 25%;">{{ item.serial }}</td>
-                <td style="width: 25%;">{{ item.otherserial }}</td>
-                <td style="width: 25%;">{{ item.name }}</td>
-                <td style="width: 25%;">{{ item.type }}</td>
+                {% if show_serial %}
+                    <td style="width: {{ cw }};">{{ item.serial }}</td>
+                {% endif %}
+                {% if show_otherserial %}
+                    <td style="width: {{ cw }};">{{ item.otherserial }}</td>
+                {% endif %}
+                {% if show_name %}
+                    <td style="width: {{ cw }};">{{ item.name }}</td>
+                {% endif %}
+                {% if show_type %}
+                    <td style="width: {{ cw }};">{{ item.type }}</td>
+                {% endif %}
+                {% for col in custom_columns %}
+                    <td style="width: {{ cw }};">{{ attribute(item, 'custom_' ~ col.field)|default('') }}</td>
+                {% endfor %}
             </tr>
         {% endfor %}
     </table>
 
+    {# ── Optional disclaimer / instructions text ── #}
+    {% if disclaimer_text is not empty %}
+    <br><br>
+    <div style="font-size: 10pt; font-family: {{ ff }}, sans-serif;">
+        {{ disclaimer_text|raw }}
+    </div>
+    {% endif %}
+
+    {# ══════════════════════════════════════════════════════════ #}
+    {# SIGNATURE SECTION                                          #}
+    {# ══════════════════════════════════════════════════════════ #}
+    {% if show_signature %}
     <br><br><br><br><br>
     <table class="signature-table">
         <tr>
-            <td style="width: 50%; border-bottom: 1px solid #000000;">
+            <td style="width: 50%; border-bottom: 1px solid #000000; font-family: {{ ff }}, sans-serif;">
                 <strong>{{ author_name }} :</strong>
             </td>
-            <td style="width: 50%; border-bottom: 1px solid #000000">
+            <td style="width: 50%; border-bottom: 1px solid #000000; font-family: {{ ff }}, sans-serif;">
                 <strong>{{ user_name }} :</strong>
             </td>
         </tr>
         <tr>
             <td class="signature-box">
-                {{ __('Signature', 'useditemsexport') }} : <br><br><br><br><br>
+                {{ labels.signature }} : <br><br><br><br><br>
             </td>
             <td class="signature-box">
-                {{ __('Signature', 'useditemsexport') }} : <br><br><br><br><br>
+                {{ labels.signature }} : <br><br><br><br><br>
             </td>
         </tr>
     </table>
+    {% endif %}
 
+    {# ══════════════════════════════════════════════════════════ #}
+    {# PAGE FOOTER                                                #}
+    {# ══════════════════════════════════════════════════════════ #}
     <page_footer>
-        <div style="width: 100%; text-align: center; font-size: 8pt">
+        <div style="width: 100%; text-align: center; font-size: 8pt; font-family: {{ ff }}, sans-serif;">
+            {% if config.footer_text is not empty %}
             - {{ config.footer_text }} -
+            {% endif %}
         </div>
     </page_footer>
 </page>
