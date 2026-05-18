@@ -49,6 +49,10 @@ $PluginUseditemsexportConfig = new PluginUseditemsexportConfig();
 
 if (isset($_POST['update'])) {
     $PluginUseditemsexportConfig->check($_POST['id'], UPDATE);
+
+    // Handle logo file upload before updating config
+    PluginUseditemsexportConfig::handleLogoUpload();
+
     $PluginUseditemsexportConfig->update($_POST);
     Html::back();
 }
