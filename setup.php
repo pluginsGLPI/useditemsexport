@@ -33,8 +33,8 @@ use Glpi\Plugin\Hooks;
 
 use function Safe\define;
 
-// Plugin version
-define('PLUGIN_USEDITEMSEXPORT_VERSION', '2.6.2');
+// Plugin version - bumped to trigger migration for configurable report fields
+define('PLUGIN_USEDITEMSEXPORT_VERSION', '2.7.0');
 define('PLUGIN_USEDITEMSEXPORT_MIN_GLPI', '11.0.0');
 define('PLUGIN_USEDITEMSEXPORT_MAX_GLPI', '11.0.99');
 
