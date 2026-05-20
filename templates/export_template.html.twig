@@ -176,11 +176,5 @@
     {# ══════════════════════════════════════════════════════════ #}
     {# PAGE FOOTER                                                #}
     {# ══════════════════════════════════════════════════════════ #}
-    <page_footer>
-        <div style="width: 100%; text-align: center; font-size: 8pt; font-family: {{ ff }}, sans-serif;">
-            {% if config.footer_text is not empty %}
-            - {{ config.footer_text }} -
-            {% endif %}
-        </div>
-    </page_footer>
+    {# Footer is rendered by PluginUseditemsexportPDF::Footer() in PHP #}
 </page>
