@@ -51,6 +51,7 @@
 {% set cw = col_width|default(25) ~ '%' %}
 {% set lw = logo_width|default(0) %}
 {% set lmime = logo_mime|default('image/png') %}
+{% set lpad = config.logo_padding|default(5) ~ 'mm' %}
 
 <page backtop="{% if show_logo or show_entity_address %}70mm{% else %}15mm{% endif %}" backleft="10mm" backright="10mm" backbottom="30mm">
 
@@ -62,13 +63,13 @@
         <table>
             <tr>
                 {% if show_logo %}
-                <td style="height: 60mm; width: {% if show_entity_address %}40%{% else %}100%{% endif %}; text-align: center;">
+                <td style="height: 60mm; width: {% if show_entity_address %}40%{% else %}100%{% endif %}; text-align: center; vertical-align: middle; padding: {{ lpad }};">
                     <img src="data:{{ lmime }};base64,{{ logo_base64 }}"
                          {% if lw > 0 %}style="width: {{ lw }}mm;"{% endif %} />
                 </td>
                 {% endif %}
                 {% if show_entity_address %}
-                <td style="width: {% if show_logo %}60%{% else %}100%{% endif %}; text-align: center; font-family: {{ ff }}, sans-serif;">
+                <td style="width: {% if show_logo %}60%{% else %}100%{% endif %}; text-align: center; vertical-align: middle; padding: {{ lpad }}; font-family: {{ ff }}, sans-serif;">
                     {{ entity_address|raw }}
                 </td>
                 {% endif %}

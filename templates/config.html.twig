@@ -114,7 +114,7 @@
             {{ __('Current logo', 'useditemsexport') }}
         </label>
         <div class="col-xxl-7 field-container">
-            <img src="{{ config('plugin_doc_dir') }}/useditemsexport/{{ logo_filename }}"
+            <img src="data:{{ logo_mime }};base64,{{ logo_base64 }}"
                  style="max-height: 80px; max-width: 200px; border: 1px solid #ccc; padding: 4px;"
                  alt="Current logo" />
             <div class="form-text text-muted">{{ logo_filename }}</div>
@@ -144,6 +144,18 @@
             'helper': __('Width in millimeters. Set 0 for automatic sizing.', 'useditemsexport'),
             'min': 0,
             'max': 300,
+            'step': 1,
+        }
+    ) }}
+
+    {{ fields.numberField(
+        'logo_padding',
+        item.fields['logo_padding'],
+        __('Header padding (mm)', 'useditemsexport'),
+        {
+            'helper': __('Padding around logo and address in the header. Default: 5mm.', 'useditemsexport'),
+            'min': 0,
+            'max': 20,
             'step': 1,
         }
     ) }}
