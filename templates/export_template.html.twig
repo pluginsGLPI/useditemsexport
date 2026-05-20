@@ -60,16 +60,16 @@
     {# ══════════════════════════════════════════════════════════ #}
     {% if show_logo or show_entity_address %}
     <page_header>
-        <table>
+        <table cellpadding="{{ config.logo_padding|default(5) }}mm">
             <tr>
                 {% if show_logo %}
-                <td style="height: 60mm; width: {% if show_entity_address %}40%{% else %}100%{% endif %}; text-align: center; vertical-align: middle; padding: {{ lpad }};">
+                <td style="height: 60mm; width: {% if show_entity_address %}40%{% else %}100%{% endif %}; text-align: center; vertical-align: middle;">
                     <img src="data:{{ lmime }};base64,{{ logo_base64 }}"
                          {% if lw > 0 %}style="width: {{ lw }}mm;"{% endif %} />
                 </td>
                 {% endif %}
                 {% if show_entity_address %}
-                <td style="width: {% if show_logo %}60%{% else %}100%{% endif %}; text-align: center; vertical-align: middle; padding: {{ lpad }}; font-family: {{ ff }}, sans-serif;">
+                <td style="width: {% if show_logo %}60%{% else %}100%{% endif %}; text-align: center; vertical-align: middle; font-family: {{ ff }}, sans-serif;">
                     {{ entity_address|raw }}
                 </td>
                 {% endif %}
