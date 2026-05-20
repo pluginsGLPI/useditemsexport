@@ -73,18 +73,28 @@ class PluginUseditemsexportConfig extends CommonDBTM
     {
         $this->getFromDB(1);
 
-        // Build current logo URL for preview
+        // Build current logo for preview as base64
         $logo_filename = $this->fields['logo_filename'] ?? 'logo.png';
         $logo_path = GLPI_PLUGIN_DOC_DIR . '/useditemsexport/' . $logo_filename;
         $logo_exists = file_exists($logo_path);
+        $logo_base64 = '';
+        $logo_mime = 'image/png';
+        if ($logo_exists) {
+            $logo_base64 = base64_encode(file_get_contents($logo_path));
+            $ext = strtolower(pathinfo($logo_path, PATHINFO_EXTENSION));
+            $mime_map = ['png' => 'image/png', 'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'gif' => 'image/gif', 'svg' => 'image/svg+xml'];
+            $logo_mime = $mime_map[$ext] ?? 'image/png';
+        }
 
         TemplateRenderer::getInstance()->display(
             '@useditemsexport/config.html.twig',
             [
-                'action'       => Toolbox::getItemTypeFormURL(self::class),
-                'item'         => $this,
-                'logo_exists'  => $logo_exists,
+                'action'        => Toolbox::getItemTypeFormURL(self::class),
+                'item'          => $this,
+                'logo_exists'   => $logo_exists,
                 'logo_filename' => $logo_filename,
+                'logo_base64'   => $logo_base64,
+                'logo_mime'     => $logo_mime,
             ],
         );
 
@@ -246,6 +256,7 @@ class PluginUseditemsexportConfig extends CommonDBTM
                      `disclaimer_text` TEXT DEFAULT NULL,
                      `custom_columns` TEXT DEFAULT NULL,
                      `font_family` VARCHAR(100) NOT NULL DEFAULT 'dejavusans',
+                     `logo_padding` INT NOT NULL DEFAULT 5,
                PRIMARY KEY  (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
             $DB->doQuery($query);
@@ -274,6 +285,7 @@ class PluginUseditemsexportConfig extends CommonDBTM
         $migration->addField($table, 'disclaimer_text', 'text', ['value' => null]);
         $migration->addField($table, 'custom_columns', 'text', ['value' => null]);
         $migration->addField($table, 'font_family', 'string', ['value' => 'dejavusans']);
+        $migration->addField($table, 'logo_padding', 'integer', ['value' => 5]);
         $migration->migrationOneTable($table);
 
         $migration->displayMessage('Create useditemsexport dir');
