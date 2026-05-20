@@ -31,12 +31,23 @@
 
 /**
  * Custom PDF class that overrides GLPIPDF's default footer.
- * The footer is handled by <page_footer> in the Twig template instead.
+ * Renders footer text with proper UTF-8 font support (DejaVu Sans).
  */
 class PluginUseditemsexportPDF extends GLPIPDF
 {
     public function Footer()
     {
-        // Do nothing - footer is handled by <page_footer> in export_template.html.twig
+        if (!isset($_SESSION['plugins']['useditemsexport']['config'])) {
+            PluginUseditemsexportConfig::loadInSession();
+        }
+        $config = $_SESSION['plugins']['useditemsexport']['config'];
+        $footer_text = $config['footer_text'] ?? '';
+        $font_family = $config['font_family'] ?? 'dejavusans';
+
+        if (!empty($footer_text)) {
+            $this->SetY(-15);
+            $this->SetFont($font_family, '', 8);
+            $this->Cell(0, 10, '- ' . $footer_text . ' -', 0, 0, 'C', false, '', 0, false, 'T', 'M');
+        }
     }
 }
