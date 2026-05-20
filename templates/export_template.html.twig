@@ -53,7 +53,7 @@
 {% set lmime = logo_mime|default('image/png') %}
 {% set lpad = config.logo_padding|default(5) ~ 'mm' %}
 
-<page backtop="{% if show_logo or show_entity_address %}70mm{% else %}15mm{% endif %}" backleft="10mm" backright="10mm" backbottom="30mm">
+<page backtop="{% if show_logo or show_entity_address %}55mm{% else %}15mm{% endif %}" backleft="10mm" backright="10mm" backbottom="30mm">
 
     {# ══════════════════════════════════════════════════════════ #}
     {# PAGE HEADER: Logo + Entity Address                         #}
@@ -63,13 +63,13 @@
         <table cellpadding="{{ config.logo_padding|default(5) }}mm">
             <tr>
                 {% if show_logo %}
-                <td height="60mm" width="{% if show_entity_address %}40%{% else %}100%{% endif %}" align="center" valign="middle">
+                <td width="{% if show_entity_address %}40%{% else %}100%{% endif %}" align="center">
                     <img src="data:{{ lmime }};base64,{{ logo_base64 }}"
                          {% if lw > 0 %}width="{{ lw }}mm"{% endif %} />
                 </td>
                 {% endif %}
                 {% if show_entity_address %}
-                <td height="60mm" width="{% if show_logo %}60%{% else %}100%{% endif %}" align="center" valign="middle" style="font-family: {{ ff }}, sans-serif;">
+                <td width="{% if show_logo %}60%{% else %}100%{% endif %}" align="center" style="font-family: {{ ff }}, sans-serif;">
                     {{ entity_address|raw }}
                 </td>
                 {% endif %}
