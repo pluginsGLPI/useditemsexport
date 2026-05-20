@@ -400,7 +400,7 @@ class PluginUseditemsexportExport extends CommonDBTM
             ],
         );
 
-        $pdf = new GLPIPDF([
+        $pdf = new PluginUseditemsexportPDF([
             'orientation' => $useditemsexport_config['orientation'],
             'format'      => $useditemsexport_config['format'],
         ]);
