@@ -252,6 +252,8 @@ class PluginUseditemsexportConfig extends CommonDBTM
                      `label_name` VARCHAR(255) NOT NULL DEFAULT '',
                      `label_type` VARCHAR(255) NOT NULL DEFAULT '',
                      `label_signature` VARCHAR(255) NOT NULL DEFAULT '',
+                     `label_email` VARCHAR(255) NOT NULL DEFAULT '',
+                     `label_phone` VARCHAR(255) NOT NULL DEFAULT '',
                      `header_text` TEXT DEFAULT NULL,
                      `disclaimer_text` TEXT DEFAULT NULL,
                      `custom_columns` TEXT DEFAULT NULL,
@@ -281,6 +283,8 @@ class PluginUseditemsexportConfig extends CommonDBTM
         $migration->addField($table, 'label_name', 'string', ['value' => '']);
         $migration->addField($table, 'label_type', 'string', ['value' => '']);
         $migration->addField($table, 'label_signature', 'string', ['value' => '']);
+        $migration->addField($table, 'label_email', 'string', ['value' => '']);
+        $migration->addField($table, 'label_phone', 'string', ['value' => '']);
         $migration->addField($table, 'header_text', 'text', ['value' => null]);
         $migration->addField($table, 'disclaimer_text', 'text', ['value' => null]);
         $migration->addField($table, 'custom_columns', 'text', ['value' => null]);
