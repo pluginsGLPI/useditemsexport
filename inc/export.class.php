@@ -270,15 +270,16 @@ class PluginUseditemsexportExport extends CommonDBTM
 
         $entity = new Entity();
         $entity->getFromDB($user_entity_id);
+
         $entity_address = '<h3>' . ($entity->fields['name'] ?? '') . '</h3><br />';
         $entity_address .= ($entity->fields['address'] ?? '') . '<br />';
         $entity_address .= ($entity->fields['postcode'] ?? '') . ' - ' . ($entity->fields['town'] ?? '') . '<br />';
         $entity_address .= ($entity->fields['country'] ?? '') . '<br />';
         if (!empty($entity->fields['email'])) {
-            $entity_address .= __s('Email') . ' : ' . $entity->fields['email'] . '<br />';
+            $entity_address .= $entity->fields['email'] . '<br />';
         }
         if (!empty($entity->fields['phonenumber'])) {
-            $entity_address .= __s('Phone') . ' : ' . $entity->fields['phonenumber'] . '<br />';
+            $entity_address .= $entity->fields['phonenumber'] . '<br />';
         }
 
         $Author = new User();
@@ -357,25 +358,33 @@ class PluginUseditemsexportExport extends CommonDBTM
                             ? $useditemsexport_config['document_title']
                             : __s('Asset export ref', 'useditemsexport');
 
-        // ── Logo ──
-        $logo_filename = $useditemsexport_config['logo_filename'] ?? 'logo.png';
-        $logo_path = GLPI_PLUGIN_DOC_DIR . '/useditemsexport/' . $logo_filename;
-        if (!file_exists($logo_path)) {
-            // Fallback to default
-            $logo_path = GLPI_PLUGIN_DOC_DIR . '/useditemsexport/logo.png';
-        }
-        $logo_base64 = base64_encode(file_get_contents($logo_path));
+        // ── Logo: entity-specific first, then global fallback ──
+        $logo_width = (int)($useditemsexport_config['logo_width'] ?? 0);
+        $entityLogo = PluginUseditemsexportEntityconfig::getEntityLogo($user_entity_id);
 
-        // Determine logo mime type for data URI
-        $logo_ext = strtolower(pathinfo($logo_path, PATHINFO_EXTENSION));
-        $mime_map = [
-            'png'  => 'image/png',
-            'jpg'  => 'image/jpeg',
-            'jpeg' => 'image/jpeg',
-            'gif'  => 'image/gif',
-            'svg'  => 'image/svg+xml',
-        ];
-        $logo_mime = $mime_map[$logo_ext] ?? 'image/png';
+        if ($entityLogo !== null) {
+            // Entity-specific logo
+            $logo_path = $entityLogo['path'];
+            $logo_mime = $entityLogo['mime'];
+        } else {
+            // Global logo fallback
+            $logo_filename = $useditemsexport_config['logo_filename'] ?? 'logo.png';
+            $logo_path = GLPI_PLUGIN_DOC_DIR . '/useditemsexport/' . $logo_filename;
+            if (!file_exists($logo_path)) {
+                $logo_path = GLPI_PLUGIN_DOC_DIR . '/useditemsexport/logo.png';
+            }
+            $logo_ext = strtolower(pathinfo($logo_path, PATHINFO_EXTENSION));
+            $mime_map = [
+                'png'  => 'image/png',
+                'jpg'  => 'image/jpeg',
+                'jpeg' => 'image/jpeg',
+                'gif'  => 'image/gif',
+                'svg'  => 'image/svg+xml',
+            ];
+            $logo_mime = $mime_map[$logo_ext] ?? 'image/png';
+        }
+
+        $logo_base64 = base64_encode(file_get_contents($logo_path));
 
         // ── Font family ──
         $font_family = $useditemsexport_config['font_family'] ?? 'dejavusans';
@@ -385,7 +394,7 @@ class PluginUseditemsexportExport extends CommonDBTM
             [
                 'logo_base64'        => $logo_base64,
                 'logo_mime'          => $logo_mime,
-                'logo_width'         => (int)($useditemsexport_config['logo_width'] ?? 0),
+                'logo_width'         => $logo_width,
                 'entity_address'     => $entity_address,
                 'refnumber'          => $refnumber,
                 'document_title'     => $document_title,

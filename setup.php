@@ -34,7 +34,7 @@ use Glpi\Plugin\Hooks;
 use function Safe\define;
 
 // Plugin version - bumped to trigger migration for configurable report fields
-define('PLUGIN_USEDITEMSEXPORT_VERSION', '2.7.1');
+define('PLUGIN_USEDITEMSEXPORT_VERSION', '2.8.0');
 define('PLUGIN_USEDITEMSEXPORT_MIN_GLPI', '11.0.0');
 define('PLUGIN_USEDITEMSEXPORT_MAX_GLPI', '11.0.99');
 
@@ -59,6 +59,7 @@ function plugin_init_useditemsexport()
         if (Session::haveRight('config', UPDATE)) {
             $PLUGIN_HOOKS[Hooks::CONFIG_PAGE]['useditemsexport'] = '../../front/config.form.php?forcetab=PluginUseditemsexportConfig$1';
             Plugin::registerClass(PluginUseditemsexportConfig::class, ['addtabon' => [Config::class]]);
+            Plugin::registerClass(PluginUseditemsexportEntityconfig::class, ['addtabon' => [Entity::class]]);
         }
 
         if (Session::haveRight('profile', UPDATE)) {

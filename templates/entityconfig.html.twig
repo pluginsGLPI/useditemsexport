@@ -1,0 +1,81 @@
+{#
+ # -------------------------------------------------------------------------
+ # UsedItemsExport plugin for GLPI
+ # -------------------------------------------------------------------------
+ # Per-entity logo configuration form.
+ # -------------------------------------------------------------------------
+ #}
+
+{% import "components/form/fields_macros.html.twig" as fields %}
+
+<form name='form' action='{{ action }}' method='post' enctype='multipart/form-data' class='left'>
+    <input type="hidden" name="entities_id" value="{{ entities_id }}">
+    {% if has_config %}
+        <input type="hidden" name="id" value="{{ item.fields['id'] }}">
+    {% endif %}
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+
+    <div class="hr-text">
+        <i class="ti ti-clipboard-list me-1"></i>
+        <span>{{ __("Entity logo for PDF export", 'useditemsexport') }}</span>
+    </div>
+
+    <div class="form-field row col-12 col-sm-6 mb-2">
+        <label class="col-form-label col-xxl-5 text-xxl-end"></label>
+        <div class="col-xxl-7 field-container">
+            <div class="alert alert-info mb-0 p-2" style="font-size: 0.85em;">
+                <i class="ti ti-info-circle"></i>
+                {{ __('Upload a logo specific to this entity. If no logo is set, the global default logo will be used.', 'useditemsexport') }}
+            </div>
+        </div>
+    </div>
+
+    {# Current logo preview #}
+    {% if logo_exists %}
+    <div class="form-field row col-12 col-sm-6 mb-2">
+        <label class="col-form-label col-xxl-5 text-xxl-end">
+            {{ __('Current entity logo', 'useditemsexport') }}
+        </label>
+        <div class="col-xxl-7 field-container">
+            <img src="data:{{ logo_mime }};base64,{{ logo_base64 }}"
+                 style="max-height: 80px; max-width: 200px; border: 1px solid #ccc; padding: 4px;"
+                 alt="Entity logo" />
+            <div class="form-text text-muted">{{ logo_filename }}</div>
+        </div>
+    </div>
+    {% endif %}
+
+    {# Logo file upload #}
+    <div class="form-field row col-12 col-sm-6 mb-2">
+        <label class="col-form-label col-xxl-5 text-xxl-end" for="logo_file">
+            {{ __('Upload new logo', 'useditemsexport') }}
+        </label>
+        <div class="col-xxl-7 field-container">
+            <input type="file" class="form-control" name="logo_file" id="logo_file"
+                   accept="image/png,image/jpeg,image/gif,image/svg+xml" />
+            <div class="form-text text-muted">
+                {{ __('PNG, JPG, GIF or SVG. Leave empty to keep current logo.', 'useditemsexport') }}
+            </div>
+        </div>
+    </div>
+
+    {# Remove logo option #}
+    {% if logo_exists %}
+    {{ fields.checkboxField(
+        'remove_logo',
+        false,
+        __('Remove entity logo (use global default)', 'useditemsexport')
+    ) }}
+    {% endif %}
+
+    <div class="hr"></div>
+
+    <div class="hstack gap-1">
+        <div class="pe-5 ms-auto">
+            <button class="btn btn-primary" type="submit" name="update" value="1">
+                <i class="ti ti-device-floppy"></i>
+                <span>{{ _x('button', 'Save') }}</span>
+            </button>
+        </div>
+    </div>
+</form>
