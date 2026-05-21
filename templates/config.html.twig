@@ -160,6 +160,18 @@
         }
     ) }}
 
+    {{ fields.numberField(
+        'header_height',
+        item.fields['header_height'],
+        __('Header height (mm)', 'useditemsexport'),
+        {
+            'helper': __('Fixed height of the header row. The logo scales to fit this height. Default: 40mm.', 'useditemsexport'),
+            'min': 15,
+            'max': 100,
+            'step': 1,
+        }
+    ) }}
+
     {# ══════════════════════════════════════════════════════════ #}
     {# HEADER SETTINGS                                            #}
     {# ══════════════════════════════════════════════════════════ #}
