@@ -259,6 +259,7 @@ class PluginUseditemsexportConfig extends CommonDBTM
                      `custom_columns` TEXT DEFAULT NULL,
                      `font_family` VARCHAR(100) NOT NULL DEFAULT 'dejavusans',
                      `logo_padding` INT NOT NULL DEFAULT 5,
+                     `header_height` INT NOT NULL DEFAULT 40,
                PRIMARY KEY  (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
             $DB->doQuery($query);
@@ -290,6 +291,7 @@ class PluginUseditemsexportConfig extends CommonDBTM
         $migration->addField($table, 'custom_columns', 'text', ['value' => null]);
         $migration->addField($table, 'font_family', 'string', ['value' => 'dejavusans']);
         $migration->addField($table, 'logo_padding', 'integer', ['value' => 5]);
+        $migration->addField($table, 'header_height', 'integer', ['value' => 40]);
         $migration->migrationOneTable($table);
 
         $migration->displayMessage('Create useditemsexport dir');
