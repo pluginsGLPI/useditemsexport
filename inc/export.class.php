@@ -201,15 +201,15 @@ class PluginUseditemsexportExport extends CommonDBTM
 
         $entity = new Entity();
         $entity->getFromDB($_SESSION['glpiactive_entity']);
-        $entity_address = '<h3>' . $entity->fields['name'] . '</h3><br />';
-        $entity_address .= $entity->fields['address'] . '<br />';
-        $entity_address .= $entity->fields['postcode'] . ' - ' . $entity->fields['town'] . '<br />';
-        $entity_address .= $entity->fields['country'] . '<br />';
+        $entity_address = '<h3>' . htmlspecialchars($entity->fields['name']) . '</h3><br />';
+        $entity_address .= htmlspecialchars($entity->fields['address']) . '<br />';
+        $entity_address .= htmlspecialchars($entity->fields['postcode']) . ' - ' . htmlspecialchars($entity->fields['town']) . '<br />';
+        $entity_address .= htmlspecialchars($entity->fields['country']) . '<br />';
         if (isset($entity->fields['email'])) {
-            $entity_address .= __s('Email') . ' : ' . $entity->fields['email'] . '<br />';
+            $entity_address .= __s('Email') . ' : ' . htmlspecialchars($entity->fields['email']) . '<br />';
         }
         if (isset($entity->fields['phonenumber'])) {
-            $entity_address .= __s('Phone') . ' : ' . $entity->fields['phonenumber'] . '<br />';
+            $entity_address .= __s('Phone') . ' : ' . htmlspecialchars($entity->fields['phonenumber']) . '<br />';
         }
 
         $User = new User();
@@ -261,6 +261,7 @@ class PluginUseditemsexportExport extends CommonDBTM
         $export = new self();
         $export->add([
             'users_id'     => $users_id,
+            'entities_id'  => $User->fields['entities_id'],
             'date_mod'     => date('Y-m-d H:i:s'),
             'num'          => $num,
             'refnumber'    => $refnumber,
@@ -461,14 +462,25 @@ class PluginUseditemsexportExport extends CommonDBTM
             $query = "CREATE TABLE IF NOT EXISTS `$table` (
                   `id` INT {$default_key_sign} NOT NULL AUTO_INCREMENT,
                   `users_id` INT {$default_key_sign} NOT NULL DEFAULT '0',
+                  `entities_id` INT {$default_key_sign} NOT NULL DEFAULT '0',
                   `date_mod` TIMESTAMP NULL DEFAULT NULL,
                   `num` SMALLINT NOT NULL DEFAULT 0,
                   `refnumber` VARCHAR(9) NOT NULL DEFAULT '0000-0000',
                   `authors_id` INT {$default_key_sign} NOT NULL DEFAULT '0',
                   `documents_id` INT {$default_key_sign} NOT NULL DEFAULT '0',
-               PRIMARY KEY  (`id`)
+               PRIMARY KEY  (`id`),
+               KEY `entities_id` (`entities_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
             $DB->doQuery($query);
+        } elseif (!$DB->fieldExists($table, 'entities_id', false)) {
+            $migration->displayMessage("Adding entities_id to $table");
+            $migration->addField($table, 'entities_id', "INT {$default_key_sign} NOT NULL DEFAULT '0'");
+            $migration->addKey($table, 'entities_id');
+            $migration->addPostQuery(
+                "UPDATE `$table` AS export
+                 INNER JOIN `glpi_users` AS export_user ON export_user.id = export.users_id
+                 SET export.entities_id = export_user.entities_id",
+            );
         }
 
         return true;
@@ -485,6 +497,13 @@ class PluginUseditemsexportExport extends CommonDBTM
         global $DB;
 
         $table = getTableForItemType(self::class);
+
+        if ($DB->tableExists($table)) {
+            $doc = new Document();
+            foreach ($DB->request(['FROM' => $table]) as $row) {
+                $doc->delete(['id' => $row['documents_id']], true);
+            }
+        }
 
         $query = 'DROP TABLE IF EXISTS  `' . $table . '`';
         $DB->doQuery($query);
