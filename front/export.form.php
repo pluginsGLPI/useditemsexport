@@ -31,12 +31,18 @@
 
 include(__DIR__ . '/../../../inc/includes.php');
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 Session::checkLoginUser();
 
 $PluginUseditemsexportExport = new PluginUseditemsexportExport();
 
 if (isset($_REQUEST['generate'])) {
     Session::checkRight('plugin_useditemsexport_export', CREATE);
+    $User = new User();
+    if (!$User->getFromDB($_POST['users_id']) || !Session::haveAccessToEntity($User->getEntityID())) {
+        throw new AccessDeniedHttpException();
+    }
     if ($PluginUseditemsexportExport::generatePDF($_POST['users_id'])) {
         Session::addMessageAfterRedirect(__s('PDF successfully generated.', 'useditemsexport'), true);
         Html::back();
@@ -46,9 +52,9 @@ if (isset($_REQUEST['generate'])) {
 if (isset($_REQUEST['purgeitem'])) {
     Session::checkRight('plugin_useditemsexport_export', PURGE);
     foreach ($_POST['useditemsexport'] as $key => $val) {
-        $input = ['id' => $key];
         if ($val == 1) {
-            $PluginUseditemsexportExport->delete($input, true);
+            $PluginUseditemsexportExport->check($key, PURGE);
+            $PluginUseditemsexportExport->delete(['id' => $key], true);
         }
     }
     Html::back();

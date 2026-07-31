@@ -53,6 +53,7 @@ function plugin_useditemsexport_install()
             }
         }
     }
+    $migration->executeMigration();
     return true;
 }
 
