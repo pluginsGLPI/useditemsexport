@@ -477,9 +477,12 @@ class PluginUseditemsexportExport extends CommonDBTM
             $migration->addField($table, 'entities_id', "INT {$default_key_sign} NOT NULL DEFAULT '0'");
             $migration->addKey($table, 'entities_id');
             $migration->addPostQuery(
-                "UPDATE `$table` AS export
-                 INNER JOIN `glpi_users` AS export_user ON export_user.id = export.users_id
-                 SET export.entities_id = export_user.entities_id",
+                $DB->buildUpdate(
+                    $table,
+                    ['entities_id' => new QueryExpression($DB->quoteName('glpi_users') . '.' . $DB->quoteName('entities_id'))],
+                    ['entities_id' => 0],
+                    ['INNER JOIN' => ['glpi_users' => ['FKEY' => [$table => 'users_id', 'glpi_users' => 'id']]]],
+                ),
             );
         }
 
