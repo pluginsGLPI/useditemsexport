@@ -40,7 +40,7 @@ $PluginUseditemsexportExport = new PluginUseditemsexportExport();
 if (isset($_REQUEST['generate'])) {
     Session::checkRight('plugin_useditemsexport_export', CREATE);
     $User = new User();
-    if (!$User->getFromDB($_POST['users_id']) || !Session::haveAccessToEntity($User->getEntityID())) {
+    if (!$User->getFromDB($_POST['users_id']) || !Session::haveAccessToEntity($User->fields['entities_id'])) {
         throw new AccessDeniedHttpException();
     }
     if ($PluginUseditemsexportExport::generatePDF($_POST['users_id'])) {
