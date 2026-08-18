@@ -32,7 +32,7 @@
 class PluginUseditemsexportProfile extends CommonDBTM
 {
     // Necessary rights to edit the rights of this plugin
-    public static $rightname = 'profile';
+    public static string $rightname = 'profile';
 
     /**
      * @see CommonGLPI::getTabNameForItem()
@@ -97,10 +97,10 @@ class PluginUseditemsexportProfile extends CommonDBTM
         $profileRight = new ProfileRight();
         foreach ($rights as $right => $value) {
             if (
-                !countElementsInTable(
+                countElementsInTable(
                     'glpi_profilerights',
                     ['profiles_id' => $profiles_id, 'name' => $right],
-                )
+                ) === 0
             ) {
                 $myright['profiles_id'] = $profiles_id;
                 $myright['name']        = $right;
