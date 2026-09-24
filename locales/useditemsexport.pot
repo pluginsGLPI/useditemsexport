@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 02:33+0000\n"
+"POT-Creation-Date: 2026-09-24 02:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,11 +53,11 @@ msgstr ""
 msgid "Format"
 msgstr ""
 
-#: setup.php:100 inc/export.class.php:46 inc/config.class.php:48
+#: setup.php:100 inc/config.class.php:48 inc/export.class.php:46
 msgid "Used items export"
 msgstr ""
 
-#: front/export.form.php:41
+#: front/export.form.php:49
 msgid "PDF successfully generated."
 msgstr ""
 
@@ -77,6 +77,6 @@ msgstr ""
 msgid "Export document"
 msgstr ""
 
-#: inc/export.class.php:285
+#: inc/export.class.php:286
 msgid "Used-Items-Export"
 msgstr ""

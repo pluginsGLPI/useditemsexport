@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-14 02:33+0000\n"
+"POT-Creation-Date: 2026-09-24 02:34+0000\n"
 "PO-Revision-Date: 2018-02-20 13:00+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2025\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/teclib/teams/28042/tr_TR/)\n"
@@ -57,11 +57,11 @@ msgstr "Doğrultu"
 msgid "Format"
 msgstr "Biçim"
 
-#: setup.php:100 inc/export.class.php:46 inc/config.class.php:48
+#: setup.php:100 inc/config.class.php:48 inc/export.class.php:46
 msgid "Used items export"
 msgstr "Kullanılmış ögelerin dışa aktarımı"
 
-#: front/export.form.php:41
+#: front/export.form.php:49
 msgid "PDF successfully generated."
 msgstr "PDF oluşturuldu."
 
@@ -81,6 +81,6 @@ msgstr "Dışa aktarma sorumlusu"
 msgid "Export document"
 msgstr "Belgeyi dışa aktar"
 
-#: inc/export.class.php:285
+#: inc/export.class.php:286
 msgid "Used-Items-Export"
 msgstr "Kullanilmis-Ogeler-Disa-Aktarma"
