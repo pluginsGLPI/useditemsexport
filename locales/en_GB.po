@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-24 02:34+0000\n"
-"PO-Revision-Date: 2026-09-24 02:34+0000\n"
+"POT-Creation-Date: 2026-09-28 02:57+0000\n"
+"PO-Revision-Date: 2026-09-28 02:57+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en_GB\n"
@@ -16,18 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=ASCII\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#: templates/export_template.html.twig
-msgid "Asset export ref : "
-msgstr "Asset export ref : "
-
-#: templates/export_template.html.twig
-msgid "Signature"
-msgstr "Signature"
-
-#: templates/export.html.twig
-msgid "Generate new export"
-msgstr "Generate new export"
 
 #: templates/config.html.twig
 msgid "Configuration"
@@ -53,13 +41,25 @@ msgstr "Orientation"
 msgid "Format"
 msgstr "Format"
 
-#: setup.php:100 inc/config.class.php:48 inc/export.class.php:46
-msgid "Used items export"
-msgstr "Used items export"
+#: templates/export.html.twig
+msgid "Generate new export"
+msgstr "Generate new export"
+
+#: templates/export_template.html.twig
+msgid "Asset export ref : "
+msgstr "Asset export ref : "
+
+#: templates/export_template.html.twig
+msgid "Signature"
+msgstr "Signature"
 
 #: front/export.form.php:49
 msgid "PDF successfully generated."
 msgstr "PDF successfully generated."
+
+#: inc/config.class.php:48 inc/export.class.php:46 setup.php:100
+msgid "Used items export"
+msgstr "Used items export"
 
 #: inc/export.class.php:163
 msgid "Reference number of export"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-24 02:34+0000\n"
+"POT-Creation-Date: 2026-09-25 02:52+0000\n"
 "PO-Revision-Date: 2018-02-20 13:00+0000\n"
 "Last-Translator: Ana Cordeiro, 2026\n"
 "Language-Team: Portuguese (Portugal) (https://app.transifex.com/teclib/teams/28042/pt_PT/)\n"
@@ -21,18 +21,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt_PT\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
-
-#: templates/export_template.html.twig
-msgid "Asset export ref : "
-msgstr "Exportação de activos ref : "
-
-#: templates/export_template.html.twig
-msgid "Signature"
-msgstr "Assinatura"
-
-#: templates/export.html.twig
-msgid "Generate new export"
-msgstr "Gerar nova exportação"
 
 #: templates/config.html.twig
 msgid "Configuration"
@@ -58,13 +46,25 @@ msgstr "Orientação"
 msgid "Format"
 msgstr "Formato"
 
-#: setup.php:100 inc/config.class.php:48 inc/export.class.php:46
-msgid "Used items export"
-msgstr "Exportação de itens usados"
+#: templates/export.html.twig
+msgid "Generate new export"
+msgstr "Gerar nova exportação"
+
+#: templates/export_template.html.twig
+msgid "Asset export ref : "
+msgstr "Exportação de activos ref : "
+
+#: templates/export_template.html.twig
+msgid "Signature"
+msgstr "Assinatura"
 
 #: front/export.form.php:49
 msgid "PDF successfully generated."
 msgstr "PDF gerado com sucesso."
+
+#: inc/config.class.php:48 inc/export.class.php:46 setup.php:100
+msgid "Used items export"
+msgstr "Exportação de itens usados"
 
 #: inc/export.class.php:163
 msgid "Reference number of export"
