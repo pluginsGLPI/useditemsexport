@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 - Fix "Access Denied" on export generation caused by `User::getEntityID()` always returning -1
+- CI: fix Psalm cache directory, drop the stray `glpi-project/tools` composer dependency, declare a unique composer autoloader suffix
 
 ## [2.6.3] - 2026-08-04
 
