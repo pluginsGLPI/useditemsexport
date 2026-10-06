@@ -50,19 +50,18 @@ class PluginUseditemsexportConfig extends CommonDBTM
 
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
-        switch ($item->getType()) {
-            case "Config":
-                return self::createTabEntry(self::getTypeName(), 0, $item::getType(), self::getIcon());
+        if ($item::class === "Config") {
+            return self::createTabEntry(self::getTypeName(), 0, $item::class, self::getIcon());
         }
+
         return '';
     }
 
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         $config = new self();
-        switch ($item->getType()) {
-            case "Config":
-                $config->showConfigForm();
+        if ($item::class === "Config") {
+            $config->showConfigForm();
         }
 
         return true;
@@ -133,7 +132,7 @@ class PluginUseditemsexportConfig extends CommonDBTM
     /**
      * Install all necessary tables for the plugin
      *
-     * @return boolean True if success
+     * @return bool True if success
      */
     public static function install(Migration $migration)
     {
@@ -161,6 +160,7 @@ class PluginUseditemsexportConfig extends CommonDBTM
 
             $DB->insert($table, ['id' => 1]);
         }
+
         $migration->dropField($table, 'language'); // useless field removed in 2.5.1
 
         $migration->displayMessage('Create useditemsexport dir');
@@ -182,7 +182,7 @@ class PluginUseditemsexportConfig extends CommonDBTM
     /**
      * Uninstall previously installed tables of the plugin
      *
-     * @return boolean True if success
+     * @return bool True if success
      */
     public static function uninstall()
     {

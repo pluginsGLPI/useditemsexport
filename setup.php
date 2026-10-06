@@ -56,12 +56,12 @@ function plugin_init_useditemsexport()
     if (Session::getLoginUserID() && $plugin->isActivated('useditemsexport')) {
         PluginUseditemsexportConfig::loadInSession();
 
-        if (Session::haveRight('config', UPDATE)) {
+        if (Session::haveRight(Config::$rightname, UPDATE)) {
             $PLUGIN_HOOKS[Hooks::CONFIG_PAGE]['useditemsexport'] = '../../front/config.form.php?forcetab=PluginUseditemsexportConfig$1';
             Plugin::registerClass(PluginUseditemsexportConfig::class, ['addtabon' => [Config::class]]);
         }
 
-        if (Session::haveRight('profile', UPDATE)) {
+        if (Session::haveRight(Profile::$rightname, UPDATE)) {
             Plugin::registerClass(PluginUseditemsexportProfile::class, ['addtabon' => Profile::class]);
         }
 
@@ -69,7 +69,7 @@ function plugin_init_useditemsexport()
             $useditemsexport_config = $_SESSION['plugins']['useditemsexport']['config'];
 
             if (
-                Session::haveRightsOr('plugin_useditemsexport_export', [READ, CREATE, PURGE])
+                Session::haveRightsOr(PluginUseditemsexportExport::$rightname, [READ, CREATE, PURGE])
                 && $useditemsexport_config['is_active']
             ) {
                 Plugin::registerClass(PluginUseditemsexportExport::class, ['addtabon' => User::class]);
@@ -85,6 +85,7 @@ function plugin_useditemsexport_check_prerequisites()
         echo "Run composer install --no-dev in the plugin directory<br>";
         return false;
     }
+
     return true;
 }
 

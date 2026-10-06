@@ -40,7 +40,7 @@ class PluginUseditemsexportProfile extends CommonDBTM
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         if ($item instanceof Profile && $item->getField('interface') != 'helpdesk') {
-            return self::createTabEntry(PluginUseditemsexportConfig::getTypeName(), 0, $item::getType(), PluginUseditemsexportConfig::getIcon());
+            return self::createTabEntry(PluginUseditemsexportConfig::getTypeName(), 0, $item::class, PluginUseditemsexportConfig::getIcon());
         }
 
         return '';
@@ -58,6 +58,7 @@ class PluginUseditemsexportProfile extends CommonDBTM
             foreach (self::getAllRights() as $right) {
                 self::addDefaultProfileInfos($ID, [$right['field'] => 0]);
             }
+
             $prof->showForm($ID);
         }
 
@@ -70,7 +71,7 @@ class PluginUseditemsexportProfile extends CommonDBTM
     **/
     public static function getAllRights()
     {
-        $rights = [
+        return [
             ['itemtype'  => 'PluginUseditemsexportExport',
                 'label'  => PluginUseditemsexportExport::getTypeName(),
                 'field'  => 'plugin_useditemsexport_export',
@@ -83,8 +84,6 @@ class PluginUseditemsexportProfile extends CommonDBTM
                 'default' => 21,
             ],
         ];
-
-        return $rights;
     }
 
     /**
@@ -137,6 +136,7 @@ class PluginUseditemsexportProfile extends CommonDBTM
             echo "</div>\n";
             Html::closeForm();
         }
+
         echo '</div>';
         return true;
     }
@@ -144,7 +144,7 @@ class PluginUseditemsexportProfile extends CommonDBTM
     /**
      * Install all necessary profile for the plugin
      *
-     * @return boolean True if success
+     * @return bool True if success
      */
     public static function install(Migration $migration)
     {
@@ -161,7 +161,7 @@ class PluginUseditemsexportProfile extends CommonDBTM
     /**
      * Uninstall previously installed profile of the plugin
      *
-     * @return boolean True if success
+     * @return bool True if success
      */
     public static function uninstall()
     {

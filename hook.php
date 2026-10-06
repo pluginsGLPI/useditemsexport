@@ -35,7 +35,7 @@ use function Safe\preg_match;
 /**
  * Install all necessary elements for the plugin
  *
- * @return boolean True if success
+ * @return bool True if success
  */
 function plugin_useditemsexport_install()
 {
@@ -53,6 +53,7 @@ function plugin_useditemsexport_install()
             }
         }
     }
+
     $migration->executeMigration();
     return true;
 }
@@ -60,7 +61,7 @@ function plugin_useditemsexport_install()
 /**
  * Uninstall previously installed elements of the plugin
  *
- * @return boolean True if success
+ * @return bool True if success
  */
 function plugin_useditemsexport_uninstall()
 {
@@ -76,5 +77,6 @@ function plugin_useditemsexport_uninstall()
             }
         }
     }
+
     return true;
 }
