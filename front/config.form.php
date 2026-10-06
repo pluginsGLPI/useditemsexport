@@ -31,7 +31,7 @@
 
 include(__DIR__ . '/../../../inc/includes.php');
 
-Session::checkRight('config', UPDATE);
+Session::checkRight(Config::$rightname, UPDATE);
 
 Html::header(
     PluginUseditemsexportConfig::getTypeName(1),
@@ -41,9 +41,7 @@ Html::header(
     'config',
 );
 
-if (!isset($_GET['id'])) {
-    $_GET['id'] = 1;
-}
+$_GET['id'] ??= 1;
 
 $PluginUseditemsexportConfig = new PluginUseditemsexportConfig();
 

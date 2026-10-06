@@ -28,10 +28,10 @@
  * @link      https://github.com/pluginsGLPI/useditemsexport
  * -------------------------------------------------------------------------
  */
-use Glpi\DBAL\QueryExpression;
-use Glpi\DBAL\QuerySubQuery;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\Asset\AssetDefinitionManager;
+use Glpi\DBAL\QueryExpression;
+use Glpi\DBAL\QuerySubQuery;
 use Safe\DateTime;
 
 use function Safe\file_get_contents;
@@ -45,6 +45,7 @@ class PluginUseditemsexportExport extends CommonDBTM
     {
         return __s('Used items export', 'useditemsexport');
     }
+
     /**
      * @see CommonGLPI::getTabNameForItem()
     **/
@@ -55,8 +56,9 @@ class PluginUseditemsexportExport extends CommonDBTM
             if ($_SESSION['glpishow_count_on_tabs']) {
                 $nb = self::countForItem($item);
             }
-            if (Session::haveRightsOr('plugin_useditemsexport_export', [READ, CREATE, PURGE])) {
-                return self::createTabEntry(self::getTypeName(), $nb, $item::getType(), PluginUseditemsexportConfig::getIcon());
+
+            if (Session::haveRightsOr(self::$rightname, [READ, CREATE, PURGE])) {
+                return self::createTabEntry(self::getTypeName(), $nb, $item::class, PluginUseditemsexportConfig::getIcon());
             }
         }
 
@@ -65,7 +67,7 @@ class PluginUseditemsexportExport extends CommonDBTM
 
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
-        if ($item instanceof User && Session::haveRightsOr('plugin_useditemsexport_export', [READ, CREATE, PURGE])) {
+        if ($item instanceof User && Session::haveRightsOr(self::$rightname, [READ, CREATE, PURGE])) {
             $PluginUseditemsexportExport = new self();
             $PluginUseditemsexportExport->showForUser($item);
         }
@@ -187,7 +189,7 @@ class PluginUseditemsexportExport extends CommonDBTM
      *
      * @param $users_id user ID
      *
-     * @return boolean
+     * @return bool
     **/
     public static function generatePDF($users_id)
     {
@@ -197,10 +199,12 @@ class PluginUseditemsexportExport extends CommonDBTM
         if (!isset($_SESSION['plugins']['useditemsexport']['config'])) {
             PluginUseditemsexportConfig::loadInSession();
         }
+
         $useditemsexport_config = $_SESSION['plugins']['useditemsexport']['config'];
 
         $entity = new Entity();
         $entity->getFromDB($_SESSION['glpiactive_entity']);
+
         $entity_address = '<h3>' . htmlspecialchars($entity->fields['name']) . '</h3><br />';
         $entity_address .= htmlspecialchars($entity->fields['address']) . '<br />';
         $entity_address .= htmlspecialchars($entity->fields['postcode']) . ' - ' . htmlspecialchars($entity->fields['town']) . '<br />';
@@ -208,12 +212,14 @@ class PluginUseditemsexportExport extends CommonDBTM
         if (isset($entity->fields['email'])) {
             $entity_address .= __s('Email') . ' : ' . htmlspecialchars($entity->fields['email']) . '<br />';
         }
+
         if (isset($entity->fields['phonenumber'])) {
             $entity_address .= __s('Phone') . ' : ' . htmlspecialchars($entity->fields['phonenumber']) . '<br />';
         }
 
         $User = new User();
         $User->getFromDB($users_id);
+
         $Author = new User();
         $Author->getFromDB(Session::getLoginUserID());
 
@@ -253,6 +259,7 @@ class PluginUseditemsexportExport extends CommonDBTM
         ]);
         $pdf->setTotalCount($total_count);
         $pdf->WriteHTML($content);
+
         $contentPDF = $pdf->Output('', 'S');
 
         file_put_contents(GLPI_UPLOAD_DIR . '/' . $refnumber . '.pdf', $contentPDF);
@@ -275,7 +282,7 @@ class PluginUseditemsexportExport extends CommonDBTM
     /**
      * Store Document into GLPi DB
      * @param string $refnumber
-     * @return integer id of Document
+     * @return int id of Document
      */
     public static function createDocument($refnumber)
     {
@@ -291,14 +298,13 @@ class PluginUseditemsexportExport extends CommonDBTM
         $input['users_id']              = Session::getLoginUserID();
 
         $doc->check(-1, CREATE, $input);
-        $newdocid = $doc->add($input);
 
-        return $newdocid;
+        return $doc->add($input);
     }
 
     /**
      * Get next num
-     * @return integer
+     * @return int
      */
     public static function getNextNum()
     {
@@ -312,11 +318,10 @@ class PluginUseditemsexportExport extends CommonDBTM
         $nextNum = count($result) > 0 ? $result->current()['num'] : false;
         if (!$nextNum) {
             return 1;
-        } else {
-            $nextNum++;
-
-            return $nextNum;
         }
+
+        $nextNum++;
+        return $nextNum;
     }
 
     /**
@@ -333,14 +338,14 @@ class PluginUseditemsexportExport extends CommonDBTM
             $date          = new DateTime();
 
             return $nextRefnumber . '-' . $date->format('Y');
-        } else {
-            return '';
         }
+
+        return '';
     }
 
     /**
      * Get all used items for user
-     * @param integer $ID ID of user
+     * @param int $ID ID of user
      * @return array
      */
     public static function getAllUsedItemsForUser($ID)
@@ -357,6 +362,7 @@ class PluginUseditemsexportExport extends CommonDBTM
             if (!($item = getItemForItemtype($itemtype))) {
                 continue;
             }
+
             if ($item->canView()) {
                 $itemtable = getTableForItemType($itemtype);
                 $criteria  = [
@@ -367,9 +373,11 @@ class PluginUseditemsexportExport extends CommonDBTM
                 if ($item->maybeTemplate()) {
                     $criteria['WHERE']['is_template'] = '0';
                 }
+
                 if ($item->maybeDeleted()) {
                     $criteria['WHERE']['is_deleted'] = '0';
                 }
+
                 $result = $DB->request($criteria);
 
                 $type_name = $item->getTypeName();
@@ -443,7 +451,7 @@ class PluginUseditemsexportExport extends CommonDBTM
     /**
      * Install all necessary tables for the plugin
      *
-     * @return boolean True if success
+     * @return bool True if success
      */
     public static function install(Migration $migration)
     {
@@ -492,7 +500,7 @@ class PluginUseditemsexportExport extends CommonDBTM
     /**
      * Uninstall previously installed tables of the plugin
      *
-     * @return boolean True if success
+     * @return bool True if success
      */
     public static function uninstall()
     {

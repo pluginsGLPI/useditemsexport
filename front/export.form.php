@@ -38,13 +38,14 @@ Session::checkLoginUser();
 $PluginUseditemsexportExport = new PluginUseditemsexportExport();
 
 if (isset($_REQUEST['generate'])) {
-    Session::checkRight('plugin_useditemsexport_export', CREATE);
+    Session::checkRight(PluginUseditemsexportExport::$rightname, CREATE);
     if (
         !(new User())->getFromDB($_POST['users_id'])
         || !Session::haveAccessToOneOfEntities(Profile_User::getUserEntities($_POST['users_id'], false))
     ) {
         throw new AccessDeniedHttpException();
     }
+
     if ($PluginUseditemsexportExport::generatePDF($_POST['users_id'])) {
         Session::addMessageAfterRedirect(__s('PDF successfully generated.', 'useditemsexport'), true);
         Html::back();
@@ -52,12 +53,13 @@ if (isset($_REQUEST['generate'])) {
 }
 
 if (isset($_REQUEST['purgeitem'])) {
-    Session::checkRight('plugin_useditemsexport_export', PURGE);
+    Session::checkRight(PluginUseditemsexportExport::$rightname, PURGE);
     foreach ($_POST['useditemsexport'] as $key => $val) {
         if ($val == 1) {
             $PluginUseditemsexportExport->check($key, PURGE);
             $PluginUseditemsexportExport->delete(['id' => $key], true);
         }
     }
+
     Html::back();
 }
