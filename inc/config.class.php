@@ -36,7 +36,7 @@ use function Safe\mkdir;
 
 class PluginUseditemsexportConfig extends CommonDBTM
 {
-    public static $rightname = 'config';
+    public static string $rightname = 'config';
 
     /**
      * Display name of itemtype

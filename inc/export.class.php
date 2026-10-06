@@ -39,7 +39,7 @@ use function Safe\file_put_contents;
 
 class PluginUseditemsexportExport extends CommonDBTM
 {
-    public static $rightname = 'plugin_useditemsexport_export';
+    public static string $rightname = 'plugin_useditemsexport_export';
 
     public static function getTypeName($nb = 0)
     {
