@@ -6,3 +6,7 @@ vendor/
 node-modules/
 .vscode/
 var/
+
+# PHPUnit
+.phpunit.cache/
+.phpunit.result.cache
