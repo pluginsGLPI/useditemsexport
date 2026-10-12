@@ -29,6 +29,7 @@
  * -------------------------------------------------------------------------
  */
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Asset\Asset;
 use Glpi\Asset\AssetDefinitionManager;
 use Glpi\DBAL\QueryExpression;
 use Glpi\DBAL\QuerySubQuery;
@@ -265,10 +266,18 @@ class PluginUseditemsexportExport extends CommonDBTM
         file_put_contents(GLPI_UPLOAD_DIR . '/' . $refnumber . '.pdf', $contentPDF);
         $documents_id = self::createDocument($refnumber);
 
+        $entities_id = $User->fields['entities_id'];
+        // No default entity: use the first entity where the user has a profile
+        // and that is visible in the current session (guaranteed by export.form.php)
+        $entities_id ??= current(array_intersect(
+            Profile_User::getUserEntities($users_id, false),
+            $_SESSION['glpiactiveentities'],
+        ));
+
         $export = new self();
         $export->add([
             'users_id'     => $users_id,
-            'entities_id'  => $User->fields['entities_id'],
+            'entities_id'  => $entities_id,
             'date_mod'     => date('Y-m-d H:i:s'),
             'num'          => $num,
             'refnumber'    => $refnumber,
@@ -359,6 +368,11 @@ class PluginUseditemsexportExport extends CommonDBTM
         $items = [];
 
         foreach ($CFG_GLPI['linkuser_types'] as $itemtype) {
+            // Custom assets are handled below, filtered by their definition
+            if (is_a($itemtype, Asset::class, true)) {
+                continue;
+            }
+
             if (!($item = getItemForItemtype($itemtype))) {
                 continue;
             }
@@ -422,7 +436,12 @@ class PluginUseditemsexportExport extends CommonDBTM
             if ($item && $item->canView()) {
                 $criteria  = [
                     'FROM'  => 'glpi_assets_assets',
-                    'WHERE' => ['users_id' => $ID, 'assets_assetdefinitions_id' => $definition->getID()],
+                    'WHERE' => [
+                        'users_id'                   => $ID,
+                        'assets_assetdefinitions_id' => $definition->getID(),
+                        'is_template'                => 0,
+                        'is_deleted'                 => 0,
+                    ],
                 ];
                 $result = $DB->request($criteria);
 
