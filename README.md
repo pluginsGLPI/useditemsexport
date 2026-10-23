@@ -66,3 +66,7 @@ guidelines for [contributing](https://github.com/pluginsGLPI/useditemsexport/blo
 * **Code**: you can redistribute it and/or modify
     it under the terms of the GNU General Public License ([GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html)).
 * **Documentation**: released under Attribution 4.0 International ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)).
+
+## Additional resources
+
+* [Translations on Transifex](https://explore.transifex.com/teclib/glpi-project-plugin-used-items-export/)
