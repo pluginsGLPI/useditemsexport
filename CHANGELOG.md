@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [UNRELEASED]
+
+### Fixed
+
+- Faster display of the user's exports tab, now paginated, for users with many exports
+
 ## [2.6.5] - 2026-11-03
 
 ### Fixed

@@ -120,10 +120,25 @@ class PluginUseditemsexportExport extends CommonDBTM
          */
         global $CFG_GLPI;
 
-        $users_id = $item->getField('id');
+        /** @var DBmysql $DB */
+        global $DB;
 
-        $exports = self::getAllForUser($users_id);
-        $rand    = mt_rand();
+        $users_id = $item->getField('id');
+        $start    = (int) ($_GET['start'] ?? 0);
+        $limit    = (int) $_SESSION['glpilist_limit'];
+        $total    = self::countForItem($item);
+
+        // only the displayed page is loaded
+        $exports = iterator_to_array($DB->request([
+            'FROM'  => getTableForItemType(self::class),
+            'WHERE' => ['users_id' => $users_id],
+            'ORDER' => 'id ASC',
+            'START' => $start,
+            'LIMIT' => $limit,
+        ]), false);
+        $authors   = self::loadItems(User::class, array_column($exports, 'authors_id'));
+        $documents = self::loadItems(Document::class, array_column($exports, 'documents_id'));
+        $rand      = mt_rand();
 
         $canpurge  = self::canPurge();
         $cancreate = self::canCreate();
@@ -140,12 +155,11 @@ class PluginUseditemsexportExport extends CommonDBTM
 
         $entries = [];
         foreach ($exports as $row) {
-
-            $user = new User();
-            $user->getFromDB($row['authors_id']);
-
-            $doc = new Document();
-            $doc->getFromDB($row['documents_id']);
+            $user = $authors[$row['authors_id']] ?? new User();
+            $doc  = $documents[$row['documents_id']] ?? null;
+            if (!$doc instanceof Document) {
+                $doc = new Document();
+            }
 
             $entries[] = [
                 'itemtype' => self::class,
@@ -173,14 +187,43 @@ class PluginUseditemsexportExport extends CommonDBTM
                 'doc' => 'raw_html',
             ],
             'entries' => $entries,
-            'total_number' => count($entries),
-            'filtered_number' => count($entries),
+            'start' => $start,
+            'limit' => $limit,
+            'total_number' => $total,
+            'filtered_number' => $total,
             'showmassiveactions' => $cancreate || $canpurge,
             'massiveactionparams' => [
-                'num_displayed' => min($_SESSION['glpilist_limit'], count($entries)),
+                'num_displayed' => count($entries),
                 'container'     => 'mass' . static::class . $rand,
             ],
         ]);
+    }
+
+    /**
+     * Load the given items in one query, indexed by id.
+     *
+     * @param class-string<CommonDBTM> $itemtype
+     * @param array<int|string> $ids
+     *
+     * @return array<int, CommonDBTM>
+     */
+    private static function loadItems(string $itemtype, array $ids): array
+    {
+        $ids  = array_values(array_unique(array_filter(array_map('intval', $ids))));
+        $base = getItemForItemtype($itemtype);
+        if ($ids === [] || !$base instanceof CommonDBTM) {
+            return [];
+        }
+
+        $items = [];
+        foreach ($base->find(['id' => $ids]) as $row) {
+            $item = clone $base;
+            $item->getFromResultSet($row);
+            $item->post_getFromDB();
+            $items[(int) $row['id']] = $item;
+        }
+
+        return $items;
     }
 
     /**
@@ -193,7 +236,7 @@ class PluginUseditemsexportExport extends CommonDBTM
     public static function generatePDF($users_id)
     {
         $num       = self::getNextNum();
-        $refnumber = self::getNextRefnumber();
+        $refnumber = self::getNextRefnumber($num);
 
         if (!isset($_SESSION['plugins']['useditemsexport']['config'])) {
             PluginUseditemsexportConfig::loadInSession();
@@ -334,12 +377,10 @@ class PluginUseditemsexportExport extends CommonDBTM
      * Compute next refnumber
      * @return string
      */
-    public static function getNextRefnumber()
+    public static function getNextRefnumber(?int $nextNum = null)
     {
-        /** @var DBmysql $DB */
-        global $DB;
-
-        if ($nextNum = self::getNextNum()) {
+        $nextNum ??= self::getNextNum();
+        if ($nextNum) {
             $nextRefnumber = str_pad((string) $nextNum, 4, '0', STR_PAD_LEFT);
             $date          = new DateTime();
 
@@ -489,7 +530,9 @@ class PluginUseditemsexportExport extends CommonDBTM
                   `authors_id` INT {$default_key_sign} NOT NULL DEFAULT '0',
                   `documents_id` INT {$default_key_sign} NOT NULL DEFAULT '0',
                PRIMARY KEY  (`id`),
-               KEY `entities_id` (`entities_id`)
+               KEY `entities_id` (`entities_id`),
+               KEY `users_id` (`users_id`),
+               KEY `num` (`num`)
             ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
             $DB->doQuery($query);
         } elseif (!$DB->fieldExists($table, 'entities_id', false)) {
@@ -505,6 +548,10 @@ class PluginUseditemsexportExport extends CommonDBTM
                 ),
             );
         }
+
+        // the user tab counts and lists the exports of one user, a new export reads MAX(num)
+        $migration->addKey($table, 'users_id');
+        $migration->addKey($table, 'num');
 
         return true;
     }

@@ -32,6 +32,7 @@
 namespace GlpiPlugin\Useditemsexport\Tests\Units;
 
 use Computer;
+use Document;
 use Entity;
 use Glpi\Tests\DbTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -147,5 +148,66 @@ final class ExportTest extends DbTestCase
 
         // The export must remain purgeable by the user who generated it
         $this->assertTrue((new PluginUseditemsexportExport())->can($export['id'], PURGE));
+    }
+
+    public function testShowForUserDisplaysOnePage(): void
+    {
+        $this->login();
+
+        $user   = $this->createItem(User::class, ['name' => __FUNCTION__]);
+        $author = $this->createItem(User::class, ['name' => __FUNCTION__ . '_author']);
+        $links = [];
+        foreach (['0001-2026', '0002-2026', '0003-2026'] as $num => $refnumber) {
+            $document = $this->createItem(Document::class, [
+                'name'        => 'doc_' . $refnumber,
+                'entities_id' => $this->getTestRootEntity(true),
+            ]);
+            // the link of a document points to its id
+            $links[$refnumber] = $document->getDownloadLink();
+            $this->assertStringContainsString('docid=' . $document->getID(), $links[$refnumber]);
+            $this->createItem(PluginUseditemsexportExport::class, [
+                'users_id'     => $user->getID(),
+                'num'          => $num + 1,
+                'refnumber'    => $refnumber,
+                'authors_id'   => $author->getID(),
+                'documents_id' => $document->getID(),
+            ]);
+        }
+
+        $_SESSION['glpilist_limit'] = 2;
+        $render = static function (int $start) use ($user): string {
+            $_GET['start'] = $start;
+            ob_start();
+            (new PluginUseditemsexportExport())->showForUser($user);
+
+            return (string) ob_get_clean();
+        };
+
+        // First page: the two first exports, with their author and document
+        $first_page = $render(0);
+        $this->assertStringContainsString('0001-2026', $first_page);
+        $this->assertStringContainsString('0002-2026', $first_page);
+        $this->assertStringNotContainsString('0003-2026', $first_page);
+        $this->assertStringContainsString(__FUNCTION__ . '_author', $first_page);
+        $this->assertStringContainsString($links['0001-2026'], $first_page);
+        $this->assertStringContainsString($links['0002-2026'], $first_page);
+
+        // Second page: the last export only
+        $second_page = $render(2);
+        $this->assertStringNotContainsString('0002-2026', $second_page);
+        $this->assertStringContainsString('0003-2026', $second_page);
+        $this->assertStringContainsString($links['0003-2026'], $second_page);
+
+        unset($_GET['start']);
+    }
+
+    public function testNextRefnumberUsesGivenNum(): void
+    {
+        $year = date('Y');
+        $this->assertSame('0042-' . $year, PluginUseditemsexportExport::getNextRefnumber(42));
+        $this->assertSame(
+            str_pad((string) PluginUseditemsexportExport::getNextNum(), 4, '0', STR_PAD_LEFT) . '-' . $year,
+            PluginUseditemsexportExport::getNextRefnumber(),
+        );
     }
 }
