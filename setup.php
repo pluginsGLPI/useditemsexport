@@ -97,13 +97,14 @@ function plugin_useditemsexport_check_prerequisites()
 function plugin_version_useditemsexport()
 {
     return  [
-        'name'         => __s('Used items export', 'useditemsexport'),
-        'version'      => PLUGIN_USEDITEMSEXPORT_VERSION,
-        'oldname'      => '',
-        'license'      => 'GPLv2+',
-        'author'       => 'TECLIB',
-        'homepage'     => 'https://github.com/pluginsGLPI/useditemsexport',
-        'requirements' => [
+        'name'          => __s('Used items export', 'useditemsexport'),
+        'version'       => PLUGIN_USEDITEMSEXPORT_VERSION,
+        'oldname'       => '',
+        'license'       => 'GPLv2+',
+        'author'        => 'TECLIB',
+        'homepage'      => 'https://github.com/pluginsGLPI/useditemsexport',
+        'csp_compliant' => true,
+        'requirements'  => [
             'glpi' => [
                 'min' => PLUGIN_USEDITEMSEXPORT_MIN_GLPI,
                 'max' => PLUGIN_USEDITEMSEXPORT_MAX_GLPI,
